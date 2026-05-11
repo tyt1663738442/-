@@ -1,4 +1,4 @@
-import { TrendingUp, TrendingDown, ArrowUpRight, ArrowDownRight } from 'lucide-react'
+import { ArrowUp, ArrowDown } from 'lucide-react'
 import type { StockInfo } from '../types'
 
 interface StockListProps {
@@ -9,170 +9,93 @@ interface StockListProps {
 export function StockList({ stocks, onSelect }: StockListProps) {
   if (stocks.length === 0) {
     return (
-      <div className="glass-card p-8 text-center">
+      <div className="bg-[#16213e] rounded-lg p-8 text-center">
         <div className="animate-pulse space-y-4">
-          <div className="h-4 bg-gray-700 rounded w-1/3 mx-auto"></div>
-          <div className="h-4 bg-gray-700 rounded w-1/2 mx-auto"></div>
+          <div className="h-4 bg-[#2d3748] rounded w-1/3 mx-auto"></div>
+          <div className="h-4 bg-[#2d3748] rounded w-1/2 mx-auto"></div>
         </div>
-        <p className="text-gray-400 mt-4">正在加载市场数据...</p>
+        <p className="text-[#718096] mt-4">正在加载市场数据...</p>
       </div>
     )
   }
 
   return (
-    <div className="space-y-4">
-      {/* 统计卡片 */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <StatCard
-          title="上涨家数"
-          value={stocks.filter(s => s.change_percent > 0).length}
-          color="red"
-          icon={<TrendingUp className="w-5 h-5" />}
-        />
-        <StatCard
-          title="下跌家数"
-          value={stocks.filter(s => s.change_percent < 0).length}
-          color="green"
-          icon={<TrendingDown className="w-5 h-5" />}
-        />
-        <StatCard
-          title="涨停家数"
-          value={stocks.filter(s => s.change_percent >= 9.9).length}
-          color="red"
-        />
-        <StatCard
-          title="跌停家数"
-          value={stocks.filter(s => s.change_percent <= -9.9).length}
-          color="green"
-        />
+    <div className="bg-[#16213e] rounded-lg overflow-hidden border border-[#2d3748]">
+      {/* 表头 */}
+      <div className="bg-[#0f3460]">
+        <div className="grid grid-cols-12 gap-2 px-4 py-3 text-xs font-medium text-[#a0aec0]">
+          <div className="col-span-1">序号</div>
+          <div className="col-span-2">股票名称</div>
+          <div className="col-span-1 text-right">代码</div>
+          <div className="col-span-1 text-right">现价</div>
+          <div className="col-span-1 text-right">涨跌幅</div>
+          <div className="col-span-1 text-right">涨跌额</div>
+          <div className="col-span-1 text-right">今开</div>
+          <div className="col-span-1 text-right">最高</div>
+          <div className="col-span-1 text-right">最低</div>
+          <div className="col-span-1 text-right">成交量</div>
+          <div className="col-span-1 text-right">成交额</div>
+        </div>
       </div>
 
-      {/* 股票列表 */}
-      <div className="glass-card overflow-hidden">
-        <div className="px-4 py-3 border-b border-stock-border flex items-center justify-between">
-          <h3 className="text-lg font-semibold">市场行情</h3>
-          <span className="text-sm text-gray-400">共 {stocks.length} 只</span>
-        </div>
-        
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead className="bg-stock-bg/50">
-              <tr className="text-left text-xs text-gray-400">
-                <th className="px-4 py-3 font-medium">股票名称</th>
-                <th className="px-4 py-3 font-medium text-right">最新价</th>
-                <th className="px-4 py-3 font-medium text-right">涨跌幅</th>
-                <th className="px-4 py-3 font-medium text-right">涨跌额</th>
-                <th className="px-4 py-3 font-medium text-right">成交量</th>
-                <th className="px-4 py-3 font-medium text-right">成交额</th>
-                <th className="px-4 py-3 font-medium">操作</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-stock-border">
-              {stocks.map((stock) => {
-                const changeAmount = stock.price - stock.pre_close
-                const isUp = stock.change_percent >= 0
-                
-                return (
-                  <tr
-                    key={stock.code}
-                    className="hover:bg-white/5 transition-colors cursor-pointer"
-                    onClick={() => onSelect(stock.code)}
-                  >
-                    <td className="px-4 py-3">
-                      <div>
-                        <div className="font-medium text-white">{stock.name}</div>
-                        <div className="text-xs text-gray-500">{stock.code}</div>
-                      </div>
-                    </td>
-                    <td className="px-4 py-3 text-right">
-                      <span className={`number-font font-semibold ${isUp ? 'stock-up' : 'stock-down'}`}>
-                        {stock.price.toFixed(2)}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3 text-right">
-                      <span className={`inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium ${
-                        isUp 
-                          ? 'bg-red-500/20 text-red-400' 
-                          : 'bg-green-500/20 text-green-400'
-                      }`}>
-                        {isUp ? <ArrowUpRight className="w-3 h-3" /> : <ArrowDownRight className="w-3 h-3" />}
-                        {stock.change_percent >= 0 ? '+' : ''}{stock.change_percent.toFixed(2)}%
-                      </span>
-                    </td>
-                    <td className={`px-4 py-3 text-right number-font ${isUp ? 'stock-up' : 'stock-down'}`}>
-                      {changeAmount >= 0 ? '+' : ''}{changeAmount.toFixed(2)}
-                    </td>
-                    <td className="px-4 py-3 text-right text-gray-300 number-font">
-                      {formatVolume(stock.volume)}
-                    </td>
-                    <td className="px-4 py-3 text-right text-gray-300 number-font">
-                      {formatAmount(stock.amount)}
-                    </td>
-                    <td className="px-4 py-3">
-                      <button 
-                        className="text-xs px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded transition-colors"
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          onSelect(stock.code)
-                        }}
-                      >
-                        详情
-                      </button>
-                    </td>
-                  </tr>
-                )
-              })}
-            </tbody>
-          </table>
-        </div>
+      {/* 数据行 */}
+      <div className="divide-y divide-[#2d3748]">
+        {stocks.map((stock, index) => {
+          const isUp = stock.change_percent >= 0
+          const changeAmount = stock.price - stock.pre_close
+          const isLimitUp = stock.change_percent >= 9.9
+          const isLimitDown = stock.change_percent <= -9.9
+
+          return (
+            <div
+              key={stock.code}
+              onClick={() => onSelect(stock.code)}
+              className={`grid grid-cols-12 gap-2 px-4 py-2.5 text-sm hover:bg-[#1a4a7a]/30 cursor-pointer transition-colors ${
+                isLimitUp ? 'bg-red-500/10' : isLimitDown ? 'bg-green-500/10' : ''
+              }`}
+            >
+              <div className="col-span-1 text-[#718096]">{index + 1}</div>
+              <div className="col-span-2 font-medium text-white truncate">{stock.name}</div>
+              <div className="col-span-1 text-right text-[#718096]">{stock.code}</div>
+              <div className={`col-span-1 text-right font-bold number-font ${
+                isLimitUp ? 'text-[#ef4444]' : isLimitDown ? 'text-[#22c55e]' : isUp ? 'text-[#ef4444]' : 'text-[#22c55e]'
+              }`}>
+                {stock.price.toFixed(2)}
+              </div>
+              <div className={`col-span-1 text-right font-medium ${
+                isUp ? 'text-[#ef4444]' : 'text-[#22c55e]'
+              }`}>
+                <span className="inline-flex items-center gap-0.5">
+                  {isUp ? <ArrowUp className="w-3 h-3" /> : <ArrowDown className="w-3 h-3" />}
+                  {stock.change_percent >= 0 ? '+' : ''}{stock.change_percent.toFixed(2)}%
+                </span>
+              </div>
+              <div className={`col-span-1 text-right ${
+                isUp ? 'text-[#ef4444]' : 'text-[#22c55e]'
+              }`}>
+                {changeAmount >= 0 ? '+' : ''}{changeAmount.toFixed(2)}
+              </div>
+              <div className="col-span-1 text-right text-[#a0aec0]">{stock.open.toFixed(2)}</div>
+              <div className="col-span-1 text-right text-[#ef4444]">{stock.high.toFixed(2)}</div>
+              <div className="col-span-1 text-right text-[#22c55e]">{stock.low.toFixed(2)}</div>
+              <div className="col-span-1 text-right text-[#a0aec0]">{formatVolume(stock.volume)}</div>
+              <div className="col-span-1 text-right text-[#a0aec0]">{formatAmount(stock.amount)}</div>
+            </div>
+          )
+        })}
       </div>
     </div>
   )
 }
 
-interface StatCardProps {
-  title: string
-  value: number
-  color: 'red' | 'green'
-  icon?: React.ReactNode
-}
-
-function StatCard({ title, value, color, icon }: StatCardProps) {
-  return (
-    <div className="glass-card p-4">
-      <div className="flex items-center justify-between">
-        <div>
-          <p className="text-sm text-gray-400">{title}</p>
-          <p className={`text-2xl font-bold mt-1 ${color === 'red' ? 'stock-up' : 'stock-down'}`}>
-            {value}
-          </p>
-        </div>
-        {icon && (
-          <div className={`p-2 rounded-lg ${color === 'red' ? 'bg-red-500/20' : 'bg-green-500/20'}`}>
-            {icon}
-          </div>
-        )}
-      </div>
-    </div>
-  )
-}
-
-// 格式化成交量
 function formatVolume(volume: number): string {
-  if (volume >= 100000000) {
-    return (volume / 100000000).toFixed(2) + '亿'
-  } else if (volume >= 10000) {
-    return (volume / 10000).toFixed(2) + '万'
-  }
+  if (volume >= 100000000) return (volume / 100000000).toFixed(2) + '亿'
+  if (volume >= 10000) return (volume / 10000).toFixed(2) + '万'
   return volume.toString()
 }
 
-// 格式化成交额
 function formatAmount(amount: number): string {
-  if (amount >= 100000000) {
-    return (amount / 100000000).toFixed(2) + '亿'
-  } else if (amount >= 10000) {
-    return (amount / 10000).toFixed(2) + '万'
-  }
-  return amount.toFixed(2)
+  if (amount >= 100000000) return (amount / 100000000).toFixed(2) + '亿'
+  if (amount >= 10000) return (amount / 10000).toFixed(2) + '万'
+  return amount.toFixed(0)
 }

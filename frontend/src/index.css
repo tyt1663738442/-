@@ -8,24 +8,12 @@
   }
   
   body {
-    @apply bg-stock-bg text-white antialiased;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+    @apply bg-[#1a1a2e] text-white antialiased;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', sans-serif;
   }
 }
 
 @layer components {
-  .stock-up {
-    @apply text-stock-up;
-  }
-  
-  .stock-down {
-    @apply text-stock-down;
-  }
-  
-  .glass-card {
-    @apply bg-stock-card border border-stock-border rounded-lg;
-  }
-  
   .number-font {
     font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, monospace;
   }
@@ -33,24 +21,48 @@
 
 /* 滚动条样式 */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #1e293b;
+  background: #1a1a2e;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #475569;
-  border-radius: 3px;
+  background: #4a5568;
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #64748b;
+  background: #718096;
 }
 
 /* 选中文字样式 */
 ::selection {
-  background: rgba(59, 130, 246, 0.3);
+  background: rgba(231, 76, 60, 0.3);
+}
+
+/* 表格样式 */
+table {
+  border-collapse: collapse;
+}
+
+/* 动画 */
+@keyframes pulse-red {
+  0%, 100% { background-color: transparent; }
+  50% { background-color: rgba(239, 68, 68, 0.1); }
+}
+
+@keyframes pulse-green {
+  0%, 100% { background-color: transparent; }
+  50% { background-color: rgba(34, 197, 94, 0.1); }
+}
+
+.animate-pulse-red {
+  animation: pulse-red 1s ease-in-out infinite;
+}
+
+.animate-pulse-green {
+  animation: pulse-green 1s ease-in-out infinite;
 }

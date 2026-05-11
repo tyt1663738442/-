@@ -53,25 +53,22 @@ export function StockDetail({ code, onBack }: StockDetailProps) {
   useEffect(() => {
     setLoading(true)
     fetchDetail()
-    // 每30秒自动刷新
-    const interval = setInterval(fetchDetail, 30000)
-    return () => clearInterval(interval)
   }, [code])
 
   if (loading) {
     return (
-      <div className="glass-card p-8 text-center">
-        <div className="animate-spin w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full mx-auto"></div>
-        <p className="text-gray-400 mt-4">加载中...</p>
+      <div className="bg-[#16213e] rounded-lg p-8 text-center border border-[#2d3748]">
+        <div className="animate-spin w-8 h-8 border-2 border-[#e74c3c] border-t-transparent rounded-full mx-auto"></div>
+        <p className="text-[#718096] mt-4">加载中...</p>
       </div>
     )
   }
 
   if (!stock) {
     return (
-      <div className="glass-card p-8 text-center">
-        <p className="text-gray-400">未找到股票信息</p>
-        <button onClick={onBack} className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg">返回</button>
+      <div className="bg-[#16213e] rounded-lg p-8 text-center border border-[#2d3748]">
+        <p className="text-[#718096]">未找到股票信息</p>
+        <button onClick={onBack} className="mt-4 px-4 py-2 bg-[#e74c3c] text-white rounded-lg">返回</button>
       </div>
     )
   }
@@ -81,22 +78,22 @@ export function StockDetail({ code, onBack }: StockDetailProps) {
 
   return (
     <div className="space-y-4">
-      <button onClick={onBack} className="inline-flex items-center gap-2 text-gray-400 hover:text-white">
+      <button onClick={onBack} className="inline-flex items-center gap-2 text-[#718096] hover:text-white transition-colors">
         <ArrowLeft className="w-4 h-4" />返回列表
       </button>
 
       {/* 基本信息 */}
-      <div className="glass-card p-6">
+      <div className="bg-[#16213e] rounded-lg p-6 border border-[#2d3748]">
         <div className="flex items-start justify-between">
           <div>
-            <h2 className="text-2xl font-bold">{stock.name}</h2>
-            <p className="text-gray-400">{stock.code}</p>
+            <h2 className="text-2xl font-bold text-white">{stock.name}</h2>
+            <p className="text-[#718096]">{stock.code}</p>
           </div>
           <div className="text-right">
-            <div className={`text-4xl font-bold number-font ${isUp ? 'stock-up' : 'stock-down'}`}>
+            <div className={`text-4xl font-bold number-font ${isUp ? 'text-[#ef4444]' : 'text-[#22c55e]'}`}>
               {stock.price.toFixed(2)}
             </div>
-            <div className={`flex items-center justify-end gap-2 mt-1 ${isUp ? 'stock-up' : 'stock-down'}`}>
+            <div className={`flex items-center justify-end gap-2 mt-1 ${isUp ? 'text-[#ef4444]' : 'text-[#22c55e]'}`}>
               {isUp ? <TrendingUp className="w-4 h-4" /> : <TrendingDown className="w-4 h-4" />}
               <span className="number-font">{stock.change_amount >= 0 ? '+' : ''}{stock.change_amount.toFixed(2)}</span>
               <span className="number-font">({stock.change_percent >= 0 ? '+' : ''}{stock.change_percent.toFixed(2)}%)</span>
@@ -105,7 +102,7 @@ export function StockDetail({ code, onBack }: StockDetailProps) {
         </div>
 
         {/* 价格信息 */}
-        <div className="grid grid-cols-2 md:grid-cols-6 gap-4 mt-6 pt-6 border-t border-stock-border">
+        <div className="grid grid-cols-3 md:grid-cols-6 gap-4 mt-6 pt-6 border-t border-[#2d3748]">
           <PriceInfo label="今开" value={stock.open} />
           <PriceInfo label="昨收" value={stock.pre_close} />
           <PriceInfo label="最高" value={stock.high} color="red" />
@@ -116,51 +113,51 @@ export function StockDetail({ code, onBack }: StockDetailProps) {
       </div>
 
       {/* 分时图 */}
-      <div className="glass-card p-6">
+      <div className="bg-[#16213e] rounded-lg p-6 border border-[#2d3748]">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
-            <BarChart3 className="w-5 h-5 text-blue-400" />
-            <h3 className="font-semibold">分时走势</h3>
+            <BarChart3 className="w-5 h-5 text-[#e74c3c]" />
+            <h3 className="font-semibold text-white">分时走势</h3>
             <button 
               onClick={() => { setRefreshing(true); fetchDetail(); }}
               disabled={refreshing}
-              className="ml-2 p-1 hover:bg-white/10 rounded disabled:opacity-50"
+              className="ml-2 p-1 hover:bg-[#2d3748] rounded transition-colors disabled:opacity-50"
             >
               <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
             </button>
           </div>
-          <span className="text-xs text-gray-400">{chartData.length > 0 ? `${chartData.length}条数据` : '暂无数据'}</span>
+          <span className="text-xs text-[#718096]">{chartData.length > 0 ? `${chartData.length}条数据` : '暂无数据'}</span>
         </div>
         
         {chartData.length > 0 ? (
           <div className="h-80">
             <ResponsiveContainer width="100%" height="100%">
               <ComposedChart data={chartData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+                <CartesianGrid strokeDasharray="3 3" stroke="#2d3748" />
                 <XAxis 
                   dataKey="time" 
-                  stroke="#64748b"
-                  tick={{ fill: '#64748b', fontSize: 11 }}
+                  stroke="#718096"
+                  tick={{ fill: '#718096', fontSize: 11 }}
                   interval="preserveStartEnd"
                   minTickGap={50}
                 />
                 <YAxis 
                   domain={['auto', 'auto']}
-                  stroke="#64748b"
-                  tick={{ fill: '#64748b', fontSize: 11 }}
+                  stroke="#718096"
+                  tick={{ fill: '#718096', fontSize: 11 }}
                   tickFormatter={(v) => v.toFixed(2)}
                 />
                 <Tooltip
-                  contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #334155', borderRadius: '8px' }}
-                  labelStyle={{ color: '#94a3b8' }}
+                  contentStyle={{ backgroundColor: '#0f3460', border: '1px solid #2d3748', borderRadius: '8px' }}
+                  labelStyle={{ color: '#a0aec0' }}
                   itemStyle={{ color: '#fff' }}
                   formatter={(value: number) => [value.toFixed(2), '价格']}
                 />
                 <ReferenceLine 
                   y={stock.pre_close} 
-                  stroke="#64748b" 
+                  stroke="#718096" 
                   strokeDasharray="3 3"
-                  label={{ value: '昨收', fill: '#64748b', fontSize: 11 }}
+                  label={{ value: '昨收', fill: '#718096', fontSize: 11 }}
                 />
                 <Area type="monotone" dataKey="price" fill={isUp ? 'rgba(239,68,68,0.1)' : 'rgba(34,197,94,0.1)'} stroke="none" />
                 <Line
@@ -175,28 +172,28 @@ export function StockDetail({ code, onBack }: StockDetailProps) {
             </ResponsiveContainer>
           </div>
         ) : (
-          <div className="h-80 flex items-center justify-center text-gray-400">
+          <div className="h-80 flex items-center justify-center text-[#718096]">
             <Activity className="w-8 h-8 mr-2" />
-            <span>暂无分时数据（交易时间内更新）</span>
+            <span>暂无分时数据</span>
           </div>
         )}
       </div>
 
       {/* 成交量统计 */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="glass-card p-4">
+      <div className="grid grid-cols-2 gap-4">
+        <div className="bg-[#16213e] rounded-lg p-4 border border-[#2d3748]">
           <div className="flex items-center gap-2 mb-3">
-            <Activity className="w-4 h-4 text-blue-400" />
-            <span className="text-sm font-medium">成交量</span>
+            <Activity className="w-4 h-4 text-[#e74c3c]" />
+            <span className="text-sm font-medium text-white">成交量</span>
           </div>
-          <p className="text-2xl font-bold number-font">{formatVolume(stock.volume)}</p>
+          <p className="text-2xl font-bold text-white number-font">{formatVolume(stock.volume)}</p>
         </div>
-        <div className="glass-card p-4">
+        <div className="bg-[#16213e] rounded-lg p-4 border border-[#2d3748]">
           <div className="flex items-center gap-2 mb-3">
-            <BarChart3 className="w-4 h-4 text-blue-400" />
-            <span className="text-sm font-medium">成交额</span>
+            <BarChart3 className="w-4 h-4 text-[#e74c3c]" />
+            <span className="text-sm font-medium text-white">成交额</span>
           </div>
-          <p className="text-2xl font-bold number-font">{formatAmount(stock.amount)}</p>
+          <p className="text-2xl font-bold text-white number-font">{formatAmount(stock.amount)}</p>
         </div>
       </div>
     </div>
@@ -206,8 +203,10 @@ export function StockDetail({ code, onBack }: StockDetailProps) {
 function PriceInfo({ label, value, color }: { label: string; value: number; color?: 'red' | 'green' }) {
   return (
     <div>
-      <p className="text-xs text-gray-400 mb-1">{label}</p>
-      <p className={`text-lg font-semibold number-font ${color === 'red' ? 'stock-up' : color === 'green' ? 'stock-down' : 'text-white'}`}>
+      <p className="text-xs text-[#718096] mb-1">{label}</p>
+      <p className={`text-lg font-semibold number-font ${
+        color === 'red' ? 'text-[#ef4444]' : color === 'green' ? 'text-[#22c55e]' : 'text-white'
+      }`}>
         {value.toFixed(2)}
       </p>
     </div>
