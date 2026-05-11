@@ -24,6 +24,38 @@ function App() {
   const wsUrl = `${wsProtocol}//${window.location.host}/ws/market`
   const { isConnected, marketData } = useWebSocket(wsUrl)
 
+  // 初始加载数据（API轮询作为备用）
+  useEffect(() => {
+    const fetchInitialData = async () => {
+      try {
+        // 并行请求多个接口
+        const [stocksRes, dabanRes, ordersRes] = await Promise.all([
+          fetch('/api/stocks?limit=20'),
+          fetch('/api/daban'),
+          fetch('/api/big-orders?limit=20')
+        ])
+        
+        const [stocksData, dabanData, ordersData] = await Promise.all([
+          stocksRes.json(),
+          dabanRes.json(),
+          ordersRes.json()
+        ])
+        
+        if (stocksData.stocks) setStocks(stocksData.stocks)
+        if (ordersData.orders) setBigOrders(ordersData.orders)
+        if (dabanData.candidates) setDabanCandidates(dabanData.candidates)
+        setLastUpdate(new Date().toLocaleTimeString())
+      } catch (err) {
+        console.error('获取初始数据失败:', err)
+      }
+    }
+    
+    fetchInitialData()
+    // 每10秒刷新一次数据
+    const interval = setInterval(fetchInitialData, 10000)
+    return () => clearInterval(interval)
+  }, [])
+
   // 处理 WebSocket 数据
   useEffect(() => {
     if (marketData) {
