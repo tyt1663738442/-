@@ -1,15 +1,18 @@
 import { useEffect, useState } from 'react'
 import { ArrowLeft, TrendingUp, TrendingDown, Activity, BarChart3, RefreshCw } from 'lucide-react'
-import { Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine, Area, ComposedChart } from 'recharts'
+import { ComposedChart, Line, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine, Legend } from 'recharts'
 
 interface StockDetailProps {
   code: string
   onBack: () => void
 }
 
-interface MinuteData {
-  time: string
-  price: number
+interface KLineData {
+  date: string
+  open: number
+  high: number
+  low: number
+  close: number
   volume: number
 }
 
@@ -27,13 +30,18 @@ interface StockDetailData {
   pre_close: number
   limit_up: number
   limit_down: number
-  minute_data: MinuteData[]
+  minute_data: { time: string; price: number; volume: number }[]
+  daily_data: KLineData[]
+  weekly_data: KLineData[]
 }
+
+type ChartType = 'minute' | 'daily' | 'weekly'
 
 export function StockDetail({ code, onBack }: StockDetailProps) {
   const [stock, setStock] = useState<StockDetailData | null>(null)
   const [loading, setLoading] = useState(true)
   const [refreshing, setRefreshing] = useState(false)
+  const [chartType, setChartType] = useState<ChartType>('daily')
 
   const fetchDetail = async () => {
     try {
@@ -74,7 +82,37 @@ export function StockDetail({ code, onBack }: StockDetailProps) {
   }
 
   const isUp = stock.change_percent >= 0
-  const chartData = stock.minute_data || []
+
+  // 准备K线数据
+  const getChartData = () => {
+    if (chartType === 'minute') {
+      return stock.minute_data.map(d => ({
+        time: d.time,
+        price: d.price,
+        volume: d.volume,
+      }))
+    } else if (chartType === 'daily') {
+      return stock.daily_data.map(d => ({
+        date: d.date.substring(5),  // MM-DD格式
+        open: d.open,
+        high: d.high,
+        low: d.low,
+        close: d.close,
+        volume: d.volume,
+      }))
+    } else {
+      return stock.weekly_data.map(d => ({
+        date: d.date.substring(5),
+        open: d.open,
+        high: d.high,
+        low: d.low,
+        close: d.close,
+        volume: d.volume,
+      }))
+    }
+  }
+
+  const chartData = getChartData()
 
   return (
     <div className="space-y-4">
@@ -112,71 +150,118 @@ export function StockDetail({ code, onBack }: StockDetailProps) {
         </div>
       </div>
 
-      {/* 分时图 */}
-      <div className="bg-[#16213e] rounded-lg p-6 border border-[#2d3748]">
-        <div className="flex items-center justify-between mb-4">
+      {/* 图表区域 */}
+      <div className="bg-[#16213e] rounded-lg border border-[#2d3748]">
+        {/* 图表类型切换 */}
+        <div className="flex items-center justify-between px-4 py-3 border-b border-[#2d3748]">
           <div className="flex items-center gap-2">
             <BarChart3 className="w-5 h-5 text-[#e74c3c]" />
-            <h3 className="font-semibold text-white">分时走势</h3>
-            <button 
+            <span className="font-medium text-white">
+              {chartType === 'minute' ? '分时走势' : chartType === 'daily' ? '日K线' : '周K线'}
+            </span>
+            <span className="text-xs text-[#718096] ml-2">
+              {chartType === 'minute' ? `${stock.minute_data?.length || 0}条数据` : 
+               chartType === 'daily' ? `${stock.daily_data?.length || 0}天` : 
+               `${stock.weekly_data?.length || 0}周`}
+            </span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="flex bg-[#0f3460] rounded-lg p-1">
+              <button
+                onClick={() => setChartType('minute')}
+                className={`px-3 py-1 text-xs rounded-md transition-colors ${chartType === 'minute' ? 'bg-[#e74c3c] text-white' : 'text-[#718096] hover:text-white'}`}
+              >
+                分时
+              </button>
+              <button
+                onClick={() => setChartType('daily')}
+                className={`px-3 py-1 text-xs rounded-md transition-colors ${chartType === 'daily' ? 'bg-[#e74c3c] text-white' : 'text-[#718096] hover:text-white'}`}
+              >
+                日线
+              </button>
+              <button
+                onClick={() => setChartType('weekly')}
+                className={`px-3 py-1 text-xs rounded-md transition-colors ${chartType === 'weekly' ? 'bg-[#e74c3c] text-white' : 'text-[#718096] hover:text-white'}`}
+              >
+                周线
+              </button>
+            </div>
+            <button
               onClick={() => { setRefreshing(true); fetchDetail(); }}
               disabled={refreshing}
-              className="ml-2 p-1 hover:bg-[#2d3748] rounded transition-colors disabled:opacity-50"
+              className="p-1.5 hover:bg-[#2d3748] rounded-md transition-colors disabled:opacity-50"
             >
               <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
             </button>
           </div>
-          <span className="text-xs text-[#718096]">{chartData.length > 0 ? `${chartData.length}条数据` : '暂无数据'}</span>
         </div>
-        
-        {chartData.length > 0 ? (
-          <div className="h-80">
-            <ResponsiveContainer width="100%" height="100%">
-              <ComposedChart data={chartData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#2d3748" />
-                <XAxis 
-                  dataKey="time" 
-                  stroke="#718096"
-                  tick={{ fill: '#718096', fontSize: 11 }}
-                  interval="preserveStartEnd"
-                  minTickGap={50}
-                />
-                <YAxis 
-                  domain={['auto', 'auto']}
-                  stroke="#718096"
-                  tick={{ fill: '#718096', fontSize: 11 }}
-                  tickFormatter={(v) => v.toFixed(2)}
-                />
-                <Tooltip
-                  contentStyle={{ backgroundColor: '#0f3460', border: '1px solid #2d3748', borderRadius: '8px' }}
-                  labelStyle={{ color: '#a0aec0' }}
-                  itemStyle={{ color: '#fff' }}
-                  formatter={(value: number) => [value.toFixed(2), '价格']}
-                />
-                <ReferenceLine 
-                  y={stock.pre_close} 
-                  stroke="#718096" 
-                  strokeDasharray="3 3"
-                  label={{ value: '昨收', fill: '#718096', fontSize: 11 }}
-                />
-                <Area type="monotone" dataKey="price" fill={isUp ? 'rgba(239,68,68,0.1)' : 'rgba(34,197,94,0.1)'} stroke="none" />
-                <Line
-                  type="monotone"
-                  dataKey="price"
-                  stroke={isUp ? '#ef4444' : '#22c55e'}
-                  strokeWidth={2}
-                  dot={false}
-                  activeDot={{ r: 4 }}
-                />
-              </ComposedChart>
-            </ResponsiveContainer>
-          </div>
-        ) : (
-          <div className="h-80 flex items-center justify-center text-[#718096]">
-            <Activity className="w-8 h-8 mr-2" />
-            <span>暂无分时数据</span>
-          </div>
-        )}
+
+        {/* 图表 */}
+        <div className="p-4">
+          {chartData.length > 0 ? (
+            <div className="h-80">
+              <ResponsiveContainer width="100%" height="100%">
+                <ComposedChart data={chartData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#2d3748" />
+                  <XAxis 
+                    dataKey={chartType === 'minute' ? 'time' : 'date'} 
+                    stroke="#718096"
+                    tick={{ fill: '#718096', fontSize: 11 }}
+                    interval="preserveStartEnd"
+                    minTickGap={30}
+                  />
+                  <YAxis 
+                    yAxisId="price"
+                    domain={['auto', 'auto']}
+                    stroke="#718096"
+                    tick={{ fill: '#718096', fontSize: 11 }}
+                    tickFormatter={(v) => v.toFixed(2)}
+                  />
+                  <YAxis 
+                    yAxisId="volume"
+                    orientation="right"
+                    stroke="#718096"
+                    tick={{ fill: '#718096', fontSize: 11 }}
+                  />
+                  <Tooltip
+                    contentStyle={{ backgroundColor: '#0f3460', border: '1px solid #2d3748', borderRadius: '8px' }}
+                    labelStyle={{ color: '#a0aec0' }}
+                    itemStyle={{ color: '#fff' }}
+                    formatter={(value: number, name: string) => {
+                      const names: Record<string, string> = { open: '开盘', high: '最高', low: '最低', close: '收盘', price: '价格', volume: '成交量' }
+                      return [value.toFixed(2), names[name] || name]
+                    }}
+                  />
+                  <Legend wrapperStyle={{ color: '#a0aec0' }} />
+                  <ReferenceLine yAxisId="price" y={stock.pre_close} stroke="#718096" strokeDasharray="3 3" label={{ value: '昨收', fill: '#718096', fontSize: 11 }} />
+                  
+                  {/* K线蜡烛图 */}
+                  {chartType !== 'minute' && (
+                    <Bar yAxisId="price" dataKey="high" fill="transparent" />
+                  )}
+                  
+                  {/* 价格线/柱状 */}
+                  {chartType === 'minute' ? (
+                    <Line yAxisId="price" type="monotone" dataKey="price" stroke={isUp ? '#ef4444' : '#22c55e'} strokeWidth={2} dot={false} />
+                  ) : (
+                    <>
+                      <Bar yAxisId="price" dataKey="close" fill={isUp ? '#ef4444' : '#22c55e'} opacity={0.6} />
+                      <Line yAxisId="price" type="monotone" dataKey="close" stroke={isUp ? '#ef4444' : '#22c55e'} strokeWidth={2} dot={false} />
+                    </>
+                  )}
+                  
+                  {/* 成交量柱状图 */}
+                  <Bar yAxisId="volume" dataKey="volume" fill="#4a5568" opacity={0.5} />
+                </ComposedChart>
+              </ResponsiveContainer>
+            </div>
+          ) : (
+            <div className="h-80 flex items-center justify-center text-[#718096]">
+              <Activity className="w-8 h-8 mr-2" />
+              <span>暂无{chartType === 'minute' ? '分时' : chartType === 'daily' ? '日K线' : '周K线'}数据</span>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* 成交量统计 */}

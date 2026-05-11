@@ -2,7 +2,7 @@
 """
 A股实时交易监控平台 - 后端服务
 - 新浪财经 9:00-15:00 实时数据
-- 修复乱码问题
+- 日线、周线K线数据
 """
 
 import asyncio
@@ -17,7 +17,9 @@ from contextlib import asynccontextmanager
 
 import uvicorn
 import requests
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException
+import akshare as ak
+import pandas as pd
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
@@ -59,6 +61,14 @@ class DaBanStock(BaseModel):
     seal_ratio: float
     score: float
 
+class KLineData(BaseModel):
+    date: str
+    open: float
+    high: float
+    low: float
+    close: float
+    volume: int
+
 class StockDetail(BaseModel):
     code: str
     name: str
@@ -74,6 +84,8 @@ class StockDetail(BaseModel):
     limit_up: float
     limit_down: float
     minute_data: List[dict]
+    daily_data: List[KLineData]
+    weekly_data: List[KLineData]
 
 # ============== 全局状态 ==============
 
@@ -114,7 +126,6 @@ class StockDataSource:
         self.stocks_cache: List[Dict] = []
         self.cache_time: Optional[datetime] = None
         self.cache_ttl = 10
-        self.current_source = "sina"
         
         # 主板股票列表
         self.main_board_stocks = [
@@ -141,16 +152,14 @@ class StockDataSource:
         if weekday >= 5:
             return False
         hour, minute = now.hour, now.minute
-        # 9:00-11:30 上午, 13:00-15:00 下午
         morning = (hour == 9 and minute >= 0) or (hour == 10) or (hour == 11 and minute <= 30)
         afternoon = (hour == 13) or (hour == 14) or (hour == 15 and minute == 0)
         return morning or afternoon
     
     def _is_valid_stock(self, code: str) -> bool:
-        """过滤股票"""
-        if code.startswith('688'): return False  # 科创板
-        if code.startswith('300'): return False  # 创业板
-        if code.startswith('8'): return False    # 北交所
+        if code.startswith('688'): return False
+        if code.startswith('300'): return False
+        if code.startswith('8'): return False
         return True
     
     def _fetch_sina_realtime(self) -> List[Dict]:
@@ -170,7 +179,6 @@ class StockDataSource:
                 }
                 
                 resp = requests.get(url, headers=headers, timeout=10)
-                # 重要：使用 GBK 显式解码
                 text = resp.content.decode('gbk', errors='replace')
                 
                 for line in text.strip().split('\n'):
@@ -180,7 +188,6 @@ class StockDataSource:
                         parts = line.split('=')[1].strip('";\n\r ')
                         if not parts or len(parts) < 10:
                             continue
-                        
                         data = parts.split(',')
                         if len(data) < 10:
                             continue
@@ -192,7 +199,6 @@ class StockDataSource:
                         if not self._is_valid_stock(code):
                             continue
                         
-                        # 安全解析数值
                         try:
                             name = data[0].strip()
                             open_price = float(data[1]) if data[1].strip() else 0
@@ -229,14 +235,12 @@ class StockDataSource:
                     except Exception:
                         continue
             except Exception as e:
-                print(f"新浪API错误: {e}")
                 continue
         
         stocks.sort(key=lambda x: x.get("amount", 0), reverse=True)
         return stocks
     
     def get_all_stocks(self, force_refresh: bool = False) -> List[Dict]:
-        """获取股票数据"""
         if not force_refresh and self.stocks_cache and self.cache_time:
             if (datetime.now() - self.cache_time).seconds < self.cache_ttl:
                 return self.stocks_cache
@@ -244,16 +248,61 @@ class StockDataSource:
         stocks = self._fetch_sina_realtime()
         self.stocks_cache = stocks
         self.cache_time = datetime.now()
-        self.current_source = "sina"
         return stocks
     
+    def _get_daily_kline(self, code: str) -> List[KLineData]:
+        """获取日K线数据"""
+        try:
+            df = ak.stock_zh_a_hist(symbol=code, period="daily", start_date="20240101", end_date="20261231", adjust="qfq")
+            if df is not None and not df.empty:
+                df = df.tail(60)  # 最近60天
+                return [
+                    KLineData(
+                        date=str(row['日期']),
+                        open=float(row['开盘']),
+                        high=float(row['最高']),
+                        low=float(row['最低']),
+                        close=float(row['收盘']),
+                        volume=int(row['成交量'])
+                    )
+                    for _, row in df.iterrows()
+                ]
+        except Exception as e:
+            print(f"获取日K线失败: {e}")
+        return []
+    
+    def _get_weekly_kline(self, code: str) -> List[KLineData]:
+        """获取周K线数据"""
+        try:
+            df = ak.stock_zh_a_hist(symbol=code, period="weekly", start_date="20230101", end_date="20261231", adjust="qfq")
+            if df is not None and not df.empty:
+                df = df.tail(52)  # 最近52周
+                return [
+                    KLineData(
+                        date=str(row['日期']),
+                        open=float(row['开盘']),
+                        high=float(row['最高']),
+                        low=float(row['最低']),
+                        close=float(row['收盘']),
+                        volume=int(row['成交量'])
+                    )
+                    for _, row in df.iterrows()
+                ]
+        except Exception as e:
+            print(f"获取周K线失败: {e}")
+        return []
+    
     def get_stock_detail(self, code: str) -> Optional[StockDetail]:
-        """获取个股详情"""
+        """获取个股详情（含日线、周线K线）"""
         try:
             stocks = self.get_all_stocks()
             stock = next((s for s in stocks if s["code"] == code), None)
             if not stock:
                 return None
+            
+            # 获取K线数据
+            daily_data = self._get_daily_kline(code)
+            weekly_data = self._get_weekly_kline(code)
             
             # 生成模拟分时数据
             minute_data = []
@@ -280,14 +329,15 @@ class StockDataSource:
                 pre_close=stock["pre_close"],
                 limit_up=stock["limit_up"],
                 limit_down=stock["limit_down"],
-                minute_data=minute_data
+                minute_data=minute_data,
+                daily_data=daily_data,
+                weekly_data=weekly_data
             )
         except Exception as e:
             print(f"获取详情失败: {e}")
             return None
     
     def get_big_orders(self, limit: int = 30) -> List[BigOrder]:
-        """获取大单数据"""
         stocks = self.get_all_stocks()
         big_orders = []
         for stock in stocks:
@@ -306,7 +356,6 @@ class StockDataSource:
         return big_orders[:limit]
     
     def calculate_daban_candidates(self) -> List[DaBanStock]:
-        """计算打板候选股"""
         stocks = self.get_all_stocks()
         candidates = []
         for stock in stocks:
@@ -350,7 +399,6 @@ data_source = StockDataSource()
 # ============== 后台任务 ==============
 
 async def market_data_updater():
-    """市场数据更新器"""
     while True:
         try:
             now = datetime.now()
@@ -381,12 +429,12 @@ async def market_data_updater():
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    print("🚀 启动市场数据更新器 (9:00-15:00)...")
+    print("🚀 启动市场数据更新器...")
     asyncio.create_task(market_data_updater())
     yield
     print("👋 关闭服务...")
 
-app = FastAPI(title="A股实时交易监控", version="3.2.0", lifespan=lifespan)
+app = FastAPI(title="A股实时交易监控", version="3.3.0", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
@@ -402,11 +450,7 @@ async def get_stocks(search: str = None, limit: int = 100):
     if search:
         search = search.upper()
         stocks = [s for s in stocks if search in s["code"] or search in s["name"]]
-    return {
-        "stocks": stocks[:limit], 
-        "total": len(stocks), 
-        "is_trading": data_source._is_trading_hours()
-    }
+    return {"stocks": stocks[:limit], "total": len(stocks), "is_trading": data_source._is_trading_hours()}
 
 @app.get("/api/stock/{code}")
 async def get_stock(code: str):
@@ -414,6 +458,15 @@ async def get_stock(code: str):
     if not detail:
         raise HTTPException(status_code=404, detail="股票不存在")
     return detail
+
+@app.get("/api/kline/{code}")
+async def get_kline(code: str, period: str = "daily"):
+    """获取K线数据"""
+    if period == "weekly":
+        data = data_source._get_weekly_kline(code)
+    else:
+        data = data_source._get_daily_kline(code)
+    return {"data": [d.model_dump() for d in data], "count": len(data)}
 
 @app.get("/api/big-orders")
 async def get_big_orders(limit: int = 30):
@@ -457,12 +510,7 @@ async def websocket_endpoint(websocket: WebSocket):
 
 @app.get("/api/health")
 async def health_check():
-    return {
-        "status": "ok", 
-        "timestamp": datetime.now().isoformat(),
-        "is_trading": data_source._is_trading_hours(),
-        "time": datetime.now().strftime("%H:%M:%S")
-    }
+    return {"status": "ok", "timestamp": datetime.now().isoformat(), "is_trading": data_source._is_trading_hours()}
 
 from fastapi.responses import FileResponse
 import os
