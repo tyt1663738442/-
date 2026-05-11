@@ -185,16 +185,20 @@ class StockDataSource:
                     if '=' not in line:
                         continue
                     try:
+                        # 正确解析股票代码
+                        key = line.split('=')[0]  # var hq_str_sh600519
+                        code_with_prefix = key.split('hq_str_')[1]  # sh600519
+                        if code_with_prefix.startswith('sh') or code_with_prefix.startswith('sz'):
+                            code = code_with_prefix[2:]  # 600519
+                        else:
+                            continue
+                        
                         parts = line.split('=')[1].strip('";\n\r ')
                         if not parts or len(parts) < 10:
                             continue
                         data = parts.split(',')
                         if len(data) < 10:
                             continue
-                        
-                        code = line.split('_')[0].split('hq_str_')[1]
-                        if code.startswith('sh') or code.startswith('sz'):
-                            code = code[2:]
                         
                         if not self._is_valid_stock(code):
                             continue
