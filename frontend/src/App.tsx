@@ -19,6 +19,7 @@ function App() {
   const [dabanCandidates, setDabanCandidates] = useState<DaBanStock[]>([])
   const [lastUpdate, setLastUpdate] = useState<string>('')
   const [isRefreshing, setIsRefreshing] = useState(false)
+  const [dataSource, setDataSource] = useState<string>('')
 
   // WebSocket
   const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
@@ -33,6 +34,7 @@ function App() {
       if (data.big_orders) setBigOrders(data.big_orders)
       if (data.daban_candidates) setDabanCandidates(data.daban_candidates)
       if (data.timestamp) setLastUpdate(data.timestamp)
+      if (data.source) setDataSource(data.source)
     }
   }, [marketData])
 
@@ -54,6 +56,7 @@ function App() {
         ])
         
         if (stocksData.stocks) setStocks(stocksData.stocks)
+        if (stocksData.source) setDataSource(stocksData.source)
         if (ordersData.orders) setBigOrders(ordersData.orders)
         if (dabanData.candidates) setDabanCandidates(dabanData.candidates)
         setLastUpdate(new Date().toLocaleTimeString())
@@ -163,8 +166,13 @@ function App() {
 
       {/* 状态栏 */}
       <div className="bg-stock-bg/50 border-b border-stock-border">
-        <div className="max-w-7xl mx-auto px-4 py-2 flex items-center justify-between text-xs text-gray-400">
-          <span>已过滤：ST、科创板、创业板、北交所</span>
+        <div className="max-w-7xl mx-auto px-4 py-2 flex items-center justify-between text-xs">
+          <div className="flex items-center gap-4">
+            <span className="text-gray-400">已过滤：ST、科创板、创业板、北交所</span>
+            <span className={`px-2 py-0.5 rounded text-xs ${dataSource === 'mock' ? 'bg-yellow-500/20 text-yellow-400' : 'bg-green-500/20 text-green-400'}`}>
+              {dataSource === 'mock' ? '⚠️ 模拟数据' : dataSource === 'akshare_eastmoney' ? '📊 东方财富' : dataSource || '加载中...'}
+            </span>
+          </div>
           <WebSocketStatus isConnected={isConnected} lastUpdate={lastUpdate} />
         </div>
       </div>
