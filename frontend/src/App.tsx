@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import { TrendingUp, Search, Activity, Target, Zap, RefreshCw } from 'lucide-react'
+import { TrendingUp, Search, Activity, Target, Zap, RefreshCw, Clock } from 'lucide-react'
 import { StockList } from './components/StockList'
 import { BigOrderPanel } from './components/BigOrderPanel'
 import { DaBanPanel } from './components/DaBanPanel'
@@ -19,13 +19,12 @@ function App() {
   const [dabanCandidates, setDabanCandidates] = useState<DaBanStock[]>([])
   const [lastUpdate, setLastUpdate] = useState<string>('')
   const [isRefreshing, setIsRefreshing] = useState(false)
+  const [isTrading, setIsTrading] = useState(false)
 
-  // WebSocket
   const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
   const wsUrl = `${wsProtocol}//${window.location.host}/ws/market`
   const { isConnected, marketData } = useWebSocket(wsUrl)
 
-  // 处理 WebSocket 数据
   useEffect(() => {
     if (marketData?.type === 'market_update') {
       const data = marketData.data
@@ -33,29 +32,27 @@ function App() {
       if (data.big_orders) setBigOrders(data.big_orders)
       if (data.daban_candidates) setDabanCandidates(data.daban_candidates)
       if (data.timestamp) setLastUpdate(data.timestamp)
+      if (typeof data.is_trading === 'boolean') setIsTrading(data.is_trading)
     }
   }, [marketData])
 
-  // 初始加载 + API轮询备用
   useEffect(() => {
     const fetchData = async () => {
       setIsRefreshing(true)
       try {
-        const [stocksRes, dabanRes, ordersRes] = await Promise.all([
+        const [stocksRes, ordersRes] = await Promise.all([
           fetch('/api/stocks?limit=50'),
-          fetch('/api/daban'),
           fetch('/api/big-orders?limit=30')
         ])
         
-        const [stocksData, dabanData, ordersData] = await Promise.all([
+        const [stocksData, ordersData] = await Promise.all([
           stocksRes.json(),
-          dabanRes.json(),
           ordersRes.json()
         ])
         
         if (stocksData.stocks) setStocks(stocksData.stocks)
+        if (stocksData.is_trading !== undefined) setIsTrading(stocksData.is_trading)
         if (ordersData.orders) setBigOrders(ordersData.orders)
-        if (dabanData.candidates) setDabanCandidates(dabanData.candidates)
         setLastUpdate(new Date().toLocaleTimeString())
       } catch (err) {
         console.error('获取数据失败:', err)
@@ -65,12 +62,10 @@ function App() {
     }
     
     fetchData()
-    // 每30秒刷新一次
     const interval = setInterval(fetchData, 30000)
     return () => clearInterval(interval)
   }, [])
 
-  // 搜索
   const handleSearch = useCallback(async () => {
     if (!searchCode.trim()) return
     try {
@@ -88,13 +83,13 @@ function App() {
     if (e.key === 'Enter') handleSearch()
   }, [handleSearch])
 
-  // 手动刷新
   const handleRefresh = useCallback(() => {
     setIsRefreshing(true)
     fetch('/api/stocks?limit=50')
       .then(r => r.json())
       .then(d => {
         if (d.stocks) setStocks(d.stocks)
+        if (d.is_trading !== undefined) setIsTrading(d.is_trading)
         setLastUpdate(new Date().toLocaleTimeString())
       })
       .finally(() => setIsRefreshing(false))
@@ -102,7 +97,6 @@ function App() {
 
   return (
     <div className="min-h-screen bg-stock-bg">
-      {/* 头部 */}
       <header className="border-b border-stock-border bg-stock-card sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
@@ -112,11 +106,11 @@ function App() {
               </div>
               <div>
                 <h1 className="text-xl font-bold text-white">A股监控</h1>
-                <p className="text-xs text-green-400">📡 新浪财经实时数据</p>
+                <p className="text-xs text-green-400">
+                  {isTrading ? '🟢 实时行情' : '🟡 收盘数据'}
+                </p>
               </div>
             </div>
-
-            {/* 搜索 */}
             <div className="flex-1 max-w-md mx-8">
               <div className="relative">
                 <input
@@ -125,7 +119,7 @@ function App() {
                   value={searchCode}
                   onChange={(e) => setSearchCode(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  className="w-full bg-stock-bg border border-stock-border rounded-lg pl-10 pr-10 py-2 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-blue-500"
+                  className="w-full bg-stock-bg border border-stock-border rounded-lg pl-10 pr-24 py-2 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-blue-500"
                 />
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
                 <button
@@ -136,8 +130,6 @@ function App() {
                 </button>
               </div>
             </div>
-
-            {/* 刷新按钮 */}
             <button
               onClick={handleRefresh}
               disabled={isRefreshing}
@@ -150,7 +142,6 @@ function App() {
         </div>
       </header>
 
-      {/* 标签页 */}
       <div className="border-b border-stock-border">
         <div className="max-w-7xl mx-auto px-4">
           <nav className="flex gap-1">
@@ -161,20 +152,22 @@ function App() {
         </div>
       </div>
 
-      {/* 状态栏 */}
       <div className="bg-stock-bg/50 border-b border-stock-border">
         <div className="max-w-7xl mx-auto px-4 py-2 flex items-center justify-between text-xs">
           <div className="flex items-center gap-4">
             <span className="text-gray-400">已过滤：ST、科创板、创业板、北交所</span>
-            <span className="px-2 py-0.5 rounded text-xs bg-green-500/20 text-green-400">
-              📡 新浪财经 7x24
+            <span className="px-2 py-0.5 rounded text-xs bg-blue-500/20 text-blue-400 flex items-center gap-1">
+              <Clock className="w-3 h-3" />
+              交易时间: 9:30-11:30 / 13:00-15:00
+            </span>
+            <span className={`px-2 py-0.5 rounded text-xs ${isTrading ? 'bg-green-500/20 text-green-400' : 'bg-yellow-500/20 text-yellow-400'}`}>
+              {isTrading ? '🟢 实时' : '🟡 收盘'}
             </span>
           </div>
           <WebSocketStatus isConnected={isConnected} lastUpdate={lastUpdate} />
         </div>
       </div>
 
-      {/* 主内容 */}
       <main className="max-w-7xl mx-auto px-4 py-6">
         {selectedStock ? (
           <StockDetail code={selectedStock} onBack={() => setSelectedStock(null)} />

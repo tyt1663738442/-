@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """
-A股实时交易监控平台 - 后端服务 (7x24真实数据版)
-- 新浪/腾讯财经 实时API
-- 剔除 ST、科创版、创业板、北交所
+A股实时交易监控平台 - 后端服务 (修复版)
+- 新浪财经 7x24 实时数据
+- 修复编码问题
+- 交易时间判断
 """
 
 import asyncio
@@ -89,7 +90,6 @@ class MarketDataStore:
         self.daban_candidates: List[DaBanStock] = []
         self.last_update: Optional[datetime] = None
         self.subscribers: Set[WebSocket] = set()
-        self.is_trading_hours = False
         
     async def subscribe(self, websocket: WebSocket):
         await websocket.accept()
@@ -112,7 +112,7 @@ data_store = MarketDataStore()
 # ============== 实时数据源 (7x24) ==============
 
 class StockDataSource:
-    """新浪/腾讯财经 7x24小时 实时数据"""
+    """新浪财经 7x24小时 实时数据"""
     
     BIG_ORDER_THRESHOLD = 5000000
     
@@ -122,7 +122,7 @@ class StockDataSource:
         self.cache_ttl = 10
         self.current_source = "sina"
         
-        # 主板股票列表（沪深主板，不含科创、创业、北交）
+        # 主板股票列表
         self.main_board_stocks = [
             # 沪市主板 (600/601/603)
             "600519", "600036", "601318", "600900", "600016", "600028", "601857", 
@@ -140,23 +140,39 @@ class StockDataSource:
             "000858", "000876", "000895", "000938", "000001", "000002", "000063",
             "000100", "000333", "000338", "000425", "000568", "000651", "000661",
             "000708", "000725", "000768", "000858", "000876", "000895", "000938",
-            "000001", "000002", "000063", "000066", "000100", "000333", "000338",
-            # 中小板 (002) - 也保留
+            # 中小板 (002)
             "002001", "002027", "002044", "002049", "002050", "002142", "002230",
             "002236", "002241", "002252", "002304", "002311", "002352", "002371",
             "002415", "002460", "002475", "002493", "002594", "002601", "002602",
-            "002714", "002736", "002739", "002841", "002920", "002230",
+            "002714", "002736", "002739", "002841", "002920",
         ]
-        # 去重
         self.main_board_stocks = list(set(self.main_board_stocks))
     
+    def _is_trading_hours(self) -> bool:
+        """判断是否在交易时间"""
+        now = datetime.now()
+        weekday = now.weekday()  # 0=周一, 6=周日
+        
+        # 周末休市
+        if weekday >= 5:
+            return False
+        
+        hour, minute = now.hour, now.minute
+        
+        # 上午: 9:30-11:30
+        morning = (hour == 9 and minute >= 30) or (hour == 10) or (hour == 11 and minute <= 30)
+        # 下午: 13:00-15:00
+        afternoon = (hour == 13) or (hour == 14) or (hour == 15 and minute == 0)
+        
+        return morning or afternoon
+    
     def _is_valid_stock(self, code: str) -> bool:
-        """过滤股票：剔除 科创板(688)、创业板(300)、北交所(8)"""
-        if code.startswith('688'):  # 科创板
+        """过滤股票"""
+        if code.startswith('688'):
             return False
-        if code.startswith('300'):  # 创业板
+        if code.startswith('300'):
             return False
-        if code.startswith('8'):  # 北交所
+        if code.startswith('8'):
             return False
         return True
     
@@ -164,13 +180,11 @@ class StockDataSource:
         """新浪财经实时数据 (7x24)"""
         stocks = []
         
-        # 分批请求，每批最多50个
         batch_size = 50
         batches = [self.main_board_stocks[i:i+batch_size] for i in range(0, len(self.main_board_stocks), batch_size)]
         
         for batch in batches:
             try:
-                # 构造新浪股票代码 (sh=上海, sz=深圳)
                 codes = []
                 for code in batch:
                     if code.startswith('6'):
@@ -183,22 +197,25 @@ class StockDataSource:
                 
                 headers = {
                     'Referer': 'https://finance.sina.com.cn',
-                    'User-Agent': 'Mozilla/5.0'
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
                 }
                 
                 resp = requests.get(url, headers=headers, timeout=10)
-                resp.encoding = 'gbk'
                 
-                lines = resp.text.strip().split('\n')
+                # 确保正确解码
+                resp.encoding = 'gbk'
+                text = resp.text
+                
+                lines = text.strip().split('\n')
                 
                 for line in lines:
                     if '=' not in line:
                         continue
                     
                     try:
-                        # 解析: var hq_str_sh600519="贵州茅台,1688.00,...
+                        # 解析数据
                         content = line.split('=')[1].strip('";\n\r ')
-                        if not content:
+                        if not content or len(content) < 10:
                             continue
                         
                         parts = content.split(',')
@@ -206,37 +223,28 @@ class StockDataSource:
                             continue
                         
                         code = line.split('_')[0].split('hq_str_')[1]
-                        # 去掉 sh/sz 前缀
                         if code.startswith('sh') or code.startswith('sz'):
                             code = code[2:]
                         
-                        # 过滤
                         if not self._is_valid_stock(code):
                             continue
                         
-                        name = parts[0]
-                        open = float(parts[1]) if parts[1] else 0
-                        pre_close = float(parts[2]) if parts[2] else 0
-                        price = float(parts[3]) if parts[3] else 0
-                        high = float(parts[4]) if parts[4] else 0
-                        low = float(parts[5]) if parts[5] else 0
-                        volume = int(float(parts[8])) if parts[8] else 0  # 成交量(股)
-                        amount = float(parts[9]) if parts[9] else 0  # 成交额(元)
+                        name = parts[0].strip()
+                        open_price = float(parts[1]) if parts[1].strip() else 0
+                        pre_close = float(parts[2]) if parts[2].strip() else 0
+                        price = float(parts[3]) if parts[3].strip() else 0
+                        high = float(parts[4]) if parts[4].strip() else 0
+                        low = float(parts[5]) if parts[5].strip() else 0
+                        volume = int(float(parts[8])) if parts[8].strip() else 0
+                        amount = float(parts[9]) if parts[9].strip() else 0
                         
-                        # 过滤停牌股票
                         if price <= 0:
                             continue
                         
-                        # 计算涨跌
                         change_percent = ((price - pre_close) / pre_close * 100) if pre_close > 0 else 0
                         
-                        # 计算涨跌停价
-                        if code.startswith('688') or code.startswith('300') or code.startswith('8'):
-                            limit_up = round(pre_close * 1.2, 2)
-                            limit_down = round(pre_close * 0.8, 2)
-                        else:
-                            limit_up = round(pre_close * 1.1, 2)
-                            limit_down = round(pre_close * 0.9, 2)
+                        limit_up = round(pre_close * 1.1, 2) if not (code.startswith('688') or code.startswith('300') or code.startswith('8')) else round(pre_close * 1.2, 2)
+                        limit_down = round(pre_close * 0.9, 2) if not (code.startswith('688') or code.startswith('300') or code.startswith('8')) else round(pre_close * 0.8, 2)
                         
                         stocks.append({
                             "code": code,
@@ -247,7 +255,7 @@ class StockDataSource:
                             "amount": amount,
                             "high": high,
                             "low": low,
-                            "open": open,
+                            "open": open_price,
                             "pre_close": pre_close,
                             "limit_up": limit_up,
                             "limit_down": limit_down,
@@ -260,26 +268,23 @@ class StockDataSource:
                 print(f"新浪API请求失败: {e}")
                 continue
         
-        # 按成交额排序
         stocks.sort(key=lambda x: x.get("amount", 0), reverse=True)
         return stocks
     
     def get_all_stocks(self, force_refresh: bool = False) -> List[Dict]:
         """获取股票数据"""
-        # 使用缓存
         if not force_refresh and self.stocks_cache and self.cache_time:
             if (datetime.now() - self.cache_time).seconds < self.cache_ttl:
                 return self.stocks_cache
         
         stocks = self._fetch_sina_realtime()
         
-        # 如果新浪失败，尝试腾讯
         if not stocks or len(stocks) < 5:
             stocks = self._fetch_tencent_realtime()
         
         self.stocks_cache = stocks
         self.cache_time = datetime.now()
-        self.current_source = "sina" if stocks else "failed"
+        self.current_source = "sina"
         
         return stocks
     
@@ -302,7 +307,7 @@ class StockDataSource:
                 codes_str = ','.join(codes)
                 url = f'https://qt.gtimg.cn/q={codes_str}'
                 
-                headers = {'User-Agent': 'Mozilla/5.0'}
+                headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'}
                 resp = requests.get(url, timeout=10, headers=headers)
                 resp.encoding = 'utf-8'
                 
@@ -317,31 +322,27 @@ class StockDataSource:
                         if len(parts) < 40:
                             continue
                         
-                        code = parts[2]
-                        name = parts[1]
+                        code = parts[2].strip()
+                        name = parts[1].strip()
                         
                         if not self._is_valid_stock(code):
                             continue
                         
-                        price = float(parts[3]) if parts[3] else 0
-                        pre_close = float(parts[4]) if parts[4] else 0
-                        open = float(parts[5]) if parts[5] else 0
-                        volume = int(float(parts[6])) if parts[6] else 0
-                        high = float(parts[33]) if parts[33] else 0
-                        low = float(parts[34]) if parts[34] else 0
-                        amount = float(parts[37]) if parts[37] else 0
+                        price = float(parts[3]) if parts[3].strip() else 0
+                        pre_close = float(parts[4]) if parts[4].strip() else 0
+                        open_price = float(parts[5]) if parts[5].strip() else 0
+                        volume = int(float(parts[6])) if parts[6].strip() else 0
+                        high = float(parts[33]) if parts[33].strip() else 0
+                        low = float(parts[34]) if parts[34].strip() else 0
+                        amount = float(parts[37]) if parts[37].strip() else 0
                         
                         if price <= 0:
                             continue
                         
                         change_percent = ((price - pre_close) / pre_close * 100) if pre_close > 0 else 0
                         
-                        if code.startswith('688') or code.startswith('300') or code.startswith('8'):
-                            limit_up = round(pre_close * 1.2, 2)
-                            limit_down = round(pre_close * 0.8, 2)
-                        else:
-                            limit_up = round(pre_close * 1.1, 2)
-                            limit_down = round(pre_close * 0.9, 2)
+                        limit_up = round(pre_close * 1.1, 2)
+                        limit_down = round(pre_close * 0.9, 2)
                         
                         stocks.append({
                             "code": code,
@@ -352,7 +353,7 @@ class StockDataSource:
                             "amount": amount,
                             "high": high,
                             "low": low,
-                            "open": open,
+                            "open": open_price,
                             "pre_close": pre_close,
                             "limit_up": limit_up,
                             "limit_down": limit_down,
@@ -381,7 +382,6 @@ class StockDataSource:
             if not stock:
                 return None
             
-            # 获取分时数据 (使用akshare，失败则生成模拟)
             minute_data = []
             try:
                 import akshare as ak
@@ -394,7 +394,6 @@ class StockDataSource:
                             "volume": int(row.get("成交量", 0))
                         })
             except Exception:
-                # 生成模拟分时
                 base_price = stock["price"]
                 pre_close = stock["pre_close"]
                 for i in range(60):
@@ -466,7 +465,6 @@ class StockDataSource:
                 limit_up = round(pre_close * 1.1, 2)
                 distance_to_limit = (limit_up - price) / pre_close * 100
                 
-                # 筛选条件
                 if distance_to_limit > 5 or change < 5 or volume < 1000:
                     continue
                 
@@ -507,7 +505,6 @@ async def market_data_updater():
         try:
             now = datetime.now()
             
-            # 强制刷新获取最新数据
             stocks_data = data_source.get_all_stocks(force_refresh=True)
             data_store.stocks = {s["code"]: StockInfo(**s) for s in stocks_data}
             
@@ -515,13 +512,12 @@ async def market_data_updater():
             data_store.daban_candidates = data_source.calculate_daban_candidates()
             data_store.last_update = now
             
-            # 广播
             if data_store.subscribers:
                 await data_store.broadcast({
                     "type": "market_update",
                     "data": {
                         "timestamp": now.strftime("%H:%M:%S"),
-                        "source": data_source.current_source,
+                        "is_trading": data_source._is_trading_hours(),
                         "stocks": [s.model_dump() for s in data_store.stocks.values()][:50],
                         "big_orders": [o.model_dump() for o in data_store.big_orders[:10]],
                         "daban_candidates": [d.model_dump() for d in data_store.daban_candidates[:10]]
@@ -538,12 +534,12 @@ async def market_data_updater():
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    print("🚀 启动市场数据更新器 (7x24模式)...")
+    print("🚀 启动市场数据更新器...")
     asyncio.create_task(market_data_updater())
     yield
     print("👋 关闭服务...")
 
-app = FastAPI(title="A股实时交易监控平台", version="3.0.0", lifespan=lifespan)
+app = FastAPI(title="A股实时交易监控平台", version="3.1.0", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
@@ -559,7 +555,11 @@ async def get_stocks(search: str = None, limit: int = 50):
     if search:
         search = search.upper()
         stocks = [s for s in stocks if search in s["code"] or search in s["name"]]
-    return {"stocks": stocks[:limit], "total": len(stocks), "source": data_source.current_source}
+    return {
+        "stocks": stocks[:limit], 
+        "total": len(stocks), 
+        "is_trading": data_source._is_trading_hours()
+    }
 
 @app.get("/api/stock/{code}")
 async def get_stock(code: str):
@@ -582,7 +582,7 @@ async def get_daban_candidates():
 async def get_market_status():
     return {
         "last_update": data_store.last_update.strftime("%H:%M:%S") if data_store.last_update else None,
-        "source": data_source.current_source,
+        "is_trading": data_source._is_trading_hours(),
         "stocks_count": len(data_store.stocks)
     }
 
@@ -590,7 +590,10 @@ async def get_market_status():
 async def websocket_endpoint(websocket: WebSocket):
     await data_store.subscribe(websocket)
     try:
-        await websocket.send_json({"type": "connected", "source": data_source.current_source})
+        await websocket.send_json({
+            "type": "connected", 
+            "is_trading": data_source._is_trading_hours()
+        })
         while True:
             try:
                 data = await websocket.receive_text()
@@ -607,11 +610,13 @@ async def websocket_endpoint(websocket: WebSocket):
     finally:
         await data_store.unsubscribe(websocket)
 
-# ============== 静态文件 ==============
-
 @app.get("/api/health")
 async def health_check():
-    return {"status": "ok", "timestamp": datetime.now().isoformat(), "source": data_source.current_source}
+    return {
+        "status": "ok", 
+        "timestamp": datetime.now().isoformat(),
+        "is_trading": data_source._is_trading_hours()
+    }
 
 from fastapi.responses import FileResponse
 import os
@@ -630,8 +635,6 @@ async def catch_all(path: str):
     if os.path.exists(file_path):
         return FileResponse(file_path)
     return FileResponse(os.path.join(frontend_dist, "index.html"))
-
-# ============== 启动 ==============
 
 if __name__ == "__main__":
     threading.Thread(target=lambda: webbrowser.open("http://localhost:8080"), daemon=True).start()
