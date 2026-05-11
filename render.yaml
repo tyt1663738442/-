@@ -1,0 +1,17 @@
+# Render 部署配置
+# 访问 https://render.com 注册账号后，点击 "New +" -> "Blueprint"
+# 选择你的 GitHub 仓库，Render 会自动读取此配置
+
+services:
+  - type: web
+    name: a-stock-monitor
+    runtime: docker
+    plan: free
+    branch: main
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: PORT
+        value: 8080
+    healthCheckPath: /api/health
