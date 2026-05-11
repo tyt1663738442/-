@@ -19,7 +19,10 @@ function App() {
   const [dabanCandidates, setDabanCandidates] = useState<DaBanStock[]>([])
   const [lastUpdate, setLastUpdate] = useState<string>('')
 
-  const { isConnected, marketData } = useWebSocket('ws://localhost:8080/ws/market')
+  // 使用相对 WebSocket 地址，兼容本地和生产环境
+  const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
+  const wsUrl = `${wsProtocol}//${window.location.host}/ws/market`
+  const { isConnected, marketData } = useWebSocket(wsUrl)
 
   // 处理 WebSocket 数据
   useEffect(() => {
