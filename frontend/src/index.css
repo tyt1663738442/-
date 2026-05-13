@@ -2,27 +2,69 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ========== 同花顺配色方案 ========== */
+/* 核心原则：绿涨红跌（同花顺标准）*/
+:root {
+  --ths-up: #f23645;       /* 上涨/涨停 - 红色 */
+  --ths-down: #15b755;     /* 下跌/跌停 - 绿色 */
+  --ths-flat: #8a8d93;     /* 平盘 - 灰色 */
+  --ths-bg-dark: #1a1a2e;  /* 深色背景 */
+  --ths-bg-card: #16213e;  /* 卡片背景 */
+  --ths-border: #2d3748;   /* 边框 */
+}
+
 @layer base {
   html {
     scroll-behavior: smooth;
   }
-  
+
   body {
     @apply bg-[#1a1a2e] text-white antialiased;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', sans-serif;
   }
 }
 
 @layer components {
+  /* 数字字体（等宽） */
   .number-font {
-    font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, monospace;
+    font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+  }
+
+  /* 涨停样式 */
+  .limit-up {
+    @apply text-[#f23645] font-bold;
+  }
+
+  /* 跌停样式 */
+  .limit-down {
+    @apply text-[#15b755] font-bold;
+  }
+
+  /* 封板标记 */
+  .seal-badge {
+    @apply inline-flex items-center justify-center w-5 h-5 rounded text-xs font-bold bg-[#f23645] text-white;
+  }
+
+  /* 同花顺风格卡片 */
+  .ths-card {
+    @apply bg-[#16213e] rounded-lg overflow-hidden border border-[#2d3748];
+  }
+
+  /* 同花顺风格表头 */
+  .ths-table-header {
+    @apply bg-[#0d1b3e] text-xs text-[#8a8d93] font-medium;
+  }
+
+  /* 同花顺风格数据行 */
+  .ths-table-row {
+    @apply divide-y divide-[#1e2d4a] hover:bg-[#1e2d4a]/50 cursor-pointer transition-colors;
   }
 }
 
-/* 滚动条样式 */
+/* ========== 滚动条样式 ========== */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
@@ -31,38 +73,140 @@
 
 ::-webkit-scrollbar-thumb {
   background: #4a5568;
-  border-radius: 4px;
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background: #718096;
 }
 
-/* 选中文字样式 */
+/* ========== 选中文字样式 ========== */
 ::selection {
-  background: rgba(231, 76, 60, 0.3);
+  background: rgba(242, 54, 69, 0.3);
 }
 
-/* 表格样式 */
+/* ========== 表格样式 ========== */
 table {
   border-collapse: collapse;
 }
 
-/* 动画 */
-@keyframes pulse-red {
-  0%, 100% { background-color: transparent; }
-  50% { background-color: rgba(239, 68, 68, 0.1); }
+/* ========== 动画 ========== */
+
+/* 涨停闪烁 */
+@keyframes pulse-limit-up {
+  0%, 100% { background-color: rgba(242, 54, 69, 0.1); }
+  50% { background-color: rgba(242, 54, 69, 0.2); }
 }
 
-@keyframes pulse-green {
-  0%, 100% { background-color: transparent; }
-  50% { background-color: rgba(34, 197, 94, 0.1); }
+/* 跌停闪烁 */
+@keyframes pulse-limit-down {
+  0%, 100% { background-color: rgba(21, 183, 85, 0.1); }
+  50% { background-color: rgba(21, 183, 85, 0.2); }
 }
 
-.animate-pulse-red {
-  animation: pulse-red 1s ease-in-out infinite;
+/* 封板脉冲 */
+@keyframes pulse-seal {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(242, 54, 69, 0.4); }
+  50% { box-shadow: 0 0 0 4px rgba(242, 54, 69, 0.2); }
 }
 
-.animate-pulse-green {
-  animation: pulse-green 1s ease-in-out infinite;
+.animate-pulse-limit-up {
+  animation: pulse-limit-up 1.5s ease-in-out infinite;
+}
+
+.animate-pulse-limit-down {
+  animation: pulse-limit-down 1.5s ease-in-out infinite;
+}
+
+.animate-pulse-seal {
+  animation: pulse-seal 2s ease-in-out infinite;
+}
+
+/* 数据刷新闪烁 */
+@keyframes flash-update {
+  0% { background-color: rgba(255, 255, 255, 0.1); }
+  100% { background-color: transparent; }
+}
+
+.animate-flash {
+  animation: flash-update 0.3s ease-out;
+}
+
+/* ========== 同花顺风格分时图 ========== */
+.minute-chart {
+  background: linear-gradient(180deg, #0d1b3e 0%, #16213e 100%);
+}
+
+.minute-line {
+  stroke: #f23645;
+  stroke-width: 1.5;
+  fill: none;
+}
+
+.minute-avg-line {
+  stroke: #f59e0b;
+  stroke-width: 1;
+  stroke-dasharray: 4 2;
+  fill: none;
+}
+
+.minute-fill-up {
+  fill: url(#gradient-up);
+}
+
+.minute-fill-down {
+  fill: url(#gradient-down);
+}
+
+/* ========== 同花顺风格K线 ========== */
+.kline-candle-up {
+  fill: #f23645;
+  stroke: #f23645;
+}
+
+.kline-candle-down {
+  fill: #15b755;
+  stroke: #15b755;
+}
+
+.kline-ma5 {
+  stroke: #f59e0b;
+  stroke-width: 1;
+  fill: none;
+}
+
+.kline-ma10 {
+  stroke: #3b82f6;
+  stroke-width: 1;
+  fill: none;
+}
+
+.kline-ma20 {
+  stroke: #a855f7;
+  stroke-width: 1;
+  fill: none;
+}
+
+/* ========== 响应式调整 ========== */
+@media (max-width: 768px) {
+  .ths-card {
+    @apply rounded;
+  }
+
+  body {
+    font-size: 14px;
+  }
+}
+
+/* ========== 打印样式 ========== */
+@media print {
+  body {
+    background: white;
+    color: black;
+  }
+
+  .ths-card {
+    background: white;
+    border: 1px solid #ddd;
+  }
 }

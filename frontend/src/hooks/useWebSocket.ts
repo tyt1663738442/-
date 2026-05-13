@@ -1,64 +1,76 @@
-import { useEffect, useRef, useState, useCallback } from 'react'
-import type { WebSocketMessage } from '../types'
+import { useEffect, useRef, useCallback, useState } from 'react'
 
 export function useWebSocket(url: string) {
+  const wsRef = useRef<WebSocket | null>(null)
   const [isConnected, setIsConnected] = useState(false)
-  const [marketData, setMarketData] = useState<WebSocketMessage | null>(null)
-  const ws = useRef<WebSocket | null>(null)
-  const reconnectTimeout = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const [lastMessage, setLastMessage] = useState<any>(null)
+  const reconnectTimeoutRef = useRef<ReturnType<typeof setTimeout>>()
 
   const connect = useCallback(() => {
-    try {
-      ws.current = new WebSocket(url)
+    if (wsRef.current?.readyState === WebSocket.OPEN) return
 
-      ws.current.onopen = () => {
-        console.log('WebSocket 已连接')
+    try {
+      const ws = new WebSocket(url)
+
+      ws.onopen = () => {
         setIsConnected(true)
+        console.log('[WS] 已连接')
       }
 
-      ws.current.onmessage = (event) => {
+      ws.onmessage = (event) => {
         try {
           const data = JSON.parse(event.data)
-          setMarketData(data)
-        } catch (err) {
-          console.error('解析消息失败:', err)
+          setLastMessage(data)
+        } catch (e) {
+          // 非 JSON 消息
+          setLastMessage({ type: 'raw', data: event.data })
         }
       }
 
-      ws.current.onclose = () => {
-        console.log('WebSocket 已断开')
+      ws.onclose = () => {
         setIsConnected(false)
-        // 自动重连
-        reconnectTimeout.current = setTimeout(connect, 3000)
+        console.log('[WS] 连接断开，尝试重连...')
+        // 5秒后重连
+        reconnectTimeoutRef.current = setTimeout(connect, 5000)
       }
 
-      ws.current.onerror = (error) => {
-        console.error('WebSocket 错误:', error)
+      ws.onerror = (e) => {
+        console.error('[WS] 错误:', e)
       }
-    } catch (err) {
-      console.error('连接失败:', err)
-      reconnectTimeout.current = setTimeout(connect, 3000)
+
+      wsRef.current = ws
+    } catch (e) {
+      console.error('[WS] 创建失败:', e)
     }
   }, [url])
 
-  useEffect(() => {
-    connect()
-
-    return () => {
-      if (reconnectTimeout.current) {
-        clearTimeout(reconnectTimeout.current)
-      }
-      if (ws.current) {
-        ws.current.close()
-      }
+  const disconnect = useCallback(() => {
+    if (reconnectTimeoutRef.current) {
+      clearTimeout(reconnectTimeoutRef.current)
     }
-  }, [connect])
+    if (wsRef.current) {
+      wsRef.current.close()
+      wsRef.current = null
+    }
+    setIsConnected(false)
+  }, [])
 
-  const sendMessage = useCallback((message: object) => {
-    if (ws.current?.readyState === WebSocket.OPEN) {
-      ws.current.send(JSON.stringify(message))
+  const send = useCallback((data: any) => {
+    if (wsRef.current?.readyState === WebSocket.OPEN) {
+      wsRef.current.send(JSON.stringify(data))
     }
   }, [])
 
-  return { isConnected, marketData, sendMessage }
+  useEffect(() => {
+    connect()
+    return () => disconnect()
+  }, [connect, disconnect])
+
+  return {
+    isConnected,
+    lastMessage,
+    send,
+    connect,
+    disconnect,
+  }
 }
