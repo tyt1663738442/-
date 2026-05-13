@@ -8,11 +8,12 @@ import {
 interface StockDetailProps {
   code: string
   onBack: () => void
+  hideBackButton?: boolean
 }
 
 type ChartType = 'minute' | 'daily' | 'weekly'
 
-export function StockDetail({ code, onBack }: StockDetailProps) {
+export function StockDetail({ code, onBack, hideBackButton = false }: StockDetailProps) {
   const [stock, setStock] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [refreshing, setRefreshing] = useState(false)
@@ -105,9 +106,11 @@ export function StockDetail({ code, onBack }: StockDetailProps) {
       <div className="bg-[#0d1b3e] border-b border-[#2d3748]">
         <div className="px-4 py-3">
           <div className="flex items-center gap-3">
-            <button onClick={onBack} className="p-1.5 rounded hover:bg-[#2d3748]">
-              <ArrowLeft className="w-5 h-5 text-white" />
-            </button>
+            {!hideBackButton && (
+              <button onClick={onBack} className="p-1.5 rounded hover:bg-[#2d3748]">
+                <ArrowLeft className="w-5 h-5 text-white" />
+              </button>
+            )}
             <div className="flex-1">
               <div className="flex items-center gap-2">
                 <span className={`text-xl font-bold ${isLimitUp ? 'text-[#f23645]' : ''}`}>
@@ -117,12 +120,14 @@ export function StockDetail({ code, onBack }: StockDetailProps) {
                 {isLimitUp && <Lock className="w-4 h-4 text-[#f23645]" />}
               </div>
             </div>
-            <button
-              onClick={() => { setRefreshing(true); fetchDetail() }}
-              className="p-1.5 rounded hover:bg-[#2d3748]"
-            >
-              <RefreshCw className={`w-4 h-4 text-[#8a8d93] ${refreshing ? 'animate-spin' : ''}`} />
-            </button>
+            {!hideBackButton && (
+              <button
+                onClick={() => { setRefreshing(true); fetchDetail() }}
+                className="p-1.5 rounded hover:bg-[#2d3748]"
+              >
+                <RefreshCw className={`w-4 h-4 text-[#8a8d93] ${refreshing ? 'animate-spin' : ''}`} />
+              </button>
+            )}
           </div>
 
           {/* 价格信息 */}
@@ -210,20 +215,56 @@ export function StockDetail({ code, onBack }: StockDetailProps) {
               暂无图表数据
             </div>
           ) : chartType === 'minute' ? (
-            <ResponsiveContainer width="100%" height={300}>
-              <ComposedChart data={chartData}>
-                <CartesianGrid stroke="#2d3748" strokeDasharray="3 3" />
-                <XAxis dataKey="time" stroke="#8a8d93" fontSize={10} interval="preserveStartEnd" />
-                <YAxis stroke="#8a8d93" fontSize={10} domain={['dataMin', 'dataMax']} />
-                <Tooltip
-                  contentStyle={{ backgroundColor: '#16213e', border: '1px solid #2d3748', color: '#fff' }}
-                  labelStyle={{ color: '#8a8d93' }}
-                />
-                <ReferenceLine y={stock.pre_close} stroke="#8a8d93" strokeDasharray="4 4" />
-                <Area type="monotone" dataKey="price" stroke={color} fill={color} fillOpacity={0.1} />
-                <Line type="monotone" dataKey="avg" stroke="#f59e0b" strokeDasharray="4 2" dot={false} />
-              </ComposedChart>
-            </ResponsiveContainer>
+            <div className="space-y-2">
+              {/* 分时图 */}
+              <ResponsiveContainer width="100%" height={220}>
+                <ComposedChart data={chartData} margin={{ top: 5, right: 5, bottom: 5, left: 0 }}>
+                  <defs>
+                    <linearGradient id="gradient-up" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#f23645" stopOpacity={0.1} />
+                      <stop offset="95%" stopColor="#f23645" stopOpacity={0.01} />
+                    </linearGradient>
+                    <linearGradient id="gradient-down" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#15b755" stopOpacity={0.1} />
+                      <stop offset="95%" stopColor="#15b755" stopOpacity={0.01} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid stroke="#2d3748" strokeDasharray="2 2" opacity={0.3} />
+                  <XAxis dataKey="time" stroke="#8a8d93" fontSize={10} interval="preserveStartEnd" tickLine={false} hide />
+                  <YAxis stroke="#8a8d93" fontSize={10} domain={['dataMin - 0.05', 'dataMax + 0.05']} tickLine={false} />
+                  <Tooltip
+                    contentStyle={{ backgroundColor: '#16213e', border: '1px solid #2d3748', color: '#fff', fontSize: '12px' }}
+                    labelStyle={{ color: '#8a8d93' }}
+                    formatter={(value: any) => [parseFloat(value).toFixed(2), '']}
+                  />
+                  <ReferenceLine y={stock.pre_close} stroke="#8a8d93" strokeDasharray="2 2" />
+                  <Area type="monotone" dataKey="price" stroke={color} fill={color} fillOpacity={0.1} />
+                  <Line type="monotone" dataKey="price" stroke="#fff" strokeWidth={1.5} dot={false} name="价格" />
+                  <Line type="monotone" dataKey="avg" stroke="#f59e0b" strokeWidth={1} dot={false} name="均价" strokeDasharray="3 2" />
+                </ComposedChart>
+              </ResponsiveContainer>
+
+              {/* 成交量柱 */}
+              <ResponsiveContainer width="100%" height={60}>
+                <BarChart data={chartData} margin={{ top: 0, right: 5, bottom: 0, left: 0 }}>
+                  <XAxis dataKey="time" stroke="#8a8d93" fontSize={8} interval="preserveStartEnd" tickLine={false} />
+                  <YAxis stroke="#8a8d93" fontSize={8} tickLine={false} tickFormatter={(v) => v >= 10000 ? `${(v/10000).toFixed(0)}万` : v} />
+                  <Tooltip
+                    contentStyle={{ backgroundColor: '#16213e', border: '1px solid #2d3748', color: '#fff', fontSize: '12px' }}
+                    labelStyle={{ color: '#8a8d93' }}
+                    formatter={(value: any) => [fmtVol(value), '成交量']}
+                  />
+                  <Bar
+                    dataKey="volume"
+                    fill={(entry: any) => {
+                      const prev = chartData[chartData.indexOf(entry) - 1]?.price || stock.pre_close
+                      return entry.price >= prev ? '#f23645' : '#15b755'
+                    }}
+                    opacity={0.7}
+                  />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
           ) : (
             <ResponsiveContainer width="100%" height={300}>
               <ComposedChart data={chartData}>
@@ -251,4 +292,10 @@ function fmtAmount(a: number): string {
   if (a >= 100000000) return (a / 100000000).toFixed(1) + '亿'
   if (a >= 10000) return (a / 10000).toFixed(0) + '万'
   return a?.toFixed(0) || '--'
+}
+
+function fmtVol(v: number): string {
+  if (v >= 1000000) return (v / 1000000).toFixed(1) + '万手'
+  if (v >= 10000) return (v / 10000).toFixed(0) + '万手'
+  return v + '手'
 }

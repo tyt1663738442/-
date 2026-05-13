@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
-import { Search, RefreshCw, Activity, Flame, TrendingUp, TrendingDown, Target, Wifi, WifiOff, Clock, BarChart2, Zap } from 'lucide-react'
+import { Search, RefreshCw, Activity, Flame, TrendingUp, TrendingDown, Target, Clock, BarChart2, Zap, ChevronRight, ChevronDown } from 'lucide-react'
 import { StockList } from './components/StockList'
 import { BigOrderPanel } from './components/BigOrderPanel'
 import { DaBanPanel } from './components/DaBanPanel'
@@ -13,25 +13,22 @@ type TabType = 'market' | 'daban' | 'bigorder' | 'auction'
 
 const API_BASE = ''
 
+// 自选股列表（默认你关注的股票）
+const watchList = ['600152', '002418', '600406', '600673', '600821', '600930', '002217', '600433', '000720', '300750', '002594', '300014']
+
 function App() {
-  const [activeTab, setActiveTab] = useState<TabType>('market')
-  const [searchCode, setSearchCode] = useState('')
-  const [selectedStock, setSelectedStock] = useState<string | null>(null)
-  const [stocks, setStocks] = useState<StockInfo[]>([])
-  const [dabanCandidates, setDabanCandidates] = useState<DaBanStock[]>([])
-  const [marketStatus, setMarketStatus] = useState<MarketStatus | null>(null)
-  const [lastUpdate, setLastUpdate] = useState<string>('')
-  const [isRefreshing, setIsRefreshing] = useState(false)
-  const [sortBy, setSortBy] = useState<string>('change_pct')
-  const [autoRefresh, setAutoRefresh] = useState(true)
-  const refreshRef = useRef<ReturnType<typeof setInterval>()
 
   // 实时数据
   const fetchAll = useCallback(async () => {
+    // 非交易时段只拉一次，不重复刷新
+    if (marketStatus?.phase === '已休市' || marketStatus?.phase === '周末休市') {
+      if (stocks.length > 0) return
+    }
+
     setIsRefreshing(true)
     try {
       const [stocksRes, dabanRes, statusRes] = await Promise.all([
-        fetch(`${API_BASE}/api/stocks?limit=200&sort_by=${sortBy}`),
+        fetch(`${API_BASE}/api/stocks?limit=100&sort_by=${sortBy}`),
         fetch(`${API_BASE}/api/daban`),
         fetch(`${API_BASE}/api/market/status`),
       ])
@@ -49,19 +46,18 @@ function App() {
     } finally {
       setIsRefreshing(false)
     }
-  }, [sortBy])
+  }, [sortBy, marketStatus?.phase, stocks.length])
 
   // 初始化
   useEffect(() => {
     fetchAll()
   }, [fetchAll])
 
-  // 自动刷新（交易时段每5秒）
+  // 自动刷新（交易时段每5秒，休市不刷新）
   useEffect(() => {
     if (autoRefresh && marketStatus?.is_trading) {
       refreshRef.current = setInterval(fetchAll, 5000)
     } else if (autoRefresh && marketStatus?.phase === '集合竞价') {
-      // 竞价期间每10秒
       refreshRef.current = setInterval(fetchAll, 10000)
     } else {
       clearInterval(refreshRef.current)
@@ -79,142 +75,172 @@ function App() {
     } catch {}
   }, [searchCode])
 
-  // 排序切换
-  const handleSortChange = (field: string) => {
-    setSortBy(field)
-  }
-
-  if (selectedStock) {
-    return <StockDetail code={selectedStock} onBack={() => setSelectedStock(null)} />
-  }
+  // 自选股筛选
+  const watchListStocks = stocks.filter(s => watchList.includes(s.code) || watchList.includes(s.code.replace(/^sh|^sz/, '')))
 
   return (
-    <div className="min-h-screen bg-[#1a1a2e] text-white">
-      {/* 顶部指数栏 */}
-      <IndexBanner />
-
-      {/* 工具栏 */}
-      <div className="sticky top-0 z-40 bg-[#1a1a2e] border-b border-[#2d3748] px-4 py-2">
-        <div className="flex items-center gap-3">
-          {/* 搜索 */}
-          <div className="flex-1 flex items-center bg-[#0f1d3a] rounded-lg px-3 py-1.5">
-            <Search className="w-4 h-4 text-[#718096] mr-2" />
-            <input
-              value={searchCode}
-              onChange={e => setSearchCode(e.target.value)}
-              onKeyDown={e => e.key === 'Enter' && handleSearch()}
-              placeholder="输入代码/名称搜索"
-              className="flex-1 bg-transparent text-sm outline-none text-white placeholder-[#718096]"
-            />
+    <div className="min-h-screen bg-[#0f172a] text-white flex flex-col h-screen overflow-hidden">
+      {/* 顶部状态栏 */}
+      <div className="bg-[#0d1b3e] border-b border-[#1e293b] px-4 py-2 flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <span className="text-lg font-bold text-[#f23645]">国信金太阳 · A股监控</span>
+          <span className="text-xs text-[#94a3b8]">v2.0</span>
+          {marketStatus && (
+            <div className={`flex items-center gap-1.5 text-xs px-2 py-1 rounded ${
+              marketStatus.is_trading
+                ? 'bg-green-500/20 text-green-400'
+                : marketStatus.phase === '集合竞价'
+                ? 'bg-yellow-500/20 text-yellow-400'
+                : 'bg-gray-500/20 text-gray-400'
+            }`}>
+              <span className={`w-2 h-2 rounded-full ${marketStatus.is_trading ? 'bg-green-400 animate-pulse' : 'bg-gray-500'}`} />
+              <span>{marketStatus.phase}</span>
+            </div>
+          )}
+        </div>
+        <div className="flex items-center gap-4">
+          {/* 指数栏精简版 */}
+          <IndexBanner />
+          <div className="flex items-center gap-2 text-xs text-[#94a3b8]">
+            <Clock className="w-3 h-3" />
+            <span>{lastUpdate || '--'}</span>
           </div>
-
-          {/* 排序快捷键 */}
-          <button
-            onClick={() => handleSortChange('change_pct')}
-            className={`px-2 py-1 rounded text-xs font-medium ${sortBy === 'change_pct' ? 'bg-[#f23645] text-white' : 'bg-[#0f1d3a] text-[#718096]'}`}
-          >
-            涨幅
-          </button>
-          <button
-            onClick={() => handleSortChange('seal_amount')}
-            className={`px-2 py-1 rounded text-xs font-medium ${sortBy === 'seal_amount' ? 'bg-[#f23645] text-white' : 'bg-[#0f1d3a] text-[#718096]'}`}
-          >
-            封单
-          </button>
-
-          {/* 自动刷新 */}
           <button
             onClick={() => setAutoRefresh(!autoRefresh)}
-            className={`p-1.5 rounded ${autoRefresh ? 'bg-green-500/20 text-green-400' : 'bg-[#0f1d3a] text-[#718096]'}`}
+            className={`p-1.5 rounded ${autoRefresh ? 'bg-green-500/20 text-green-400' : 'bg-gray-500/20 text-gray-400'}`}
             title={autoRefresh ? '自动刷新中' : '已暂停'}
           >
             <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
           </button>
-
-          {/* 时间 */}
-          <div className="flex items-center gap-1 text-xs text-[#718096]">
-            <Clock className="w-3 h-3" />
-            <span>{lastUpdate || '--'}</span>
-          </div>
         </div>
       </div>
 
-      {/* 标签栏 */}
-      <div className="flex border-b border-[#2d3748] bg-[#1a1a2e] sticky top-[48px] z-30">
-        {[
-          { key: 'market', label: '市场', icon: BarChart2 },
-          { key: 'daban', label: '打板精选', icon: Flame },
-          { key: 'bigorder', label: '大单追踪', icon: Activity },
-          { key: 'auction', label: '竞价', icon: Zap },
-        ].map(({ key, label, icon: Icon }) => (
-          <button
-            key={key}
-            onClick={() => setActiveTab(key as TabType)}
-            className={`flex-1 flex items-center justify-center gap-1.5 py-3 text-sm font-medium transition-colors ${
-              activeTab === key
-                ? 'text-white border-b-2 border-[#f23645] bg-[#0f1d3a]'
-                : 'text-[#718096] hover:text-white hover:bg-[#0f1d3a]/50'
-            }`}
-          >
-            <Icon className="w-4 h-4" />
-            {label}
-            {key === 'daban' && dabanCandidates.length > 0 && (
-              <span className="bg-[#f23645] text-white text-xs px-1.5 rounded-full">
-                {dabanCandidates.length}
-              </span>
-            )}
-          </button>
-        ))}
-      </div>
-
-      {/* 内容区 */}
-      <div className="p-4">
-        {/* 市场页面 */}
-        {activeTab === 'market' && (
-          <div className="space-y-4">
-            {/* 市场状态提示 */}
-            {marketStatus && (
-              <div className={`flex items-center justify-between px-4 py-2 rounded-lg text-sm ${
-                marketStatus.is_trading
-                  ? 'bg-[#15b755]/10 text-[#15b755] border border-[#15b755]/30'
-                  : marketStatus.phase === '集合竞价'
-                  ? 'bg-yellow-500/10 text-yellow-400 border border-yellow-500/30'
-                  : 'bg-[#2d3748]/50 text-[#718096]'
-              }`}>
-                <div className="flex items-center gap-2">
-                  {marketStatus.is_trading ? (
-                    <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-                  ) : (
-                    <span className="w-2 h-2 bg-gray-500 rounded-full" />
-                  )}
-                  <span className="font-medium">{marketStatus.phase}</span>
-                  {marketStatus.auction_status && (
-                    <span className="text-xs opacity-75">({marketStatus.auction_status})</span>
-                  )}
-                </div>
-                <span>{marketStatus.time}</span>
-              </div>
-            )}
-
-            {/* 股票列表 */}
-            <StockList stocks={stocks} onSelect={setSelectedStock} />
+      <div className="flex flex-1 overflow-hidden">
+        {/* 左侧自选股栏 */}
+        <div className={`bg-[#0f172a] border-r border-[#1e293b] transition-all duration-300 ${
+          leftPanelCollapsed ? 'w-8' : 'w-64'
+        } flex flex-col`}>
+          <div className="p-2 border-b border-[#1e293b] flex items-center justify-between">
+            {!leftPanelCollapsed && <span className="text-sm font-medium">自选股</span>}
+            <button
+              onClick={() => setLeftPanelCollapsed(!leftPanelCollapsed)}
+              className="p-1 hover:bg-[#1e293b] rounded"
+            >
+              {leftPanelCollapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+            </button>
           </div>
-        )}
 
-        {/* 打板精选 */}
-        {activeTab === 'daban' && (
-          <DaBanPanel candidates={dabanCandidates} onSelect={setSelectedStock} />
-        )}
+          {/* 搜索框 */}
+          {!leftPanelCollapsed && (
+            <div className="p-2 border-b border-[#1e293b]">
+              <div className="flex items-center bg-[#1e293b] rounded-lg px-2 py-1">
+                <Search className="w-3 h-3 text-[#64748b] mr-2" />
+                <input
+                  value={searchCode}
+                  onChange={e => setSearchCode(e.target.value)}
+                  onKeyDown={e => e.key === 'Enter' && handleSearch()}
+                  placeholder="代码/名称"
+                  className="flex-1 bg-transparent text-xs outline-none text-white placeholder-[#64748b]"
+                />
+              </div>
+            </div>
+          )}
 
-        {/* 大单追踪 */}
-        {activeTab === 'bigorder' && (
-          <BigOrderPanel />
-        )}
+          {/* 自选股列表 */}
+          {!leftPanelCollapsed && (
+            <div className="flex-1 overflow-y-auto">
+              <div className="bg-[#1e293b] py-1.5 px-2 grid grid-cols-[1fr_40px_50px] gap-1 text-[10px] text-[#94a3b8] font-medium">
+                <div>名称</div>
+                <div className="text-right">涨跌</div>
+                <div className="text-right">现价</div>
+              </div>
 
-        {/* 竞价 */}
-        {activeTab === 'auction' && (
-          <AuctionPanel />
-        )}
+              <div className="divide-y divide-[#1e293b]">
+                {watchListStocks.map(stock => {
+                  const isUp = stock.change_pct > 0
+                  const isSelected = selectedStock === stock.code
+                  return (
+                    <div
+                      key={stock.code}
+                      onClick={() => setSelectedStock(stock.code)}
+                      className={`grid grid-cols-[1fr_40px_50px] gap-1 px-2 py-1.5 text-xs cursor-pointer ${
+                        isSelected ? 'bg-[#1e3a8a]' : 'hover:bg-[#1e293b]'
+                      }`}
+                    >
+                      <div className="flex flex-col min-w-0">
+                        <span className={`font-medium truncate ${isUp ? 'text-[#f23645]' : 'text-[#15b755]'}`}>
+                          {stock.name}
+                        </span>
+                        <span className="text-[10px] text-[#64748b]">{stock.code}</span>
+                      </div>
+                      <div className={`flex items-center justify-end font-mono font-medium ${
+                        isUp ? 'text-[#f23645]' : 'text-[#15b755]'
+                      }`}>
+                        {stock.change_pct >= 0 ? '+' : ''}{stock.change_pct.toFixed(2)}%
+                      </div>
+                      <div className={`flex items-center justify-end font-mono ${
+                        isUp ? 'text-[#f23645]' : 'text-[#15b755]'
+                      }`}>
+                        {stock.price.toFixed(2)}
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* 中间核心区 - 个股详情/分时图 */}
+        <div className="flex-1 flex flex-col overflow-hidden bg-[#0f172a]">
+          <StockDetail code={selectedStock} onBack={() => {}} hideBackButton />
+        </div>
+
+        {/* 右侧功能区 */}
+        <div className="w-96 bg-[#0f172a] border-l border-[#1e293b] overflow-y-auto">
+          <div className="sticky top-0 z-10 bg-[#0f172a] border-b border-[#1e293b]">
+            <div className="flex">
+              {[
+                { key: 'daban', label: '打板精选', icon: Flame },
+                { key: 'bigorder', label: '大单追踪', icon: Activity },
+                { key: 'auction', label: '竞价监测', icon: Zap },
+              ].map(({ key, label, icon: Icon }) => (
+                <button
+                  key={key}
+                  onClick={() => setActiveTab(key as TabType)}
+                  className={`flex-1 flex items-center justify-center gap-1 py-2 text-xs font-medium transition-colors ${
+                    activeTab === key
+                      ? 'text-white border-b-2 border-[#f23645] bg-[#1e293b]'
+                      : 'text-[#94a3b8] hover:text-white hover:bg-[#1e293b]'
+                  }`}
+                >
+                  <Icon className="w-3 h-3" />
+                  {label}
+                  {key === 'daban' && dabanCandidates.length > 0 && (
+                    <span className="bg-[#f23645] text-white text-[10px] px-1 rounded-full">
+                      {dabanCandidates.length}
+                    </span>
+                  )}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="p-2">
+            {/* 打板精选 */}
+            {activeTab === 'daban' && (
+              <DaBanPanel candidates={dabanCandidates} onSelect={setSelectedStock} />
+            )}
+            {/* 大单追踪 */}
+            {activeTab === 'bigorder' && (
+              <BigOrderPanel />
+            )}
+            {/* 竞价监测 */}
+            {activeTab === 'auction' && (
+              <AuctionPanel />
+            )}
+          </div>
+        </div>
       </div>
     </div>
   )

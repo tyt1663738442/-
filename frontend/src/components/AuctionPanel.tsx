@@ -149,10 +149,10 @@ export function AuctionPanel() {
       <div className="bg-[#0d1b3e] rounded-lg p-4 border border-[#2d3748]">
         <h4 className="text-sm font-medium text-white mb-2">📌 竞价阶段说明</h4>
         <div className="grid grid-cols-2 gap-2 text-xs text-[#8a8d93]">
-          <div>• <span className="text-[#f23645]">强势买入</span>：竞价涨幅>7%且量比高</div>
+          <div>• <span className="text-[#f23645]">强势买入</span>：竞价涨幅{'>'}7%且量比高</div>
           <div>• <span className="text-[#f59e0b]">买入</span>：竞价涨幅3-7%</div>
           <div>• <span className="text-[#8a8d93]">观望</span>：竞价涨幅0-3%</div>
-          <div>• <span className="text-[#15b755]">卖出</span>：竞价涨幅<0</div>
+          <div>• <span className="text-[#15b755]">卖出</span>：竞价涨幅{'<'}0</div>
         </div>
         <p className="text-xs text-[#f59e0b] mt-2">⚠️ 竞价数据仅供参考，开盘价以9:25分最终成交价为准</p>
       </div>

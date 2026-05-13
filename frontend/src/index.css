@@ -2,15 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ========== 同花顺配色方案 ========== */
-/* 核心原则：绿涨红跌（同花顺标准）*/
+/* ========== 同花顺/国信金太阳配色方案 ========== */
+/* 核心原则：红涨绿跌（同花顺/金太阳标准）*/
 :root {
   --ths-up: #f23645;       /* 上涨/涨停 - 红色 */
   --ths-down: #15b755;     /* 下跌/跌停 - 绿色 */
-  --ths-flat: #8a8d93;     /* 平盘 - 灰色 */
-  --ths-bg-dark: #1a1a2e;  /* 深色背景 */
-  --ths-bg-card: #16213e;  /* 卡片背景 */
-  --ths-border: #2d3748;   /* 边框 */
+  --ths-flat: #94a3b8;     /* 平盘 - 灰色 */
+  --ths-bg-dark: #0f172a;  /* 深色背景（国信金太阳） */
+  --ths-bg-card: #1e293b;  /* 卡片背景 */
+  --ths-border: #334155;   /* 边框 */
 }
 
 @layer base {
@@ -19,7 +19,7 @@
   }
 
   body {
-    @apply bg-[#1a1a2e] text-white antialiased;
+    @apply bg-[#0f172a] text-white antialiased;
     font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', sans-serif;
   }
 }
