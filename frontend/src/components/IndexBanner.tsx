@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import { TrendingUp, TrendingDown, ArrowUp, ArrowDown, RefreshCw } from 'lucide-react'
 
+const API_BASE = 'http://localhost:8000'
+
 interface IndexData {
   [key: string]: {
     name: string
@@ -18,7 +20,7 @@ export function IndexBanner() {
 
   const fetchIndex = async () => {
     try {
-      const res = await fetch('/api/market/status')
+      const res = await fetch(`${API_BASE}/api/market/status`)
       const result = await res.json()
       if (result.index_data) {
         setData(result.index_data)

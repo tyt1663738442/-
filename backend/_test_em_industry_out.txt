@@ -1,0 +1,3 @@
+600519: industry=白酒Ⅱ
+002290: industry=家电零部件Ⅱ
+000001: industry=银行Ⅱ

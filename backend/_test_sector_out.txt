@@ -1,0 +1,11 @@
+gn_hwqc: name=华为汽车, change=-1.5544041450777%
+gn_BCdc: name=BC电池, change=-2.9967159277504%
+gn_hwhs: name=华为海思, change=-3.5445322138135%
+gn_gykc: name=高压快充, change=-1.7229805325576%
+gn_hwhm: name=华为鸿蒙, change=-1.1559959349593%
+gn_cxy: name=创新药, change=-2.7012776472718%
+gn_gtk: name=钙钛矿, change=-0.23259065316031%
+gn_hwfz: name=核污防治, change=-2.3423107290113%
+gn_hdgn: name=恒大概念, change=-2.8262270313507%
+gn_jr: name=鸡肉, change=2.3385761589404%
+Total: 175

@@ -11,6 +11,20 @@
   --ths-bg-dark: #0f172a;  /* 深色背景（国信金太阳） */
   --ths-bg-card: #1e293b;  /* 卡片背景 */
   --ths-border: #334155;   /* 边框 */
+
+  /* ========== 量化策略仪表板 - 科技风配色 ========== */
+  --qb-bg-primary: #0a0f1a;      /* 主背景 */
+  --qb-bg-card: #0d1525;         /* 卡片背景 */
+  --qb-bg-card-hover: #111d33;   /* 卡片悬停 */
+  --qb-border: #1a2a44;          /* 边框 */
+  --qb-border-glow: #2a3a55;     /* 发光边框 */
+  --qb-text-primary: #e0e6f0;    /* 主文字 */
+  --qb-text-secondary: #7a8aa0;  /* 次要文字 */
+  --qb-accent-cyan: #00d4ff;     /* 青色强调 */
+  --qb-accent-green: #00ff88;    /* 绿色强调 */
+  --qb-accent-red: #ff4d6d;      /* 红色强调 */
+  --qb-accent-gold: #ffd700;     /* 金色强调 */
+  --qb-accent-purple: #a855f7;   /* 紫色强调 */
 }
 
 @layer base {
@@ -185,6 +199,119 @@ table {
   stroke: #a855f7;
   stroke-width: 1;
   fill: none;
+}
+
+/* ========== 量化策略仪表板组件样式 ========== */
+@layer components {
+  /* 科技风卡片 */
+  .qb-card {
+    @apply rounded-xl border overflow-hidden;
+    background: linear-gradient(135deg, rgba(13, 21, 37, 0.95) 0%, rgba(17, 29, 51, 0.9) 100%);
+    border-color: var(--qb-border);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  }
+
+  .qb-card:hover {
+    border-color: var(--qb-border-glow);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  }
+
+  /* KPI指标卡片 */
+  .qb-kpi-card {
+    @apply rounded-lg border p-4 flex flex-col items-center justify-center gap-1;
+    background: linear-gradient(180deg, rgba(13, 21, 37, 0.98) 0%, rgba(10, 15, 26, 0.98) 100%);
+    border-color: var(--qb-border);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .qb-kpi-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--qb-accent-cyan), transparent);
+    opacity: 0.6;
+  }
+
+  .qb-kpi-card.positive::before {
+    background: linear-gradient(90deg, transparent, var(--qb-accent-green), transparent);
+  }
+
+  .qb-kpi-card.negative::before {
+    background: linear-gradient(90deg, transparent, var(--qb-accent-red), transparent);
+  }
+
+  .qb-kpi-label {
+    @apply text-xs font-medium tracking-wide;
+    color: var(--qb-text-secondary);
+  }
+
+  .qb-kpi-value {
+    @apply text-2xl font-bold number-font;
+  }
+
+  .qb-kpi-value.positive {
+    color: var(--qb-accent-green);
+    text-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+  }
+
+  .qb-kpi-value.negative {
+    color: var(--qb-accent-red);
+    text-shadow: 0 0 20px rgba(255, 77, 109, 0.3);
+  }
+
+  .qb-kpi-value.neutral {
+    color: var(--qb-accent-cyan);
+    text-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+  }
+
+  /* 图表卡片 */
+  .qb-chart-card {
+    @apply rounded-xl border p-4;
+    background: linear-gradient(135deg, rgba(13, 21, 37, 0.95) 0%, rgba(17, 29, 51, 0.9) 100%);
+    border-color: var(--qb-border);
+  }
+
+  .qb-chart-title {
+    @apply text-sm font-semibold flex items-center gap-2 mb-3;
+    color: var(--qb-text-primary);
+  }
+
+  .qb-chart-title::before {
+    content: '';
+    @apply w-1.5 h-1.5 rounded-full;
+    background: var(--qb-accent-cyan);
+    box-shadow: 0 0 8px var(--qb-accent-cyan);
+  }
+
+  /* 标题栏 */
+  .qb-header {
+    @apply flex items-center justify-between px-6 py-4;
+    background: linear-gradient(90deg, rgba(10, 15, 26, 0.98) 0%, rgba(13, 21, 37, 0.95) 100%);
+    border-bottom: 1px solid var(--qb-border);
+  }
+
+  .qb-header-title {
+    @apply text-lg font-bold tracking-wide;
+    color: var(--qb-accent-green);
+    text-shadow: 0 0 20px rgba(0, 255, 136, 0.2);
+  }
+
+  .qb-header-date {
+    @apply text-sm number-font;
+    color: var(--qb-text-secondary);
+  }
+
+  /* 标签 */
+  .qb-tag {
+    @apply px-2 py-0.5 rounded text-xs font-medium;
+    background: rgba(0, 212, 255, 0.1);
+    color: var(--qb-accent-cyan);
+    border: 1px solid rgba(0, 212, 255, 0.2);
+  }
 }
 
 /* ========== 响应式调整 ========== */

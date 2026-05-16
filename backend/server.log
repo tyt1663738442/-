@@ -1,0 +1,3356 @@
+INFO:     Started server process [85168]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+[OK] 行业板块映射已加载: 3409 只股票
+[OK] loaded 3001 stocks
+A股监控平台 v3.0 启动中...
+数据源: 新浪财经 + 腾讯财经
+风格: 同花顺（绿涨红跌）
+前端静态文件: D:\258\backend\..\frontend\dist
+  [OK] 行业板块缓存已更新: 84 个行业
+INFO:     127.0.0.1:62212 - "GET /api/stocks?limit=100&page=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59489 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58710 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+WARNING:  Invalid HTTP request received.
+  [OK] Market_Center首次加载: 3000只
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+  [OK] 新闻采集: 30条, 情绪=0.51, 正面=1, 负面=0
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+  [OK] Market_Center缓存命中: 1只
+INFO:     127.0.0.1:58082 - "GET /api/stocks?search=%E8%8C%85%E5%8F%B0 HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:59015 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59015 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:51430 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:51431 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:64489 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51506 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:53432 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50060 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50687 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:50688 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:61091 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61093 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51486 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+INFO:     127.0.0.1:51489 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62493 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:59467 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:59538 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+  [OK] 行业板块缓存已更新: 84 个行业
+INFO:     127.0.0.1:59540 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61577 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61578 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [WARN] 获取股票600519新闻失败: HTTPSConnectionPool(host='search.api.sina.com.cn', port=443): Max retries exceeded with url: /?c=news&q=600519&page=1&num=10 (Caused by NameResolutionError("HTTPSConnection(host='search.api.sina.com.cn', port=443): Failed to resolve 'search.api.sina.com.cn' ([Errno 11001] getaddrinfo failed)"))
+INFO:     127.0.0.1:59495 - "GET /api/news/600519 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:61641 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:61643 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:49555 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63825 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51307 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51310 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:64571 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64579 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:50484 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50486 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:51286 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51240 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+INFO:     127.0.0.1:57827 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+  [OK] 新闻采集: 30条, 情绪=0.51, 正面=1, 负面=0
+INFO:     127.0.0.1:57829 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:62596 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62598 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51094 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:51095 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:52237 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57305 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:60087 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60088 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55909 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:55910 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+  [OK] 行业板块缓存已更新: 84 个行业
+INFO:     127.0.0.1:55983 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55984 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:60050 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60199 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60220 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存刷新: 3000只
+INFO:     127.0.0.1:60221 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55648 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55649 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:55729 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63880 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:56528 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56531 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51685 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51688 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50752 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:50753 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+  [WARN] 获取股票600519新闻失败: HTTPSConnectionPool(host='search.api.sina.com.cn', port=443): Max retries exceeded with url: /?c=news&q=600519&page=1&num=10 (Caused by NameResolutionError("HTTPSConnection(host='search.api.sina.com.cn', port=443): Failed to resolve 'search.api.sina.com.cn' ([Errno 11001] getaddrinfo failed)"))
+INFO:     127.0.0.1:57304 - "GET /api/news/600519 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64097 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64098 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55228 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:53045 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55786 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:55788 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:50794 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50795 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50833 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+INFO:     127.0.0.1:50834 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:55765 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64112 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:64158 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:64160 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64992 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64993 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+  [OK] 新闻采集: 30条, 情绪=0.51, 正面=1, 负面=0
+INFO:     127.0.0.1:58295 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+  [OK] 行业板块缓存已更新: 84 个行业
+INFO:     127.0.0.1:58297 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:61526 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64357 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50078 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50079 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:51360 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:51365 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51441 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51443 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:50061 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50060 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+INFO:     127.0.0.1:50083 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:50084 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:51521 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51522 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63609 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:63610 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:60625 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56474 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:64651 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64652 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52418 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+INFO:     127.0.0.1:52419 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:49174 - "GET /api/news/600519 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64951 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:64953 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59571 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:51368 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53603 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53605 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:56000 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+  [OK] 行业板块缓存已更新: 84 个行业
+INFO:     127.0.0.1:56001 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60051 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60053 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:54520 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52280 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存刷新: 3000只
+INFO:     127.0.0.1:52299 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52300 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52988 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+  [OK] Market_Center缓存命中: 3000只
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:52989 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52989 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54690 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57406 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:57102 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53932 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+  [OK] 新闻采集: 30条, 情绪=0.513, 正面=1, 负面=0
+INFO:     127.0.0.1:53933 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:50563 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56671 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64113 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+INFO:     127.0.0.1:64114 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:49909 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54474 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54525 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:54526 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60978 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60979 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:56245 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:56249 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50078 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:54569 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62172 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62179 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:53009 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+  [OK] 行业板块缓存已更新: 84 个行业
+INFO:     127.0.0.1:53011 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 获取股票600519新闻失败: HTTPSConnectionPool(host='search.api.sina.com.cn', port=443): Max retries exceeded with url: /?c=news&q=600519&page=1&num=10 (Caused by NameResolutionError("HTTPSConnection(host='search.api.sina.com.cn', port=443): Failed to resolve 'search.api.sina.com.cn' ([Errno 11001] getaddrinfo failed)"))
+INFO:     127.0.0.1:55332 - "GET /api/news/600519 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57975 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57976 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59912 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:54363 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+INFO:     127.0.0.1:60227 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:60228 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:50385 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50386 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55655 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:55656 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:54775 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54775 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:53213 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53214 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62814 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:62815 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55795 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:55796 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:63012 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63012 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50513 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50514 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+  [OK] 新闻采集: 30条, 情绪=0.513, 正面=1, 负面=0
+INFO:     127.0.0.1:52328 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:52332 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49274 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49275 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58742 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:52568 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:55895 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+  [OK] 行业板块缓存已更新: 84 个行业
+INFO:     127.0.0.1:55897 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62872 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62873 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存刷新: 3000只
+INFO:     127.0.0.1:53381 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53382 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:56818 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54181 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56386 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+  [OK] Market_Center缓存命中: 3000只
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:56387 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56387 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57660 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60452 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:60453 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 获取股票600519新闻失败: HTTPSConnectionPool(host='search.api.sina.com.cn', port=443): Max retries exceeded with url: /?c=news&q=600519&page=1&num=10 (Caused by NameResolutionError("HTTPSConnection(host='search.api.sina.com.cn', port=443): Failed to resolve 'search.api.sina.com.cn' ([Errno 11001] getaddrinfo failed)"))
+INFO:     127.0.0.1:61837 - "GET /api/news/600519 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:54535 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62126 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:56923 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56924 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57745 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63699 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:63771 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:63773 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:60133 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61381 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61401 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61404 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:58377 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:58379 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58434 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58435 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57792 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:54434 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+INFO:     127.0.0.1:57778 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:57779 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+  [OK] 行业板块缓存已更新: 84 个行业
+INFO:     127.0.0.1:51825 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51826 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62460 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+  [OK] 新闻采集: 30条, 情绪=0.513, 正面=1, 负面=0
+INFO:     127.0.0.1:62461 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:57759 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57759 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:61560 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61561 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58476 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+INFO:     127.0.0.1:58478 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:62815 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:62820 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:50708 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50708 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51465 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51467 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:65047 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:65049 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49957 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49959 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59233 - "GET /api/news/600519 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:58492 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55512 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:65360 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:65362 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51889 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51890 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+INFO:     127.0.0.1:62808 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:62809 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:51114 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60710 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+  [OK] 行业板块缓存已更新: 84 个行业
+INFO:     127.0.0.1:60122 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60123 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存刷新: 3000只
+INFO:     127.0.0.1:51957 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51958 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49473 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+INFO:     127.0.0.1:49474 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:60101 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55563 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+  [OK] Market_Center缓存命中: 3000只
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:55610 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55611 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54616 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54618 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:59486 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:59488 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:53569 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52476 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55561 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55562 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+  [OK] 新闻采集: 30条, 情绪=0.513, 正面=1, 负面=0
+INFO:     127.0.0.1:56192 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56195 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:63635 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63636 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:55538 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62165 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62185 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:62186 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:58581 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58582 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58628 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:58629 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 获取股票600519新闻失败: HTTPSConnectionPool(host='search.api.sina.com.cn', port=443): Max retries exceeded with url: /?c=news&q=600519&page=1&num=10 (Caused by NameResolutionError("HTTPSConnection(host='search.api.sina.com.cn', port=443): Failed to resolve 'search.api.sina.com.cn' ([Errno 11001] getaddrinfo failed)"))
+INFO:     127.0.0.1:58022 - "GET /api/news/600519 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:52474 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53648 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+  [OK] 行业板块缓存已更新: 84 个行业
+INFO:     127.0.0.1:52232 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59370 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51122 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+INFO:     127.0.0.1:51123 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:64354 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:64355 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:52726 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61765 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64968 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64969 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:63301 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:56611 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56660 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56661 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60680 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:62705 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+✅ 打板扫描完成: 8 只候选
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 42 只候选 (极强+强: 1只, 高概率≥60%: 8只)
+INFO:     127.0.0.1:52083 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52085 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62206 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+INFO:     127.0.0.1:62207 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:55513 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:55515 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:52048 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52048 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51701 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51702 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:63745 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+  [OK] 行业板块缓存已更新: 84 个行业
+INFO:     127.0.0.1:63748 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57742 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57743 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:63874 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60757 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存刷新: 3000只
+INFO:     127.0.0.1:60775 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60776 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63401 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+  [OK] 新闻采集: 30条, 情绪=0.513, 正面=1, 负面=0
+  [OK] Market_Center缓存命中: 3000只
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:63402 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63402 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63511 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 获取股票600519新闻失败: HTTPSConnectionPool(host='search.api.sina.com.cn', port=443): Max retries exceeded with url: /?c=news&q=600519&page=1&num=10 (Caused by NameResolutionError("HTTPSConnection(host='search.api.sina.com.cn', port=443): Failed to resolve 'search.api.sina.com.cn' ([Errno 11001] getaddrinfo failed)"))
+INFO:     127.0.0.1:64885 - "GET /api/news/600519 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59546 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:58479 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64591 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+INFO:     127.0.0.1:64593 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:59245 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:59247 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62657 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62658 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:64570 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+✅ 打板扫描完成: 8 只候选
+INFO:     127.0.0.1:49259 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 42 只候选 (极强+强: 1只, 高概率≥60%: 8只)
+INFO:     127.0.0.1:59358 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59359 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62017 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:62018 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62089 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:62091 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:49766 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53128 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55066 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55067 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:63871 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+  [OK] 行业板块缓存已更新: 84 个行业
+INFO:     127.0.0.1:63873 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63923 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63924 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:55044 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61738 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:55060 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:55063 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50845 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50846 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+INFO:     127.0.0.1:50876 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:50878 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:63733 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62396 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:60074 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60075 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51765 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:51768 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:51861 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51862 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65151 - "GET /api/news/600519 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:62057 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60125 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65178 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+  [OK] 新闻采集: 30条, 情绪=0.513, 正面=1, 负面=0
+INFO:     127.0.0.1:65179 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:64657 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64658 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64700 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+INFO:     127.0.0.1:64701 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49814 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:63922 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:61810 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+  [OK] 行业板块缓存已更新: 84 个行业
+INFO:     127.0.0.1:61818 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61021 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61023 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存刷新: 3000只
+INFO:     127.0.0.1:58188 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58190 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:61776 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53078 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53098 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+  [OK] Market_Center缓存命中: 3000只
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:53099 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53099 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63494 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63533 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:63534 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:61944 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57964 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:50418 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50419 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57660 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+INFO:     127.0.0.1:57661 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:53138 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:53140 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:50376 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50376 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60738 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60739 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:58740 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58741 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:63126 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63127 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 获取股票600519新闻失败: HTTPSConnectionPool(host='search.api.sina.com.cn', port=443): Max retries exceeded with url: /?c=news&q=600519&page=1&num=10 (Caused by NameResolutionError("HTTPSConnection(host='search.api.sina.com.cn', port=443): Failed to resolve 'search.api.sina.com.cn' ([Errno 11001] getaddrinfo failed)"))
+INFO:     127.0.0.1:50247 - "GET /api/news/600519 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:60720 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61712 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50268 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:50269 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+  [OK] 行业板块缓存已更新: 84 个行业
+INFO:     127.0.0.1:49496 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49498 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49540 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+  [OK] 新闻采集: 30条, 情绪=0.513, 正面=1, 负面=0
+INFO:     127.0.0.1:49541 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:56047 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58370 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:64796 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64798 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52439 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+INFO:     127.0.0.1:52440 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:59341 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:59349 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:64755 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55937 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63275 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63276 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:64596 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:64597 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65522 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65523 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62398 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:50248 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:63991 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:63993 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61612 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61613 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+INFO:     127.0.0.1:61648 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:61649 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:63902 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63902 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+  [OK] 行业板块缓存已更新: 84 个行业
+INFO:     127.0.0.1:62795 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62797 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64970 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存刷新: 3000只
+INFO:     127.0.0.1:64971 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52826 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52828 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65119 - "GET /api/news/600519 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:62760 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60724 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+✅ 打板扫描完成: 8 只候选
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 42 只候选 (极强+强: 1只, 高概率≥60%: 8只)
+INFO:     127.0.0.1:58514 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58515 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64482 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:64483 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:58183 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58184 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49521 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:50596 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51477 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+INFO:     127.0.0.1:51478 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+  [OK] 新闻采集: 30条, 情绪=0.513, 正面=1, 负面=0
+INFO:     127.0.0.1:60252 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:54704 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54758 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54759 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:51455 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53031 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:53056 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:53057 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62503 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62504 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+INFO:     127.0.0.1:64713 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:64716 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:50060 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58556 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+  [OK] 行业板块缓存已更新: 84 个行业
+INFO:     127.0.0.1:53882 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53883 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51161 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:51162 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:51231 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51232 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:53844 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53844 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60081 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+INFO:     127.0.0.1:60082 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:51226 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:51228 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49546 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49547 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 获取股票600519新闻失败: HTTPSConnectionPool(host='search.api.sina.com.cn', port=443): Max retries exceeded with url: /?c=news&q=600519&page=1&num=10 (Caused by NameResolutionError("HTTPSConnection(host='search.api.sina.com.cn', port=443): Failed to resolve 'search.api.sina.com.cn' ([Errno 11001] getaddrinfo failed)"))
+INFO:     127.0.0.1:51939 - "GET /api/news/600519 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:60061 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63327 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+✅ 打板扫描完成: 8 只候选
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 42 只候选 (极强+强: 1只, 高概率≥60%: 8只)
+INFO:     127.0.0.1:51974 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51975 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51672 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+INFO:     127.0.0.1:51673 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:51735 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:51738 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60651 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:61473 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62436 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62438 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+  [OK] 新闻采集: 30条, 情绪=0.517, 正面=1, 负面=0
+INFO:     127.0.0.1:57908 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:57911 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] 行业板块缓存已更新: 84 个行业
+INFO:     127.0.0.1:57967 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57968 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:62418 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63758 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存刷新: 3000只
+INFO:     127.0.0.1:63779 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63780 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63643 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+  [OK] Market_Center缓存命中: 3000只
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:63644 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63644 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61975 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:54014 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64766 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64149 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64150 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:62519 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:62527 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62567 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62570 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:64130 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57455 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:57485 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:57487 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57175 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57177 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:50126 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50128 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53899 - "GET /api/news/600519 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:53959 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57567 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:49300 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49302 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59858 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:59859 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+  [OK] 行业板块缓存已更新: 84 个行业
+INFO:     127.0.0.1:56003 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56004 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:55600 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55600 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55438 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:55439 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:58075 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58077 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52339 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+INFO:     127.0.0.1:52341 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:65079 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64724 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+  [OK] 新闻采集: 30条, 情绪=0.517, 正面=1, 负面=0
+INFO:     127.0.0.1:64769 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:64773 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62188 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62189 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:50345 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:50346 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:57398 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59507 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58653 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58655 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:56147 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:53958 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54016 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54018 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:59132 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57196 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+INFO:     127.0.0.1:57216 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:57217 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+  [OK] 行业板块缓存已更新: 84 个行业
+INFO:     127.0.0.1:52690 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52691 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存刷新: 3000只
+INFO:     127.0.0.1:52729 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52730 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 获取股票600519新闻失败: HTTPSConnectionPool(host='search.api.sina.com.cn', port=443): Max retries exceeded with url: /?c=news&q=600519&page=1&num=10 (Caused by NameResolutionError("HTTPSConnection(host='search.api.sina.com.cn', port=443): Failed to resolve 'search.api.sina.com.cn' ([Errno 11001] getaddrinfo failed)"))
+INFO:     127.0.0.1:64422 - "GET /api/news/600519 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55766 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:59847 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63747 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+INFO:     127.0.0.1:63748 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+  [OK] Market_Center缓存命中: 3000只
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:65238 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65239 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53473 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53474 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:63719 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64285 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+✅ 打板扫描完成: 8 只候选
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 42 只候选 (极强+强: 1只, 高概率≥60%: 8只)
+INFO:     127.0.0.1:57663 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57664 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61221 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:61222 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:61300 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61303 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:53568 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52181 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56792 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+INFO:     127.0.0.1:56793 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+  [OK] 新闻采集: 30条, 情绪=0.517, 正面=1, 负面=0
+INFO:     127.0.0.1:55352 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:55354 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55399 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55400 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:56771 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57586 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+✅ 打板扫描完成: 8 只候选
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 42 只候选 (极强+强: 1只, 高概率≥60%: 8只)
+  [OK] 行业板块缓存已更新: 84 个行业
+INFO:     127.0.0.1:57617 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57624 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62139 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+INFO:     127.0.0.1:62140 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:64668 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:64670 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52569 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:57827 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54281 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54283 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:49190 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:49192 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49250 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49251 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50634 - "GET /api/news/600519 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:52587 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57162 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:50651 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50653 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:54208 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54210 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50091 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:50092 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:54052 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55983 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:62898 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62899 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50734 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:50735 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+  [OK] 行业板块缓存已更新: 84 个行业
+INFO:     127.0.0.1:51261 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51262 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:58892 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59096 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59108 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存刷新: 3000只
+INFO:     127.0.0.1:59109 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63605 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63606 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+  [OK] 新闻采集: 30条, 情绪=0.517, 正面=1, 负面=0
+  [OK] Market_Center缓存命中: 3000只
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:58395 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59327 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:63645 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63647 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61238 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61239 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62584 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:62587 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:65155 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65156 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:61202 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61931 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52738 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:52739 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:59049 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59050 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59090 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+INFO:     127.0.0.1:59091 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+  [WARN] 获取股票600519新闻失败: HTTPSConnectionPool(host='search.api.sina.com.cn', port=443): Max retries exceeded with url: /?c=news&q=600519&page=1&num=10 (Caused by NameResolutionError("HTTPSConnection(host='search.api.sina.com.cn', port=443): Failed to resolve 'search.api.sina.com.cn' ([Errno 11001] getaddrinfo failed)"))
+INFO:     127.0.0.1:56362 - "GET /api/news/600519 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:50811 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52265 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60862 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:60864 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57713 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57714 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:57774 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+  [OK] 行业板块缓存已更新: 84 个行业
+INFO:     127.0.0.1:57776 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:60806 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60806 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54426 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54427 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:64346 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64347 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:61352 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61353 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:54407 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62010 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+INFO:     127.0.0.1:54080 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:54083 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:63407 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63409 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53538 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+  [OK] 新闻采集: 30条, 情绪=0.517, 正面=1, 负面=0
+INFO:     127.0.0.1:53539 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:50923 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61771 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:62828 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62829 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53088 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:53089 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:64785 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64786 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:53347 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51137 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52595 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+INFO:     127.0.0.1:52596 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:59397 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+  [OK] 行业板块缓存已更新: 84 个行业
+INFO:     127.0.0.1:59399 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60612 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60613 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60327 - "GET /api/news/600519 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50060 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:54389 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存刷新: 3000只
+INFO:     127.0.0.1:63317 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63318 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60429 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+  [OK] Market_Center缓存命中: 3000只
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:60430 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60430 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60430 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:63290 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63290 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60535 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+INFO:     127.0.0.1:60084 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:60085 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:60157 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50087 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52841 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:54850 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54177 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+✅ 打板扫描完成: 8 只候选
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 42 只候选 (极强+强: 1只, 高概率≥60%: 8只)
+INFO:     127.0.0.1:53964 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60982 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60983 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+INFO:     127.0.0.1:59642 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:59645 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:59721 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57590 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:64757 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56598 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55127 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+  [OK] 新闻采集: 30条, 情绪=0.517, 正面=1, 负面=0
+INFO:     127.0.0.1:55128 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+  [OK] 行业板块缓存已更新: 84 个行业
+INFO:     127.0.0.1:55204 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55205 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56430 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:56470 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62539 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+INFO:     127.0.0.1:55838 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:57646 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57647 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54237 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59954 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:60470 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 获取股票600519新闻失败: HTTPSConnectionPool(host='search.api.sina.com.cn', port=443): Max retries exceeded with url: /?c=news&q=600519&page=1&num=10 (Caused by NameResolutionError("HTTPSConnection(host='search.api.sina.com.cn', port=443): Failed to resolve 'search.api.sina.com.cn' ([Errno 11001] getaddrinfo failed)"))
+INFO:     127.0.0.1:52330 - "GET /api/news/600519 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:50895 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64162 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:54941 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58188 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58189 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:54871 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:54875 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64457 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:61276 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54119 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51084 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:53296 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:53298 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53871 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53872 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+INFO:     127.0.0.1:49291 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63736 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:64951 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:64923 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+  [OK] 行业板块缓存已更新: 84 个行业
+INFO:     127.0.0.1:59307 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59314 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50645 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存刷新: 3000只
+INFO:     127.0.0.1:50646 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50689 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:61037 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61430 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64058 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+  [OK] Market_Center缓存命中: 3000只
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:53372 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53374 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53462 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53463 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+  [OK] 新闻采集: 30条, 情绪=0.517, 正面=1, 负面=0
+INFO:     127.0.0.1:53523 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:56958 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57361 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:51445 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55331 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55335 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+INFO:     127.0.0.1:58184 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:58186 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:63380 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55738 - "GET /api/news/600519 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:64048 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57308 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63120 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63147 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:63148 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:63225 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63226 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63268 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57063 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:61796 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+INFO:     127.0.0.1:59276 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:55790 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+  [OK] 行业板块缓存已更新: 84 个行业
+INFO:     127.0.0.1:55792 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55854 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55855 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:56941 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:63031 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63031 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:62036 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52615 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52617 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:50341 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:50342 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59814 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:62817 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51767 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58258 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+INFO:     127.0.0.1:52635 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:52636 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:52715 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52716 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52762 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+INFO:     127.0.0.1:58589 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:60402 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+  [OK] 新闻采集: 30条, 情绪=0.527, 正面=2, 负面=0
+INFO:     127.0.0.1:52223 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:54158 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54159 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54207 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:54208 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:49277 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] 行业板块缓存已更新: 84 个行业
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:52402 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+  [WARN] 获取股票600519新闻失败: HTTPSConnectionPool(host='search.api.sina.com.cn', port=443): Max retries exceeded with url: /?c=news&q=600519&page=1&num=10 (Caused by NameResolutionError("HTTPSConnection(host='search.api.sina.com.cn', port=443): Failed to resolve 'search.api.sina.com.cn' ([Errno 11001] getaddrinfo failed)"))
+INFO:     127.0.0.1:61662 - "GET /api/news/600519 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57291 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63712 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56125 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存刷新: 3000只
+INFO:     127.0.0.1:56126 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57306 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57307 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:59185 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:65050 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:59278 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56842 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64140 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64141 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+INFO:     127.0.0.1:54319 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:54322 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:61083 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:63493 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63493 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57424 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60947 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:60948 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:52043 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52044 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60671 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:49855 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56896 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:55155 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:65534 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49152 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63572 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+INFO:     127.0.0.1:63573 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:63635 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:49713 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61677 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+  [OK] 行业板块缓存已更新: 84 个行业
+INFO:     127.0.0.1:58642 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53405 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53406 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+  [OK] 新闻采集: 30条, 情绪=0.527, 正面=2, 负面=0
+INFO:     127.0.0.1:53483 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:53487 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53557 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 获取股票600519新闻失败: HTTPSConnectionPool(host='search.api.sina.com.cn', port=443): Max retries exceeded with url: /?c=news&q=600519&page=1&num=10 (Caused by NameResolutionError("HTTPSConnection(host='search.api.sina.com.cn', port=443): Failed to resolve 'search.api.sina.com.cn' ([Errno 11001] getaddrinfo failed)"))
+INFO:     127.0.0.1:61059 - "GET /api/news/600519 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:57652 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58366 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59526 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:64749 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64752 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:53586 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53587 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58611 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+INFO:     127.0.0.1:64496 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:55502 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:51570 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:65075 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65077 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53268 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:53269 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:53349 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:51001 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51001 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59321 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59672 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:59673 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:59760 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] 行业板块缓存已更新: 84 个行业
+INFO:     127.0.0.1:59761 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59805 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:65081 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52541 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存刷新: 3000只
+INFO:     127.0.0.1:60685 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50886 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50889 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+  [OK] Market_Center缓存命中: 3000只
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:50220 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50221 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52815 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:55867 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62892 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53994 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+INFO:     127.0.0.1:51944 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:51945 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:58903 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58904 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58942 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62570 - "GET /api/news/600519 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:52319 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60838 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+✅ 打板扫描完成: 8 只候选
+  [OK] 新闻采集: 30条, 情绪=0.523, 正面=1, 负面=0
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 42 只候选 (极强+强: 1只, 高概率≥60%: 8只)
+INFO:     127.0.0.1:54228 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56923 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56924 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+INFO:     127.0.0.1:56979 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:56980 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:57056 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:61554 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64888 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49615 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59774 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:59775 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+  [OK] 行业板块缓存已更新: 84 个行业
+INFO:     127.0.0.1:56700 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56707 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50942 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:61818 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51753 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+INFO:     127.0.0.1:56537 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:63053 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:63055 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64662 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64663 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:61814 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:64416 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65051 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:65365 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61423 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61424 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+INFO:     127.0.0.1:59148 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:59149 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:64926 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:55346 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55346 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51520 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65041 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:65042 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:54573 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54574 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63795 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 获取股票600519新闻失败: HTTPSConnectionPool(host='search.api.sina.com.cn', port=443): Max retries exceeded with url: /?c=news&q=600519&page=1&num=10 (Caused by NameResolutionError("HTTPSConnection(host='search.api.sina.com.cn', port=443): Failed to resolve 'search.api.sina.com.cn' ([Errno 11001] getaddrinfo failed)"))
+INFO:     127.0.0.1:54714 - "GET /api/news/600519 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:50907 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65333 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+  [OK] 新闻采集: 30条, 情绪=0.527, 正面=1, 负面=0
+INFO:     127.0.0.1:51120 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+  [OK] 行业板块缓存已更新: 84 个行业
+INFO:     127.0.0.1:53691 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53692 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53738 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存刷新: 3000只
+INFO:     127.0.0.1:53740 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53789 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53345 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:50224 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61961 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+  [OK] Market_Center缓存命中: 3000只
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:50243 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50245 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50361 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50363 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50408 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:61384 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55026 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+✅ 打板扫描完成: 8 只候选
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 42 只候选 (极强+强: 1只, 高概率≥60%: 8只)
+INFO:     127.0.0.1:49998 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60400 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60401 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+INFO:     127.0.0.1:64346 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+  [OK] 东方财富资金流已获取 60/100 只
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 220只)
+INFO:     127.0.0.1:64348 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57428 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63173 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:63695 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52253 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:63872 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63874 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:63960 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63962 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64012 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:56732 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61433 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:56704 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+  [OK] 行业板块缓存已更新: 84 个行业
+INFO:     127.0.0.1:61064 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61067 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61106 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:61107 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:64278 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 获取股票600519新闻失败: HTTPSConnectionPool(host='search.api.sina.com.cn', port=443): Max retries exceeded with url: /?c=news&q=600519&page=1&num=10 (Caused by NameResolutionError("HTTPSConnection(host='search.api.sina.com.cn', port=443): Failed to resolve 'search.api.sina.com.cn' ([Errno 11001] getaddrinfo failed)"))
+INFO:     127.0.0.1:63556 - "GET /api/news/600519 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:63453 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55498 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53759 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57683 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+INFO:     127.0.0.1:57684 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+  [OK] 新闻采集: 30条, 情绪=0.527, 正面=1, 负面=0
+INFO:     127.0.0.1:64263 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:64264 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61054 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:54268 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56524 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57142 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:57449 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:57457 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57511 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57513 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:57566 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:51167 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63403 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:52712 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60743 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60744 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+INFO:     127.0.0.1:57635 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:57636 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+  [OK] 行业板块缓存已更新: 84 个行业
+INFO:     127.0.0.1:57713 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:55167 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55167 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54671 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存刷新: 3000只
+INFO:     127.0.0.1:58039 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58041 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60320 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+INFO:     127.0.0.1:60321 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:59759 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56369 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+  [OK] Market_Center缓存命中: 3000只
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:63312 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62094 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58697 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58698 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:62783 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:62790 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51114 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60768 - "GET /api/news/600519 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60962 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:56188 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58952 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:62566 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:62569 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65284 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65285 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+INFO:     127.0.0.1:55548 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:61387 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64201 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+  [OK] 新闻采集: 30条, 情绪=0.527, 正面=1, 负面=0
+INFO:     127.0.0.1:56526 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:57402 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57403 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57479 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:57481 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+  [OK] 行业板块缓存已更新: 84 个行业
+INFO:     127.0.0.1:57564 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:60154 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50814 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60691 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54625 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+INFO:     127.0.0.1:54626 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:54700 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:54702 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55132 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:49527 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59958 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51926 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:60797 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:60799 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52091 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52092 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:58070 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:53990 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62307 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65032 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:64033 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64034 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64082 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:64084 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:64165 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:61773 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+  [WARN] 获取股票600519新闻失败: HTTPSConnectionPool(host='search.api.sina.com.cn', port=443): Max retries exceeded with url: /?c=news&q=600519&page=1&num=10 (Caused by NameResolutionError("HTTPSConnection(host='search.api.sina.com.cn', port=443): Failed to resolve 'search.api.sina.com.cn' ([Errno 11001] getaddrinfo failed)"))
+INFO:     127.0.0.1:61464 - "GET /api/news/600519 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61773 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64881 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54299 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:54300 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+  [OK] 行业板块缓存已更新: 84 个行业
+INFO:     127.0.0.1:54380 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59199 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63778 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:64960 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50169 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存刷新: 3000只
+INFO:     127.0.0.1:57549 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62129 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62130 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+  [OK] 新闻采集: 30条, 情绪=0.523, 正面=1, 负面=0
+  [OK] Market_Center缓存命中: 3000只
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:55006 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55008 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58796 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60509 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:59258 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61745 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64920 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:64922 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:65011 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65013 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65060 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:50775 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50859 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:51845 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:53811 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53813 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54160 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+INFO:     127.0.0.1:54161 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:51133 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:57126 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49619 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:50618 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58301 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58302 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:58369 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+  [OK] 行业板块缓存已更新: 84 个行业
+INFO:     127.0.0.1:58371 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58436 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:51266 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+  [WARN] 获取股票600519新闻失败: HTTPSConnectionPool(host='search.api.sina.com.cn', port=443): Max retries exceeded with url: /?c=news&q=600519&page=1&num=10 (Caused by NameResolutionError("HTTPSConnection(host='search.api.sina.com.cn', port=443): Failed to resolve 'search.api.sina.com.cn' ([Errno 11001] getaddrinfo failed)"))
+INFO:     127.0.0.1:52470 - "GET /api/news/600519 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51266 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65420 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:53834 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:53835 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58457 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58458 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+INFO:     127.0.0.1:52937 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:51058 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58497 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:55270 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:55065 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54893 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58062 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+  [OK] 新闻采集: 30条, 情绪=0.523, 正面=1, 负面=0
+INFO:     127.0.0.1:58063 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:56797 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:50727 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59214 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55942 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56937 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:56938 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:57021 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57022 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57069 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:53091 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49226 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+INFO:     127.0.0.1:64788 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:53410 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+  [OK] 行业板块缓存已更新: 84 个行业
+INFO:     127.0.0.1:53412 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53464 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存刷新: 3000只
+INFO:     127.0.0.1:53466 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53506 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60101 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:53303 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58826 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+INFO:     127.0.0.1:56936 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+  [OK] Market_Center缓存命中: 3000只
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:56938 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56938 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57151 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51494 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62440 - "GET /api/news/600519 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:51674 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56807 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:64726 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:60645 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60646 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60694 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+INFO:     127.0.0.1:60696 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:60765 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:61754 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55501 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:58942 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58461 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58462 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:58523 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:58524 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55456 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:51411 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59658 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52939 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+  [OK] 新闻采集: 30条, 情绪=0.523, 正面=1, 负面=0
+INFO:     127.0.0.1:51998 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52000 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+  [OK] 行业板块缓存已更新: 84 个行业
+INFO:     127.0.0.1:62567 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62568 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63111 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+INFO:     127.0.0.1:63614 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:50455 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:60098 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:50855 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50856 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50904 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:50906 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:50349 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:52325 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52325 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58307 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64685 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+INFO:     127.0.0.1:64686 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:58904 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:58906 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59788 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 获取股票600519新闻失败: HTTPSConnectionPool(host='search.api.sina.com.cn', port=443): Max retries exceeded with url: /?c=news&q=600519&page=1&num=10 (Caused by NameResolutionError("HTTPSConnection(host='search.api.sina.com.cn', port=443): Failed to resolve 'search.api.sina.com.cn' ([Errno 11001] getaddrinfo failed)"))
+INFO:     127.0.0.1:50163 - "GET /api/news/600519 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:57893 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52861 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55056 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:54210 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:54212 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53663 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53665 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:53725 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:58568 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63848 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+  [OK] 行业板块缓存已更新: 84 个行业
+INFO:     127.0.0.1:57836 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56870 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56871 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存刷新: 3000只
+INFO:     127.0.0.1:56914 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56915 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56966 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:62896 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55818 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+  [OK] Market_Center缓存命中: 3000只
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:59845 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59845 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57339 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61521 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+INFO:     127.0.0.1:61522 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+  [OK] 新闻采集: 30条, 情绪=0.523, 正面=1, 负面=0
+INFO:     127.0.0.1:56905 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:60326 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60934 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:53054 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64116 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64117 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:62958 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62960 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:63039 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:64161 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56682 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60574 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+INFO:     127.0.0.1:60331 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:60332 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:60407 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60409 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60461 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 获取股票600519新闻失败: HTTPSConnectionPool(host='search.api.sina.com.cn', port=443): Max retries exceeded with url: /?c=news&q=600519&page=1&num=10 (Caused by NameResolutionError("HTTPSConnection(host='search.api.sina.com.cn', port=443): Failed to resolve 'search.api.sina.com.cn' ([Errno 11001] getaddrinfo failed)"))
+INFO:     127.0.0.1:50727 - "GET /api/news/600519 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55428 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:54275 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:52772 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+  [OK] 行业板块缓存已更新: 84 个行业
+INFO:     127.0.0.1:60230 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60232 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51056 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+INFO:     127.0.0.1:51057 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:50061 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:60458 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60458 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:52731 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65361 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65362 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:58385 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:58386 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58456 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:60261 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64184 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57187 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:51842 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:51844 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51904 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51905 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+INFO:     127.0.0.1:51956 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:59510 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:52072 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+  [OK] 新闻采集: 30条, 情绪=0.523, 正面=1, 负面=0
+INFO:     127.0.0.1:53958 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:57190 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57192 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57774 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:57775 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+  [OK] 行业板块缓存已更新: 84 个行业
+INFO:     127.0.0.1:63880 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:57583 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57583 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64040 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56150 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存刷新: 3000只
+INFO:     127.0.0.1:56157 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56199 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56201 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:50060 - "GET /api/news/600519 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:63201 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49584 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:56275 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60087 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60611 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60612 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:60669 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:60671 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60740 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:49454 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59591 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50955 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+INFO:     127.0.0.1:50755 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:50757 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:54550 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54551 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53409 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:50283 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58642 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+✅ 打板扫描完成: 8 只候选
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 42 只候选 (极强+强: 1只, 高概率≥60%: 8只)
+INFO:     127.0.0.1:55436 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64584 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64589 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:64647 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+  [OK] 行业板块缓存已更新: 84 个行业
+INFO:     127.0.0.1:64649 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64730 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51950 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:55179 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50092 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+INFO:     127.0.0.1:55165 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+  [OK] 新闻采集: 30条, 情绪=0.523, 正面=1, 负面=0
+INFO:     127.0.0.1:55166 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:55241 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55242 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51404 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:51683 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54019 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+✅ 打板扫描完成: 8 只候选
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 42 只候选 (极强+强: 1只, 高概率≥60%: 8只)
+INFO:     127.0.0.1:51914 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54676 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54677 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+INFO:     127.0.0.1:50284 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:50285 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:60869 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 获取股票600519新闻失败: HTTPSConnectionPool(host='search.api.sina.com.cn', port=443): Max retries exceeded with url: /?c=news&q=600519&page=1&num=10 (Caused by NameResolutionError("HTTPSConnection(host='search.api.sina.com.cn', port=443): Failed to resolve 'search.api.sina.com.cn' ([Errno 11001] getaddrinfo failed)"))
+INFO:     127.0.0.1:53656 - "GET /api/news/600519 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61460 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:53999 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52814 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65261 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:65262 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:65337 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65339 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65396 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:49738 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57372 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:55839 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+  [OK] 行业板块缓存已更新: 84 个行业
+INFO:     127.0.0.1:59874 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59875 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59921 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存刷新: 3000只
+INFO:     127.0.0.1:59922 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57331 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51957 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:58431 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64090 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+  [OK] Market_Center缓存命中: 3000只
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:54515 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54517 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54515 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51089 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51090 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:62103 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60953 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:61000 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:61003 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61790 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61791 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+  [OK] 新闻采集: 30条, 情绪=0.523, 正面=1, 负面=0
+INFO:     127.0.0.1:61838 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:61840 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:63660 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57220 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60663 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60664 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:62448 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62450 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:55655 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55656 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57216 - "GET /api/news/600519 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:60651 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63427 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57238 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:57239 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+  [OK] 行业板块缓存已更新: 84 个行业
+INFO:     127.0.0.1:59184 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59185 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54847 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:54849 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:53316 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61230 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:62344 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62346 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60463 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:60464 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:60534 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60535 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:62314 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63928 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60240 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60241 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:54125 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:54128 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55393 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55394 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54116 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:56639 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+✅ 打板扫描完成: 8 只候选
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 42 只候选 (极强+强: 1只, 高概率≥60%: 8只)
+INFO:     127.0.0.1:63867 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63869 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59063 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+INFO:     127.0.0.1:59065 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:59134 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+  [OK] 行业板块缓存已更新: 84 个行业
+INFO:     127.0.0.1:59136 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:50156 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50156 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62843 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62845 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存刷新: 3000只
+INFO:     127.0.0.1:51627 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51630 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59183 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+  [OK] 新闻采集: 30条, 情绪=0.53, 正面=1, 负面=0
+  [WARN] 获取股票600519新闻失败: HTTPSConnectionPool(host='search.api.sina.com.cn', port=443): Max retries exceeded with url: /?c=news&q=600519&page=1&num=10 (Caused by NameResolutionError("HTTPSConnection(host='search.api.sina.com.cn', port=443): Failed to resolve 'search.api.sina.com.cn' ([Errno 11001] getaddrinfo failed)"))
+INFO:     127.0.0.1:64509 - "GET /api/news/600519 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:62824 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61656 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:59185 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59185 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60228 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59900 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:59901 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:53095 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53096 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52453 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:54729 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58450 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:58452 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52126 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:52128 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51368 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51375 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:58429 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50364 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+✅ 打板扫描完成: 8 只候选
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 42 只候选 (极强+强: 1只, 高概率≥60%: 8只)
+INFO:     127.0.0.1:52770 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52772 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63333 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+INFO:     127.0.0.1:63334 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:49599 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+  [OK] 行业板块缓存已更新: 84 个行业
+INFO:     127.0.0.1:49603 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:64893 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60236 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57682 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57683 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:52009 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:52013 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52788 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52789 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:49314 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63346 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:63400 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63403 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:60102 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60104 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60149 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:60152 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61954 - "GET /api/news/600519 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:60282 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57805 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:63796 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63798 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59859 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+  [OK] 新闻采集: 30条, 情绪=0.53, 正面=1, 负面=0
+INFO:     127.0.0.1:59860 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:53728 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53730 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:63761 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63761 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56386 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+INFO:     127.0.0.1:56388 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+  [OK] 东方财富资金流已获取 20/100 只
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 222只)
+  [OK] 行业板块缓存已更新: 84 个行业
+INFO:     127.0.0.1:61262 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61263 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61311 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存刷新: 3000只
+INFO:     127.0.0.1:61312 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:54893 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52726 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52749 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52750 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+  [OK] Market_Center缓存命中: 3000只
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:50201 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50205 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60328 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60329 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54214 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:62425 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63669 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:63671 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:49842 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49843 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65105 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:65106 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:54296 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54296 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:54503 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54504 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52161 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+INFO:     127.0.0.1:55150 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:55209 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:55211 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 获取股票600519新闻失败: HTTPSConnectionPool(host='search.api.sina.com.cn', port=443): Max retries exceeded with url: /?c=news&q=600519&page=1&num=10 (Caused by NameResolutionError("HTTPSConnection(host='search.api.sina.com.cn', port=443): Failed to resolve 'search.api.sina.com.cn' ([Errno 11001] getaddrinfo failed)"))
+INFO:     127.0.0.1:57759 - "GET /api/news/600519 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:54456 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59006 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57786 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57788 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:54503 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+  [OK] 行业板块缓存已更新: 84 个行业
+INFO:     127.0.0.1:54506 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64473 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64475 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60149 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:62632 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+  [OK] 新闻采集: 30条, 情绪=0.53, 正面=1, 负面=0
+INFO:     127.0.0.1:57290 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:57294 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56521 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56522 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+INFO:     127.0.0.1:59245 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:59246 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:57264 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57264 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:56856 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56858 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58255 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:58256 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:56636 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56637 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:56835 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56835 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57229 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:57231 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55216 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:55218 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63219 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63220 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:57197 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55524 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:55560 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+  [OK] 行业板块缓存已更新: 84 个行业
+INFO:     127.0.0.1:55563 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61454 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61455 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存刷新: 3000只
+INFO:     127.0.0.1:49793 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49794 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63491 - "GET /api/news/600519 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59062 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:54741 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50305 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+  [OK] Market_Center缓存命中: 3000只
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:50307 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50307 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60696 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60725 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:60726 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:50282 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50282 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:60117 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60119 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53444 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+INFO:     127.0.0.1:53447 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+  [OK] 新闻采集: 30条, 情绪=0.53, 正面=1, 负面=0
+INFO:     127.0.0.1:50510 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:50512 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:60074 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60074 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65389 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65393 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:53980 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:53988 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54034 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54035 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:65364 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55734 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:55761 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+  [OK] 行业板块缓存已更新: 84 个行业
+INFO:     127.0.0.1:55764 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55442 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55443 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+INFO:     127.0.0.1:55480 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:55482 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:61761 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53453 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:49866 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49868 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52891 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:52899 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:60468 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51665 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 获取股票600519新闻失败: HTTPSConnectionPool(host='search.api.sina.com.cn', port=443): Max retries exceeded with url: /?c=news&q=600519&page=1&num=10 (Caused by NameResolutionError("HTTPSConnection(host='search.api.sina.com.cn', port=443): Failed to resolve 'search.api.sina.com.cn' ([Errno 11001] getaddrinfo failed)"))
+INFO:     127.0.0.1:63953 - "GET /api/news/600519 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:56253 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49999 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63975 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:63977 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:62340 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62341 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62382 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+INFO:     127.0.0.1:62383 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:65513 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61313 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59829 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:59832 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58977 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58978 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+  [OK] 新闻采集: 30条, 情绪=0.53, 正面=1, 负面=0
+INFO:     127.0.0.1:59033 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+  [OK] 行业板块缓存已更新: 84 个行业
+INFO:     127.0.0.1:59037 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:59784 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59784 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54009 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54011 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存刷新: 3000只
+INFO:     127.0.0.1:64542 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64544 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55866 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:53992 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50802 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:55867 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55867 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50880 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54665 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+INFO:     127.0.0.1:54666 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:49380 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:49381 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62986 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:60034 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63786 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63788 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:62272 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:62274 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56001 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56003 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53462 - "GET /api/news/600519 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:49159 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54922 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:62690 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:62692 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56137 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56138 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+INFO:     127.0.0.1:56181 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:56182 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:65296 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50759 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+  [OK] 行业板块缓存已更新: 84 个行业
+INFO:     127.0.0.1:57304 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57306 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61189 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:61190 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:61262 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61263 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:57275 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57275 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62249 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+INFO:     127.0.0.1:62252 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+  [OK] 新闻采集: 30条, 情绪=0.53, 正面=1, 负面=0
+INFO:     127.0.0.1:63931 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:63933 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53310 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:51845 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:51847 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58546 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58547 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:59268 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:59267 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49447 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+  [OK] 行业板块缓存已更新: 84 个行业
+INFO:     127.0.0.1:56552 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [WARN] 获取股票600519新闻失败: HTTPSConnectionPool(host='search.api.sina.com.cn', port=443): Max retries exceeded with url: /?c=news&q=600519&page=1&num=10 (Caused by NameResolutionError("HTTPSConnection(host='search.api.sina.com.cn', port=443): Failed to resolve 'search.api.sina.com.cn' ([Errno 11001] getaddrinfo failed)"))
+INFO:     127.0.0.1:64937 - "GET /api/news/600519 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:56551 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57772 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存刷新: 3000只
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:60505 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56665 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:57357 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+  [WARN] 东方财富资金流返回为空，保留OHLC估算
+  竞价扫描完成: 913 只候选 (极强+强: 66只, 高概率≥60%: 227只)
+INFO:     127.0.0.1:63243 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63243 - "GET /assets/index-CX_Ao8sP.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59842 - "GET /assets/index-Cf7Eoxff.css HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63243 - "GET /api/auction/scan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59842 - "GET /vite.svg HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57994 - "GET /api/auction/scan HTTP/1.1" 200 OK
+  [OK] Market_Center缓存命中: 200只
+INFO:     127.0.0.1:57993 - "GET /api/dashboard?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54858 - "GET /api/minute/600519?count=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59137 - "GET /api/auction/scan HTTP/1.1" 200 OK
+🔍 开始全市场打板扫描 (3001 只)...
+  [OK] Market_Center缓存命中: 3000只
+✅ 打板扫描完成: 30 只候选
+INFO:     127.0.0.1:55494 - "GET /api/auction/scan HTTP/1.1" 200 OK

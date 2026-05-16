@@ -1,0 +1,11 @@
+hangye_ZA01: name=农业, change=-1.7828843106181%
+hangye_ZA02: name=林业, change=0%
+hangye_ZA03: name=畜牧业, change=7.0330969267139%
+hangye_ZA04: name=渔业, change=-1.8133333333333%
+hangye_ZA05: name=农、林、牧、渔服务业, change=0%
+hangye_ZB06: name=煤炭开采和洗选业, change=-1.2276580232276%
+hangye_ZB07: name=石油和天然气开采业, change=-0.29381519024534%
+hangye_ZB08: name=黑色金属矿采选业, change=-1.2690355329949%
+hangye_ZB09: name=有色金属矿采选业, change=-3.4287616511318%
+hangye_ZB10: name=非金属矿采选业, change=5.9719201107376%
+Total: 84
