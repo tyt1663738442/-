@@ -22,3 +22,6 @@ backend/auction_cache.json
 
 # Windows 临时文件
 nul
+
+# 工作助手配置（本地）
+.workbuddy/
