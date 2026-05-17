@@ -15,6 +15,9 @@ export default {
           border: '#2d3748',
         }
       },
+      gridTemplateColumns: {
+        '13': 'repeat(13, minmax(0, 1fr))',
+      },
     },
   },
   plugins: [],

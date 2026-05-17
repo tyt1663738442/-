@@ -10,7 +10,7 @@ export default defineConfig({
     },
   },
   server: {
-    port: 5173,
+    port: 8081,
     host: '0.0.0.0',
     allowedHosts: true,   // 消除 host 警告
     proxy: {

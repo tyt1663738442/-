@@ -824,6 +824,64 @@ DABAN_CACHE = []
 DABAN_CACHE_TIME = 0
 AUCTION_CACHE = []
 AUCTION_CACHE_TIME = 0
+AUCTION_CACHE_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'auction_cache.json')
+BOARD_COUNT_CACHE: Dict[str, int] = {}  # code -> 连板数，由 _update_board_count_cache 定期更新
+
+def _save_auction_cache():
+    """将 AUCTION_CACHE 持久化到文件"""
+    try:
+        with open(AUCTION_CACHE_FILE, 'w', encoding='utf-8') as f:
+            json.dump({'data': AUCTION_CACHE, 'time': time.time()}, f, ensure_ascii=False)
+    except Exception as e:
+        print(f"[WARN] 保存 AUCTION_CACHE 失败: {e}")
+
+def _load_auction_cache():
+    """从文件恢复 AUCTION_CACHE，并从缓存数据中提取连板数初始化 BOARD_COUNT_CACHE"""
+    global AUCTION_CACHE, AUCTION_CACHE_TIME, BOARD_COUNT_CACHE
+    if not os.path.exists(AUCTION_CACHE_FILE):
+        return False
+    try:
+        with open(AUCTION_CACHE_FILE, 'r', encoding='utf-8') as f:
+            d = json.load(f)
+        AUCTION_CACHE = d.get('data', [])
+        AUCTION_CACHE_TIME = d.get('time', 0)
+        # 从缓存中提取已有的连板数初始化 BOARD_COUNT_CACHE（防止周末后台扫描覆盖）
+        BOARD_COUNT_CACHE = {}
+        for s in AUCTION_CACHE:
+            bc = s.get('board_count')
+            if bc and bc > 1:
+                BOARD_COUNT_CACHE[s.get('code', '')] = bc
+        print(f"[OK] 恢复 AUCTION_CACHE: {len(AUCTION_CACHE)} 只 (时间: {datetime.fromtimestamp(AUCTION_CACHE_TIME).strftime('%m-%d %H:%M')})")
+        print(f"  [OK] 初始化 BOARD_COUNT_CACHE: {len(BOARD_COUNT_CACHE)} 只连板>1")
+        return len(AUCTION_CACHE) > 0
+    except Exception as e:
+        print(f"[WARN] 恢复 AUCTION_CACHE 失败: {e}")
+        return False
+
+def _update_board_count_cache():
+    """
+    从东方财富涨停池获取连板数，更新 BOARD_COUNT_CACHE。
+    建议在交易时段每天调用1~2次（如9:30和15:00各一次）。
+    周末/非交易日自动跳过。
+    """
+    global BOARD_COUNT_CACHE
+    from datetime import datetime as _dt, timedelta as _td
+    for i in range(1, 6):
+        dt = (_dt.now() - _td(days=i)).strftime('%Y%m%d')
+        try:
+            df = ak.stock_zt_pool_em(date=dt)
+            new_cache = {}
+            for _, row in df.iterrows():
+                code = str(row['代码']).zfill(6)
+                new_cache[code] = int(row['连板数'])
+            BOARD_COUNT_CACHE = new_cache
+            print(f"[OK] 连板数缓存已更新({dt}): {len(BOARD_COUNT_CACHE)} 只")
+            return
+        except Exception as e:
+            print(f"[WARN] {dt} 连板数获取失败(非交易日?): {e}")
+            continue
+    print("[WARN] 近5日均非交易日，连板数未更新")
+
 # 板块涨跌幅缓存（用于竞价板块效应计算）
 SECTOR_CHANGE_CACHE: Dict[str, float] = {}
 
@@ -1148,6 +1206,10 @@ def load_stock_list():
         FULL_STOCK_LIST = MONITOR_STOCKS  # fallback
 
 load_stock_list()
+_load_auction_cache()
+
+# 启动时立即从 akshare 获取最新连板数（周末也执行，确保 BOARD_COUNT_CACHE 初始化）
+_update_board_count_cache()
 
 def daban_background_scan():
     global DABAN_CACHE, DABAN_CACHE_TIME, AUCTION_CACHE, AUCTION_CACHE_TIME, MARKET_CENTER_CACHE, MARKET_CENTER_CACHE_TIME
@@ -1175,6 +1237,9 @@ def daban_background_scan():
                 print(f"✅ 打板扫描完成: {len(DABAN_CACHE)} 只候选")
                 # 同时计算竞价候选
                 _refresh_auction_cache(stocks, phase)
+                # 每5轮(约2.5分钟)保存一次缓存到文件
+                if scan_count % 5 == 0:
+                    _save_auction_cache()
         except Exception as e:
             print(f"❌ 打板扫描失败: {e}")
         # 每5轮(约2.5分钟)刷新一次板块涨跌幅
@@ -1191,6 +1256,9 @@ def daban_background_scan():
                     print(f"  [OK] Market_Center缓存刷新: {len(mc)}只")
             except Exception as e:
                 print(f"  [WARN] Market_Center刷新失败: {e}")
+        # 每30轮(约15分钟)更新连板数缓存（非交易时段自动跳过）
+        if scan_count % 30 == 0:
+            _update_board_count_cache()
         time.sleep(30)
 
 def _refresh_sector_cache():
@@ -1457,6 +1525,9 @@ def _refresh_auction_cache(stocks: Dict, phase: str):
         s_dict = s.model_dump() if hasattr(s, 'model_dump') else s
         if not code.isdigit() or not s_dict.get('price'):
             continue
+        # 用 BOARD_COUNT_CACHE 更新连板数（优先使用东方财富涨停池的真实连板数）
+        if code in BOARD_COUNT_CACHE:
+            s_dict['board_count'] = BOARD_COUNT_CACHE[code]
         # 过滤科创(688)/创业板(3)/ST
         if code.startswith('688') or code.startswith('3'):
             continue
@@ -1933,6 +2004,38 @@ def get_minute_data(code: str, count: int = Query(100)):
         return {'data': [], 'error': str(e)}
 
 
+@app.get('/api/kline/{code}')
+def get_kline_data(code: str, period: str = Query('day'), count: int = Query(120)):
+    """
+    K线数据（腾讯财经接口）
+    period: day|week|month
+    返回: [date, open, close, low, high, volume]
+    """
+    prefix = 'sh' if code.startswith(('6', '5')) else 'sz'
+    try:
+        p = period if period in ('day', 'week', 'month') else 'day'
+        url = f'https://ifzq.gtimg.cn/appstock/app/kline/kline?param={prefix}{code},{p},,,{count}'
+        resp = requests.get(url, timeout=8)
+        data = resp.json()
+        items = data.get('data', {}).get(f'{prefix}{code}', {}).get(p, [])
+        result = []
+        for item in items:
+            if len(item) < 6:
+                continue
+            # 腾讯格式: [日期, 开盘, 收盘, 最高, 最低, 成交量]
+            result.append({
+                'date': str(item[0]),
+                'open': float(item[1]),
+                'close': float(item[2]),
+                'high': float(item[3]),
+                'low': float(item[4]),
+                'volume': int(float(item[5])) if item[5] else 0,
+            })
+        return {'data': result, 'period': p}
+    except Exception as e:
+        return {'data': [], 'period': period, 'error': str(e)}
+
+
 # 大单自选股管理（放在 /api/big-orders 之前，确保精确路由优先匹配）
 BIG_ORDER_WATCHLIST: List[str] = []
 BIG_ORDER_WATCHLIST_FILE = os.path.join(os.path.dirname(__file__), 'big_order_watchlist.json')
@@ -2167,6 +2270,180 @@ def get_sector_stocks(sector_key: str):
             name = s['板块名称']
             break
     return {'sector': name, 'key': sector_key, 'stocks': _fetch_sector_stocks(sector_key, name)}
+
+# ============== 复盘分析 - 连板质量矩阵评分 ==============
+
+def _calc_board_base(boards: int) -> int:
+    """连板基础分"""
+    return {1: 5, 2: 8, 3: 12, 4: 15}.get(boards, 18)  # 5板+ = 18
+
+def _calc_theme_quality(sector: str, name: str) -> int:
+    """质地分: 大题材10 / 中等8 / 小题材3"""
+    big_kw = ['政策', '技术', '合作', '发布', '中标', '订单', '国产', '创新',
+              '赛道', '产业', '规划', '纲要', '补贴', '扶持', '突破', '核心',
+              '芯片', '算力', 'AI', '人工智能', '量子', '卫星', '低空', '固态',
+              '机器人', '新能源', '储能', '氢能', '自动驾驶', '智能驾驶']
+    small_kw = ['一季报', '半年报', '三季报', '年报', '净利润', '营收', '增长', '%']
+    text = (sector or '') + (name or '')
+    if any(k in text for k in big_kw):
+        return 10
+    if any(k in text for k in small_kw):
+        return 3
+    return 8
+
+def _calc_heat_score(limit_count: int) -> int:
+    """热度分: 同题材涨停数"""
+    if limit_count >= 20: return 8
+    if limit_count >= 12: return 7
+    if limit_count >= 8:  return 6
+    if limit_count >= 4:  return 5
+    if limit_count >= 2:  return 3
+    return 1
+
+def _calc_review_scores(stocks: List[Dict]) -> List[Dict]:
+    """
+    对连板股应用连板质量矩阵评分规则 (25~72分)
+    - 连板基础分: 1板5/2板8/3板12/4板15/5板+18
+    - 题材评分(封顶30): 质地+热度+龙头+叠加
+    - 资金流向: -5~+10
+    """
+    if not stocks:
+        return []
+
+    # ---- 按板块分组，统计同板块连板数 ----
+    sector_stocks: Dict[str, List[Dict]] = defaultdict(list)
+    for s in stocks:
+        sec = s.get('sector') or '未知'
+        sector_stocks[sec].append(s)
+
+    # 板块内最高板 & 梯队深度
+    for sec, items in sector_stocks.items():
+        board_counts = sorted(set(s.get('board_count', 1) or 1 for s in items), reverse=True)
+        max_board = board_counts[0] if board_counts else 1
+        depth = len(board_counts)  # 梯队层数
+        for s in items:
+            s['_is_leader'] = (s.get('board_count', 1) or 1) == max_board
+            s['_depth'] = depth
+            s['_sector_limit_count'] = sum(1 for x in items)  # 同板块连板股数量
+            s['_sector_total_lu'] = len([x for x in items if (x.get('board_count') or 0) >= 1])  # 同题材涨停数近似
+
+    results = []
+    for s in stocks:
+        boards = s.get('board_count') or 1
+        sector = s.get('sector') or ''
+        name = s.get('name') or ''
+        inflow_ratio = abs(s.get('net_ratio') or 0)  # 主力净流入占比%
+
+        # 基础分
+        base = _calc_board_base(boards)
+
+        # 质地分
+        quality = _calc_theme_quality(sector, name)
+
+        # 热度分 (同题材涨停数)
+        heat = _calc_heat_score(s.get('_sector_total_lu') or 1)
+
+        # 龙头加分
+        leader = 8 if s.get('_is_leader') else 0
+        depth_bonus = 5 if (s.get('_depth') or 0) >= 3 else 0
+
+        # 多题材叠加 (简化: 题材数=1，大题材个数由质地推断)
+        big_count = 1 if quality >= 8 else 0
+        theme_count = 1  # 简化，题材数=1
+
+        # 题材小计(封顶30)
+        theme_total = min(30, quality + heat + leader + depth_bonus)
+
+        # 资金流向分
+        fund = 10 if inflow_ratio > 20 else (6 if inflow_ratio >= 8 else (3 if inflow_ratio >= 2 else (0 if inflow_ratio >= -2 else (-3 if inflow_ratio > -7 else -3))))
+
+        total = base + theme_total + fund
+        grade = 'S' if total >= 55 else ('A' if total >= 45 else ('B' if total >= 35 else 'C'))
+
+        results.append({
+            'code': s.get('code', ''),
+            'name': name,
+            'price': round(s.get('price') or 0, 2),
+            'change_pct': round(s.get('change_pct') or 0, 2),
+            'boards': boards,
+            'sector': sector,
+            'base_score': base,
+            'quality_score': quality,
+            'heat_score': heat,
+            'leader_score': leader,
+            'depth_bonus': depth_bonus,
+            'multi_bonus': 0,
+            'theme_total': theme_total,
+            'fund_score': fund,
+            'inflow_ratio': round(inflow_ratio, 1),
+            'total_score': total,
+            'grade': grade,
+            'is_leader': s.get('_is_leader', False),
+            'depth': s.get('_depth', 0),
+            'sector_limit_count': s.get('_sector_total_lu', 1),
+            'amount': round(s.get('auction_turnover') or 0, 2),  # 成交额(万元)
+            'signal': s.get('signal', ''),
+        })
+
+    results.sort(key=lambda x: x['total_score'], reverse=True)
+    return results
+
+
+@app.get('/api/review/stocks')
+def get_review_stocks():
+    """
+    复盘分析 - 连板质量矩阵评分
+    返回当前最新数据，按总分降序排列
+    周末/休市时直接使用缓存，不触发重新扫描
+    """
+    global AUCTION_CACHE, AUCTION_CACHE_TIME
+    phase = ds._get_market_phase()
+
+    # 周末或已休市：直接使用缓存，不重新扫描
+    if phase in ('周末休市', '已休市'):
+        if len(AUCTION_CACHE) == 0:
+            _load_auction_cache()
+        if len(AUCTION_CACHE) == 0:
+            return {'phase': phase, 'time': datetime.now().strftime('%Y-%m-%d %H:%M:%S'), 'stats': {'total': 0, 's_count': 0, 'a_count': 0, 'avg_score': '0', 'avg_inflow': '0'}, 'stocks': []}
+    else:
+        # 交易时段：缓存过期(>90s)或为空，触发一次扫描
+        cache_age = time.time() - AUCTION_CACHE_TIME
+        if cache_age > 90 or len(AUCTION_CACHE) == 0:
+            if FULL_STOCK_LIST:
+                try:
+                    stocks = ds.fetch_batch_realtime(FULL_STOCK_LIST)
+                    _refresh_auction_cache(stocks, phase)
+                except Exception as e:
+                    print(f'复盘扫描失败: {e}')
+
+    # 只取涨停/连板候选 (board_count >= 1)
+    limit_stocks = [s for s in AUCTION_CACHE if (s.get('board_count') or 0) >= 1]
+    if not limit_stocks:
+        # 降级: 取涨幅 >= 9% 的股票
+        limit_stocks = [s for s in AUCTION_CACHE if (s.get('change_pct') or 0) >= 9.0]
+        # 补充 board_count = 1
+        for s in limit_stocks:
+            if not s.get('board_count'):
+                s['board_count'] = 1
+
+    scored = _calc_review_scores(limit_stocks[:100])
+
+    stats = {
+        'total': len(scored),
+        's_count': sum(1 for x in scored if x['grade'] == 'S'),
+        'a_count': sum(1 for x in scored if x['grade'] == 'A'),
+        'b_count': sum(1 for x in scored if x['grade'] == 'B'),
+        'c_count': sum(1 for x in scored if x['grade'] == 'C'),
+        'avg_score': round(sum(x['total_score'] for x in scored) / len(scored), 1) if scored else 0,
+        'avg_inflow': round(sum(x['inflow_ratio'] for x in scored) / len(scored), 1) if scored else 0,
+    }
+
+    return {
+        'phase': phase,
+        'time': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+        'stats': stats,
+        'stocks': scored,
+    }
 
 # ============== 静态文件托管 ==============
 from fastapi.staticfiles import StaticFiles

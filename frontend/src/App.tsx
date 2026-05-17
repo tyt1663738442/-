@@ -2,25 +2,21 @@
  * A股实时监控系统 v3.0 - 同花顺风格
  * 单页面 + Tab 切换
  */
-import { useState, useEffect } from 'react'
-import { TradingLayout } from './components/TradingLayout'
-import { BigOrderPanel } from './components/BigOrderPanel'
+import { useState } from 'react'
 import { AuctionPanel } from './components/AuctionPanel'
 import { FormulaPanel } from './components/FormulaPanel'
 import { SectorPanel } from './components/SectorPanel'
-import { StrategyDashboard } from './components/StrategyDashboard'
-import { BarChart3, Activity, Zap, Grid3x3, Flame, LineChart } from 'lucide-react'
+import { ReviewPanel } from './components/ReviewPanel'
+import { Zap, Grid3x3, Flame, ClipboardList } from 'lucide-react'
 
-type TabKey = 'market' | 'bigorder' | 'auction' | 'formula' | 'sector' | 'strategy'
+type TabKey = 'auction' | 'formula' | 'sector' | 'review'
 
 // 科技风配色
 const TABS: { key: TabKey; label: string; icon: any; color: string }[] = [
-  { key: 'market',   label: '行情看板',   icon: BarChart3,   color: '#3b82f6' },
-  { key: 'bigorder', label: '大单追踪',   icon: Activity,    color: '#f59e0b' },
   { key: 'auction',  label: '竞价分析',   icon: Zap,         color: '#a855f7' },
-  { key: 'formula',  label: '竞价选股',   icon: Flame,        color: '#f23645' },
-  { key: 'sector',   label: '板块行情',   icon: Grid3x3,    color: '#06b6d4' },
-  { key: 'strategy', label: '策略回测',   icon: LineChart,   color: '#00d4ff' },
+  { key: 'formula',  label: '竞价选股',   icon: Flame,       color: '#f23645' },
+  { key: 'sector',   label: '板块行情',   icon: Grid3x3,     color: '#06b6d4' },
+  { key: 'review',   label: '复盘分析',   icon: ClipboardList, color: '#00d4ff' },
 ]
 
 // 辅助函数：将十六进制颜色转换为RGB
@@ -34,27 +30,6 @@ function hexToRgb(hex: string): string {
 
 function App() {
   const [activeTab, setActiveTab] = useState<TabKey>('auction')
-  const [pendingStockCode, setPendingStockCode] = useState<string | null>(null)
-
-  const handleSelectStock = (code: string) => {
-    setPendingStockCode(code)
-    setActiveTab('market')
-  }
-
-  // 监听各子组件的选股事件
-  useEffect(() => {
-    const handler = (e: Event) => {
-      const ce = e as CustomEvent<string>
-      setPendingStockCode(ce.detail)
-      setActiveTab('market')
-    }
-    window.addEventListener('qclaw-select-stock', handler)
-    return () => window.removeEventListener('qclaw-select-stock', handler)
-  }, [])
-
-  const clearPendingCode = () => {
-    if (pendingStockCode) setPendingStockCode(null)
-  }
 
   return (
     <div className="h-screen flex flex-col text-white overflow-hidden" style={{ background: 'linear-gradient(180deg, #0a0f1a 0%, #0d1525 100%)' }}>
@@ -111,17 +86,10 @@ function App() {
 
       {/* 内容区 */}
       <main className="flex-1 overflow-hidden">
-        {activeTab === 'market' && (
-          <TradingLayout
-            pendingStockCode={pendingStockCode}
-            onClearPending={clearPendingCode}
-          />
-        )}
-        {activeTab === 'bigorder' && <BigOrderPanel onSelectStock={handleSelectStock} />}
-        {activeTab === 'auction' && <AuctionPanel onSelectStock={handleSelectStock} />}
+        {activeTab === 'auction' && <AuctionPanel />}
         {activeTab === 'formula' && <FormulaPanel />}
-        {activeTab === 'sector' && <SectorPanel onSelectStock={handleSelectStock} />}
-        {activeTab === 'strategy' && <StrategyDashboard />}
+        {activeTab === 'sector' && <SectorPanel />}
+        {activeTab === 'review' && <ReviewPanel />}
       </main>
     </div>
   )

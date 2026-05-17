@@ -3,6 +3,10 @@ import { Zap, Target, Flame, TrendingUp, AlertTriangle, ArrowUpDown, RefreshCw, 
 
 const API_BASE = 'http://localhost:8000'
 
+interface Props {
+  onSelectStock?: (code: string) => void
+}
+
 interface FormulaStock {
   code: string
   name: string
@@ -61,7 +65,7 @@ const FORMULAS = [
 
 type SortKey = 'score' | 'change_pct' | 'auction_turnover' | 'turnover_pct'
 
-export function FormulaPanel() {
+export function FormulaPanel({ onSelectStock }: Props) {
   const [activeFormula, setActiveFormula] = useState(1)
   const [candidates, setCandidates] = useState<FormulaStock[]>([])
   const [phase, setPhase] = useState('')
@@ -227,7 +231,13 @@ export function FormulaPanel() {
                 key={stock.code}
                 className="grid gap-1 px-4 py-2.5 text-sm hover:bg-[#1e2d4a]/50 cursor-pointer transition-colors border-t border-[#1e2d4a]/50"
                 style={{ gridTemplateColumns: '1.5fr 2.5fr 1.5fr 1.5fr 1.5fr 1.5fr 1.5fr 1.5fr' }}
-                onClick={() => window.dispatchEvent(new CustomEvent('qclaw-select-stock', { detail: stock.code }))}
+                onClick={() => {
+                  if (onSelectStock) {
+                    onSelectStock(stock.code)
+                  } else {
+                    window.dispatchEvent(new CustomEvent('qclaw-select-stock', { detail: stock.code }))
+                  }
+                }}
               >
                 <div className="text-right font-mono font-bold" style={{ color }}>
                   {stock.price > 0 ? stock.price.toFixed(2) : '--'}

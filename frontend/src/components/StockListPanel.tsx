@@ -76,12 +76,12 @@ export function StockListPanel({
           borderBottom: `1px solid ${COLOR_BORDER}`,
         }}
       >
-        <div className="w-11">涨幅</div>
-        <div className="flex-1 px-1 min-w-0">名称</div>
-        <div className="w-[46px] text-right pr-1">换手</div>
-        <div className="w-[46px] text-right pr-1">量比</div>
-        <div className="w-[46px] text-right pr-1">委比</div>
-        <div className="w-14 text-right pr-1">现价</div>
+        <div className="w-10">涨幅</div>
+        <div className="w-[72px] px-1">名称</div>
+        <div className="w-[40px] text-right pr-1">换手</div>
+        <div className="w-[40px] text-right pr-1">量比</div>
+        <div className="w-[40px] text-right pr-1">委比</div>
+        <div className="w-[52px] text-right pr-1">现价</div>
       </div>
 
       {/* 股票列表 */}
@@ -116,7 +116,7 @@ export function StockListPanel({
                 onMouseLeave={e => { e.currentTarget.style.backgroundColor = bg }}
               >
                 {/* 涨幅 */}
-                <div className="w-11 flex items-center gap-0.5" style={{ color }}>
+                <div className="w-10 flex items-center gap-0.5" style={{ color }}>
                   {stock.change_pct > 0
                     ? <ArrowUp className="w-2.5 h-2.5 shrink-0" />
                     : stock.change_pct < 0
@@ -128,10 +128,10 @@ export function StockListPanel({
                 </div>
 
                 {/* 名称 + 代码 */}
-                <div className="flex-1 min-w-0 px-1">
+                <div className="w-[72px] px-1">
                   <div
-                    className="font-medium truncate text-xs leading-tight"
-                    style={{ color: TEXT_PRIMARY, maxWidth: '80px' }}
+                    className="font-medium text-xs leading-tight overflow-hidden text-ellipsis whitespace-nowrap"
+                    style={{ color: TEXT_PRIMARY }}
                     title={stock.name}
                   >
                     {stock.name || stock.code}
@@ -140,24 +140,24 @@ export function StockListPanel({
                 </div>
 
                 {/* 换手率 */}
-                <div className="w-[46px] text-right font-mono text-[10px] pr-1" style={{ color: TEXT_SECONDARY }}>
+                <div className="w-[40px] text-right font-mono text-[10px] pr-1" style={{ color: TEXT_SECONDARY }}>
                   {stock.turnover > 0 ? stock.turnover.toFixed(1) + '%' : '--'}
                 </div>
 
                 {/* 量比 */}
-                <div className="w-[46px] text-right font-mono text-[10px] pr-1" style={{ color: '#ff8c42' }}>
+                <div className="w-[40px] text-right font-mono text-[10px] pr-1" style={{ color: '#ff8c42' }}>
                   {stock.volume_ratio > 0 ? stock.volume_ratio.toFixed(2) : '--'}
                 </div>
 
                 {/* 委比 */}
-                <div className="w-[46px] text-right font-mono text-[10px] pr-1" style={{ color: priceColor((stock as any).wei_bi || 0) }}>
+                <div className="w-[40px] text-right font-mono text-[10px] pr-1" style={{ color: priceColor((stock as any).wei_bi || 0) }}>
                   {typeof (stock as any).wei_bi === 'number'
                     ? `${(stock as any).wei_bi >= 0 ? '+' : ''}${((stock as any).wei_bi).toFixed(1)}%`
                     : '--'}
                 </div>
 
                 {/* 现价 */}
-                <div className="w-14 text-right font-mono font-bold text-sm pr-1" style={{ color }}>
+                <div className="w-[52px] text-right font-mono font-bold text-sm pr-1" style={{ color }}>
                   {stock.price > 0 ? stock.price.toFixed(2) : '--'}
                 </div>
               </div>

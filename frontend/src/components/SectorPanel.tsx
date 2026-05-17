@@ -1,4 +1,5 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
+import { ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react'
 
 const API_BASE = 'http://localhost:8000'
 
@@ -10,7 +11,7 @@ interface SectorInfo {
 }
 
 interface SectorPanelProps {
-  onSelectStock: (code: string) => void
+  onSelectStock?: (code: string) => void
 }
 
 export function SectorPanel({ onSelectStock }: SectorPanelProps) {
@@ -20,6 +21,8 @@ export function SectorPanel({ onSelectStock }: SectorPanelProps) {
   const [selectedKey, setSelectedKey] = useState<string>('')
   const [sectorStocks, setSectorStocks] = useState<any[]>([])
   const [loadingStocks, setLoadingStocks] = useState(false)
+  const [sortColumn, setSortColumn] = useState<'name' | 'price' | 'changePct' | 'changeAmt' | null>(null)
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc')
 
   const fetchSectors = useCallback(async () => {
     try {
@@ -40,6 +43,8 @@ export function SectorPanel({ onSelectStock }: SectorPanelProps) {
   const handleSectorClick = useCallback(async (sectorKey: string, sectorName: string) => {
     setSelectedKey(sectorKey)
     setSelectedSector(sectorName)
+    setSortColumn(null)
+    setSortDirection('desc')
     setLoadingStocks(true)
     try {
       const res = await fetch(`${API_BASE}/api/sector/${encodeURIComponent(sectorKey)}`)
@@ -52,6 +57,42 @@ export function SectorPanel({ onSelectStock }: SectorPanelProps) {
       setLoadingStocks(false)
     }
   }, [])
+
+  const handleSort = useCallback((col: 'name' | 'price' | 'changePct' | 'changeAmt') => {
+    setSortColumn(prev => {
+      if (prev === col) {
+        setSortDirection(d => d === 'desc' ? 'asc' : 'desc')
+        return prev
+      } else {
+        setSortDirection('desc')
+        return col
+      }
+    })
+  }, [])
+
+  const sortedStocks = useMemo(() => {
+    if (!sortColumn) return sectorStocks
+    const list = [...sectorStocks]
+    list.sort((a, b) => {
+      let va: number, vb: number
+      if (sortColumn === 'name') {
+        return sortDirection === 'desc'
+          ? String(b['名称'] || '').localeCompare(String(a['名称'] || ''))
+          : String(a['名称'] || '').localeCompare(String(b['名称'] || ''))
+      } else if (sortColumn === 'price') {
+        va = parseFloat(a['最新价'] || 0)
+        vb = parseFloat(b['最新价'] || 0)
+      } else if (sortColumn === 'changePct') {
+        va = parseFloat(a['涨跌幅'] || 0)
+        vb = parseFloat(b['涨跌幅'] || 0)
+      } else {
+        va = parseFloat(a['涨跌额'] || 0)
+        vb = parseFloat(b['涨跌额'] || 0)
+      }
+      return sortDirection === 'desc' ? vb - va : va - vb
+    })
+    return list
+  }, [sectorStocks, sortColumn, sortDirection])
 
   return (
     <div className="flex h-full overflow-hidden">
@@ -112,13 +153,33 @@ export function SectorPanel({ onSelectStock }: SectorPanelProps) {
           {!loadingStocks && sectorStocks.length > 0 && (
             <div className="divide-y divide-[#1e2d4a]">
               {/* 表头 */}
-              <div className="bg-[#0d1b3e] px-4 py-2 grid grid-cols-4 gap-2 text-[10px] text-[#8a8d93] font-medium sticky top-0">
-                <div>名称</div>
-                <div className="text-right">现价</div>
-                <div className="text-right">涨幅</div>
-                <div className="text-right">涨跌幅</div>
+              <div className="bg-[#0d1b3e] px-4 py-2 grid grid-cols-4 gap-2 text-[10px] text-[#8a8d93] font-medium sticky top-0 select-none">
+                <div className="cursor-pointer flex items-center" onClick={() => handleSort('name')}>
+                  名称
+                  {sortColumn === 'name'
+                    ? (sortDirection === 'desc' ? <ArrowDown className="w-2.5 h-2.5 ml-0.5 inline" /> : <ArrowUp className="w-2.5 h-2.5 ml-0.5 inline" />)
+                    : <ArrowUpDown className="w-2.5 h-2.5 ml-0.5 inline opacity-30" />}
+                </div>
+                <div className="text-right cursor-pointer flex items-center justify-end" onClick={() => handleSort('price')}>
+                  现价
+                  {sortColumn === 'price'
+                    ? (sortDirection === 'desc' ? <ArrowDown className="w-2.5 h-2.5 ml-0.5 inline" /> : <ArrowUp className="w-2.5 h-2.5 ml-0.5 inline" />)
+                    : <ArrowUpDown className="w-2.5 h-2.5 ml-0.5 inline opacity-30" />}
+                </div>
+                <div className="text-right cursor-pointer flex items-center justify-end" onClick={() => handleSort('changePct')}>
+                  涨幅
+                  {sortColumn === 'changePct'
+                    ? (sortDirection === 'desc' ? <ArrowDown className="w-2.5 h-2.5 ml-0.5 inline" /> : <ArrowUp className="w-2.5 h-2.5 ml-0.5 inline" />)
+                    : <ArrowUpDown className="w-2.5 h-2.5 ml-0.5 inline opacity-30" />}
+                </div>
+                <div className="text-right cursor-pointer flex items-center justify-end" onClick={() => handleSort('changeAmt')}>
+                  涨跌幅
+                  {sortColumn === 'changeAmt'
+                    ? (sortDirection === 'desc' ? <ArrowDown className="w-2.5 h-2.5 ml-0.5 inline" /> : <ArrowUp className="w-2.5 h-2.5 ml-0.5 inline" />)
+                    : <ArrowUpDown className="w-2.5 h-2.5 ml-0.5 inline opacity-30" />}
+                </div>
               </div>
-              {sectorStocks.map((stock: any) => {
+              {sortedStocks.map((stock: any) => {
                 const changePct = parseFloat(stock['涨跌幅'] || 0)
                 const price = parseFloat(stock['最新价'] || 0)
                 const code = String(stock['代码'] || '')

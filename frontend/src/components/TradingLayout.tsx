@@ -6,10 +6,11 @@
  * - 搜索：支持实时搜索全量股票
  */
 import { useState, useEffect, useCallback, useRef } from 'react'
-import { Search, RefreshCw, Radio } from 'lucide-react'
+import { Search, RefreshCw, Radio, BarChart3, TrendingUp, Clock } from 'lucide-react'
 import { StockInfo, MinuteTick, IndexData } from '../types'
 import { StockListPanel } from './StockListPanel'
 import { MinuteChart } from './MinuteChart'
+import { KLineChart } from './KLineChart'
 import { QuotePanel } from './QuotePanel'
 import { NewsTimeline } from './NewsTimeline'
 import { StatusBar } from './StatusBar'
@@ -63,10 +64,16 @@ export function TradingLayout({ pendingStockCode, onClearPending }: Props) {
   const [selectedCode, setSelectedCode] = useState<string>('600519')
   const [selectedStock, setSelectedStock] = useState<StockInfo | null>(null)
   const [minuteData, setMinuteData] = useState<MinuteTick[]>([])
+  const [klineData, setKlineData] = useState<any[]>([])
+  const [chartPeriod, setChartPeriod] = useState<'minute' | 'day' | 'week'>('minute')
   const [indexData, setIndexData] = useState<IndexData>({})
   const [phase, setPhase] = useState('连续竞价')
   const [lastUpdate, setLastUpdate] = useState('')
   const [loading, setLoading] = useState(true)
+
+  // 解决定时器闭包陷阱：始终用最新的 selectedCode
+  const selectedCodeRef = useRef<string>('600519')
+  useEffect(() => { selectedCodeRef.current = selectedCode }, [selectedCode])
 
   // ===== 获取自选股 =====
   const fetchWatchlist = useCallback(async () => {
@@ -149,7 +156,7 @@ export function TradingLayout({ pendingStockCode, onClearPending }: Props) {
 
   // ===== 分时数据 =====
   const fetchMinute = useCallback(async (code?: string) => {
-    const c = code || selectedCode
+    const c = code || selectedCodeRef.current
     if (!c) return
     try {
       const res = await fetch(`${API_BASE}/api/minute/${c}?count=500`)
@@ -158,7 +165,21 @@ export function TradingLayout({ pendingStockCode, onClearPending }: Props) {
     } catch (e) {
       console.error('Minute fetch failed', e)
     }
-  }, [selectedCode])
+  }, [])
+
+  // ===== K线数据 =====
+  const fetchKLine = useCallback(async (code?: string, period?: string) => {
+    const c = code || selectedCodeRef.current
+    const p = period || chartPeriod
+    if (!c || p === 'minute') return
+    try {
+      const res = await fetch(`${API_BASE}/api/kline/${c}?period=${p}&count=120`)
+      const data = await res.json()
+      if (data.data) setKlineData(data.data)
+    } catch (e) {
+      console.error('KLine fetch failed', e)
+    }
+  }, [chartPeriod])
 
   // ===== 单只股票详情 =====
   const fetchSingleStock = useCallback(async (code: string) => {
@@ -178,12 +199,13 @@ export function TradingLayout({ pendingStockCode, onClearPending }: Props) {
     fetchWatchlist()
     fetchAllStocks(1)
     fetchMinute()
+    fetchKLine('600519', 'day')
     fetchSingleStock('600519')
     // 定时刷新
     const iv1 = setInterval(fetchWatchlist, 5000)
     const iv2 = setInterval(() => {
       if (activeListTab === 'all' && !searchTerm) fetchAllStocks(allPage)
-      fetchMinute()
+      if (chartPeriod === 'minute') fetchMinute()
     }, 5000)
     return () => { clearInterval(iv1); clearInterval(iv2) }
   }, [])
@@ -195,30 +217,31 @@ export function TradingLayout({ pendingStockCode, onClearPending }: Props) {
     }
   }, [activeListTab])
 
-  // ===== pendingStockCode =====
+  // ===== pendingStockCode：从其他面板跳转过来 =====
   useEffect(() => {
     if (pendingStockCode) {
       setSelectedCode(pendingStockCode)
       setMinuteData([])
+      setKlineData([])
+      // 先尝试从已有列表中找，减少空窗期
+      const from = [...watchlistStocks, ...allStocks, ...searchResults]
+      const found = from.find(s => s.code === pendingStockCode)
+      if (found) setSelectedStock(found)
       onClearPending?.()
       fetchMinute(pendingStockCode)
+      fetchKLine(pendingStockCode, chartPeriod)
       fetchSingleStock(pendingStockCode)
     }
   }, [pendingStockCode])
 
-  // ===== 监听全局选股事件 =====
+  // ===== chartPeriod 切换时刷新对应数据 =====
   useEffect(() => {
-    const handler = (e: CustomEvent<string>) => {
-      if (e.detail) {
-        const code = e.detail
-        setSelectedCode(code)
-        fetchMinute(code)
-        fetchSingleStock(code)
-      }
+    if (chartPeriod === 'minute') {
+      fetchMinute()
+    } else {
+      fetchKLine(undefined, chartPeriod)
     }
-    window.addEventListener('qclaw-select-stock', handler as any)
-    return () => window.removeEventListener('qclaw-select-stock', handler as any)
-  }, [fetchMinute, fetchSingleStock])
+  }, [chartPeriod])
 
   // ===== 选择股票 =====
   const handleSelectStock = (code: string) => {
@@ -227,7 +250,11 @@ export function TradingLayout({ pendingStockCode, onClearPending }: Props) {
     const from = [...watchlistStocks, ...allStocks, ...searchResults]
     const found = from.find(s => s.code === code)
     if (found) setSelectedStock(found)
-    fetchMinute(code)
+    if (chartPeriod === 'minute') {
+      fetchMinute(code)
+    } else {
+      fetchKLine(code, chartPeriod)
+    }
     fetchSingleStock(code)
   }
 
@@ -321,7 +348,12 @@ export function TradingLayout({ pendingStockCode, onClearPending }: Props) {
             )}
           </div>
           <button
-            onClick={() => { fetchWatchlist(); fetchAllStocks(allPage); fetchMinute() }}
+            onClick={() => {
+              fetchWatchlist()
+              fetchAllStocks(allPage)
+              if (chartPeriod === 'minute') fetchMinute()
+              else fetchKLine(undefined, chartPeriod)
+            }}
             className="p-1.5 rounded transition-all"
             style={{ backgroundColor: 'rgba(0,212,255,0.1)', border: `1px solid ${COLORS.border}` }}
           >
@@ -333,7 +365,7 @@ export function TradingLayout({ pendingStockCode, onClearPending }: Props) {
       {/* ====== 主内容区 ====== */}
       <main className="flex flex-1 overflow-hidden">
         {/* 左栏：股票列表 */}
-        <div className="w-[280px] flex flex-col shrink-0" style={{ borderRight: `1px solid ${COLORS.border}` }}>
+        <div className="w-[320px] flex flex-col shrink-0" style={{ borderRight: `1px solid ${COLORS.border}` }}>
           <StockListPanel
             stocks={currentStocks}
             selectedCode={selectedCode}
@@ -353,10 +385,46 @@ export function TradingLayout({ pendingStockCode, onClearPending }: Props) {
 
         {/* 中栏：分时图 + 新闻 */}
         <div className="flex-1 flex flex-col min-w-0">
-          <div className="flex-1 min-h-0 p-3">
-            <MinuteChart data={minuteData} stock={selectedStock} height={340} />
+          {/* 周期切换栏 */}
+          <div className="shrink-0 flex items-center justify-center gap-1 px-3 py-1.5"
+            style={{ borderBottom: `1px solid ${COLORS.border}` }}
+          >
+            {[
+              { key: 'minute', label: '分时', icon: Clock },
+              { key: 'day', label: '日线', icon: BarChart3 },
+              { key: 'week', label: '周线', icon: TrendingUp },
+            ].map((item) => {
+              const Icon = item.icon
+              const active = chartPeriod === item.key
+              return (
+                <button
+                  key={item.key}
+                  onClick={() => setChartPeriod(item.key as 'minute' | 'day' | 'week')}
+                  className="flex items-center gap-1 px-3 py-1 rounded text-xs font-medium transition-all"
+                  style={{
+                    backgroundColor: active ? 'rgba(0,212,255,0.12)' : 'transparent',
+                    color: active ? COLORS.cyan : COLORS.text_secondary,
+                    border: `1px solid ${active ? 'rgba(0,212,255,0.3)' : 'transparent'}`,
+                  }}
+                >
+                  <Icon className="w-3 h-3" />
+                  {item.label}
+                </button>
+              )
+            })}
           </div>
-          <div className="h-[200px]" style={{ borderTop: `1px solid ${COLORS.border}` }}>
+
+          {/* 图表区 - 撑满整个区域 */}
+          <div className="flex-1 min-h-0">
+            <div className="w-full h-full">
+              {chartPeriod === 'minute' ? (
+                <MinuteChart data={minuteData} stock={selectedStock} />
+              ) : (
+                <KLineChart data={klineData} stock={selectedStock} period={chartPeriod} />
+              )}
+            </div>
+          </div>
+          <div className="h-[200px] shrink-0" style={{ borderTop: `1px solid ${COLORS.border}` }}>
             <NewsTimeline stockCode={selectedCode} />
           </div>
         </div>
