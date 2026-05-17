@@ -2193,67 +2193,162 @@ SECTOR_LIST_CACHE: List[Dict] = []
 SECTOR_LIST_CACHE_TIME = 0
 SECTOR_STOCKS_CACHE: Dict[str, Dict] = {}
 
+# 内置板块列表（当新浪和AKShare都失败时的兜底）
+_FALLBACK_SECTORS = [
+    {'key': '银行', '板块名称': '银行', '股票数': '42'},
+    {'key': '保险', '板块名称': '保险', '股票数': '7'},
+    {'key': '证券', '板块名称': '证券', '股票数': '50'},
+    {'key': '房地产', '板块名称': '房地产', '股票数': '120'},
+    {'key': '建筑', '板块名称': '建筑', '股票数': '85'},
+    {'key': '钢铁', '板块名称': '钢铁', '股票数': '45'},
+    {'key': '煤炭', '板块名称': '煤炭', '股票数': '38'},
+    {'key': '石油', '板块名称': '石油', '股票数': '25'},
+    {'key': '电力', '板块名称': '电力', '股票数': '90'},
+    {'key': '化工', '板块名称': '化工', '股票数': '380'},
+    {'key': '医药', '板块名称': '医药制造', '股票数': '280'},
+    {'key': '医疗', '板块名称': '医疗器械', '股票数': '120'},
+    {'key': '食品饮料', '板块名称': '食品饮料', '股票数': '110'},
+    {'key': '酿酒', '板块名称': '酿酒行业', '股票数': '42'},
+    {'key': '家电', '板块名称': '家电行业', '股票数': '65'},
+    {'key': '汽车', '板块名称': '汽车整车', '股票数': '48'},
+    {'key': '汽车零部件', '板块名称': '汽车零部件', '股票数': '180'},
+    {'key': '电子', '板块名称': '电子元件', '股票数': '260'},
+    {'key': '半导体', '板块名称': '半导体', '股票数': '150'},
+    {'key': '芯片', '板块名称': '芯片', '股票数': '120'},
+    {'key': '计算机', '板块名称': '计算机设备', '股票数': '110'},
+    {'key': '软件', '板块名称': '软件开发', '股票数': '160'},
+    {'key': '通信', '板块名称': '通信设备', '股票数': '95'},
+    {'key': '传媒', '板块名称': '文化传媒', '股票数': '85'},
+    {'key': '游戏', '板块名称': '游戏', '股票数': '40'},
+    {'key': '农林牧渔', '板块名称': '农林牧渔', '股票数': '95'},
+    {'key': '有色金属', '板块名称': '有色金属', '股票数': '75'},
+    {'key': '机械设备', '板块名称': '机械设备', '股票数': '180'},
+    {'key': '纺织服装', '板块名称': '纺织服装', '股票数': '55'},
+    {'key': '交通运输', '板块名称': '交通运输', '股票数': '80'},
+    {'key': '商业百货', '板块名称': '商业百货', '股票数': '65'},
+    {'key': '旅游酒店', '板块名称': '旅游酒店', '股票数': '45'},
+    {'key': '环保', '板块名称': '环保行业', '股票数': '110'},
+    {'key': '军工', '板块名称': '航天航空', '股票数': '48'},
+    {'key': '船舶', '板块名称': '船舶制造', '股票数': '12'},
+    {'key': '新能源', '板块名称': '新能源', '股票数': '150'},
+    {'key': '光伏', '板块名称': '光伏设备', '股票数': '65'},
+    {'key': '锂电池', '板块名称': '锂电池', '股票数': '85'},
+    {'key': '储能', '板块名称': '储能', '股票数': '55'},
+    {'key': '机器人', '板块名称': '机器人', '股票数': '70'},
+    {'key': '人工智能', '板块名称': '人工智能', '股票数': '120'},
+    {'key': '算力', '板块名称': '算力概念', '股票数': '80'},
+    {'key': '5G', '板块名称': '5G概念', '股票数': '110'},
+    {'key': '区块链', '板块名称': '区块链', '股票数': '90'},
+    {'key': '数字货币', '板块名称': '数字货币', '股票数': '45'},
+    {'key': '物联网', '板块名称': '物联网', '股票数': '100'},
+    {'key': '工业互联网', '板块名称': '工业互联网', '股票数': '75'},
+    {'key': '新材料', '板块名称': '新材料', '股票数': '130'},
+    {'key': '稀土', '板块名称': '稀土永磁', '股票数': '35'},
+    {'key': '黄金', '板块名称': '贵金属', '股票数': '15'},
+]
+
 def _fetch_sector_list() -> List[Dict]:
-    """从新浪获取板块列表（带5分钟缓存）"""
+    """获取板块列表：新浪优先 → AKShare备用 → 内置兜底（带5分钟缓存）"""
     global SECTOR_LIST_CACHE, SECTOR_LIST_CACHE_TIME
     now = time.time()
     if now - SECTOR_LIST_CACHE_TIME < 300 and SECTOR_LIST_CACHE:
         return SECTOR_LIST_CACHE
+
+    result = []
+    # 第一层：新浪API
     try:
         resp = ds.session.get('https://vip.stock.finance.sina.com.cn/q/view/newSinaHy.php', timeout=10)
         resp.encoding = 'gbk'
         raw = resp.text.strip()
-        # 去掉 JSONP 包装: var S_Finance_bankuai_sinaindustry = {...}
         json_str = re.sub(r'^var\s+S_Finance_bankuai_sinaindustry\s*=\s*', '', raw)
         json_str = re.sub(r';\s*$', '', json_str)
         data = json.loads(json_str)
-        result = []
         for key, val in data.items():
             parts = val.split(',')
             if len(parts) >= 2:
                 result.append({'key': key, '板块名称': parts[1], '股票数': parts[2] if len(parts) > 2 else ''})
-        SECTOR_LIST_CACHE = result
-        SECTOR_LIST_CACHE_TIME = now
-        print(f"✅ 板块列表已更新: {len(result)} 个")
+        if result:
+            print(f"✅ 板块列表(新浪): {len(result)} 个")
     except Exception as e:
-        print(f"❌ 板块列表获取失败: {e}")
+        print(f"⚠ 板块列表(新浪)失败: {e}")
+
+    # 第二层：AKShare（东方财富行业板块）
+    if not result:
+        try:
+            df = ak.stock_board_industry_name_em()
+            for _, row in df.iterrows():
+                name = str(row.get('板块名称', '')).strip()
+                if name:
+                    result.append({'key': name, '板块名称': name, '股票数': str(row.get('股票数', ''))})
+            if result:
+                print(f"✅ 板块列表(AKShare): {len(result)} 个")
+        except Exception as e:
+            print(f"⚠ 板块列表(AKShare)失败: {e}")
+
+    # 第三层：内置兜底
+    if not result:
+        result = _FALLBACK_SECTORS.copy()
+        print(f"✅ 板块列表(内置兜底): {len(result)} 个")
+
+    SECTOR_LIST_CACHE = result
+    SECTOR_LIST_CACHE_TIME = now
     return SECTOR_LIST_CACHE
 
 def _fetch_sector_stocks(sector_key: str, sector_name: str) -> List[Dict]:
-    """从新浪获取板块成分股（带5分钟缓存）"""
+    """获取板块成分股：新浪优先 → AKShare备用（带5分钟缓存）"""
     global SECTOR_STOCKS_CACHE
     now = time.time()
     cache = SECTOR_STOCKS_CACHE.get(sector_key)
     if cache and now - cache['time'] < 300:
         return cache['data']
+
+    stocks = []
+    # 第一层：新浪API
     try:
         url = (f'https://vip.stock.finance.sina.com.cn/quotes_service/api/'
                f'json_v2.php/Market_Center.getHQNodeData'
                f'?page=1&num=500&sort=symbol&asc=1&node={sector_key}')
-        # 用全新 session，避免 ds.session 的潜在问题
         s = requests.Session()
         s.headers.update({'User-Agent': 'Mozilla/5.0', 'Referer': 'https://finance.sina.com.cn/'})
         resp = s.get(url, timeout=10)
         resp.encoding = 'gbk'
         text = resp.text.strip()
-        if not text or text == '[]':
-            print(f"⚠ 板块 [{sector_name}] 返回空数据")
-            return cache['data'] if cache else []
-        data = json.loads(text)
-        stocks = []
-        for item in data:
-            stocks.append({
-                '代码': item.get('code', ''),
-                '名称': item.get('name', ''),
-                '最新价': item.get('trade', '0'),
-                '涨跌幅': item.get('changepercent', '0'),
-            })
-        SECTOR_STOCKS_CACHE[sector_key] = {'data': stocks, 'time': now}
-        print(f"✅ 板块[{sector_name}] 成分股已更新: {len(stocks)} 只")
-        return stocks
+        if text and text != '[]':
+            data = json.loads(text)
+            for item in data:
+                stocks.append({
+                    '代码': item.get('code', ''),
+                    '名称': item.get('name', ''),
+                    '最新价': item.get('trade', '0'),
+                    '涨跌幅': item.get('changepercent', '0'),
+                })
+            if stocks:
+                print(f"✅ 板块[{sector_name}] 成分股(新浪): {len(stocks)} 只")
     except Exception as e:
-        print(f"❌ 板块成分股获取失败 [{sector_name}]: {e}")
-        return cache['data'] if cache else []
+        print(f"⚠ 板块成分股(新浪)失败 [{sector_name}]: {e}")
+
+    # 第二层：AKShare（东方财富行业板块成分股）
+    if not stocks and sector_name:
+        try:
+            df = ak.stock_board_industry_cons_em(symbol=sector_name)
+            for _, row in df.iterrows():
+                stocks.append({
+                    '代码': str(row.get('代码', '')).strip(),
+                    '名称': str(row.get('名称', '')).strip(),
+                    '最新价': str(row.get('最新价', '0')),
+                    '涨跌幅': str(row.get('涨跌幅', '0')),
+                })
+            if stocks:
+                print(f"✅ 板块[{sector_name}] 成分股(AKShare): {len(stocks)} 只")
+        except Exception as e:
+            print(f"⚠ 板块成分股(AKShare)失败 [{sector_name}]: {e}")
+
+    if stocks:
+        SECTOR_STOCKS_CACHE[sector_key] = {'data': stocks, 'time': now}
+    elif cache:
+        return cache['data']
+
+    return stocks
 
 @app.get('/api/sectors')
 def get_sectors():
