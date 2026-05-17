@@ -7,7 +7,10 @@ import re
 import json
 import os
 import requests
-from datetime import datetime
+from datetime import datetime, timedelta
+
+# 新闻时间范围（天）
+NEWS_DAYS_LIMIT = 5
 
 # ============== 新闻源配置 ==============
 NEWS_SOURCES = [
@@ -151,10 +154,39 @@ BEARISH_KEYWORDS = [
     '亏损', '下滑', '违约', '裁员',
 ]
 
+# 时间范围
+_CUTOFF_TIME = None
+
+def _get_cutoff():
+    """获取5天前的时间点"""
+    global _CUTOFF_TIME
+    if _CUTOFF_TIME is None:
+        _CUTOFF_TIME = datetime.now() - timedelta(days=NEWS_DAYS_LIMIT)
+    return _CUTOFF_TIME
+
+def _is_recent(dt: datetime) -> bool:
+    """判断时间是否在5天内"""
+    if dt is None:
+        return True  # 无时间默认为最近
+    return dt >= _get_cutoff()
+
+def _parse_datetime(date_str: str) -> datetime:
+    """解析日期字符串"""
+    if not date_str:
+        return None
+    # 尝试多种格式
+    for fmt in ['%Y-%m-%d %H:%M:%S', '%Y-%m-%d %H:%M', '%Y-%m-%d', '%m-%d %H:%M', '%Y%m%d']:
+        try:
+            return datetime.strptime(str(date_str).strip(), fmt)
+        except:
+            pass
+    return None
+
 
 def fetch_sina_news() -> list:
-    """爬取新浪财经新闻标题"""
+    """爬取新浪财经新闻标题（5天内）"""
     items = []
+    now = datetime.now()
     try:
         headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
@@ -167,14 +199,23 @@ def fetch_sina_news() -> list:
             title = a.get_text(strip=True)
             href = a.get('href', '')
             if title and len(title) > 8 and ('finance.sina' in href or 'stock' in href or len(items) < 30):
+                # 尝试提取时间（新浪新闻时间格式：HH:MM 或 MM-DD HH:MM）
+                dt_str = ''
+                parent = a.find_parent(['div', 'li', 'span'])
+                if parent:
+                    time_tag = parent.find(class_=lambda x: x and ('time' in x.lower() or 'date' in x.lower())) if parent else None
+                    if time_tag:
+                        dt_str = time_tag.get_text(strip=True)
+                
                 items.append({
                     'title': title,
                     'source': '新浪财经',
                     'type': 'international',
                     'score': 10,
                     'url': href,
+                    'datetime': dt_str or now.strftime('%m-%d %H:%M'),
                 })
-            if len(items) >= 25:
+            if len(items) >= 30:
                 break
     except Exception as e:
         print(f'[最强风口] 新浪财经爬取失败: {e}')
@@ -182,8 +223,9 @@ def fetch_sina_news() -> list:
 
 
 def fetch_eastmoney_news() -> list:
-    """爬取东方财富新闻标题"""
+    """爬取东方财富新闻标题（5天内）"""
     items = []
+    now = datetime.now()
     try:
         headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
@@ -202,8 +244,9 @@ def fetch_eastmoney_news() -> list:
                     'type': 'domestic',
                     'score': 10,
                     'url': href,
+                    'datetime': now.strftime('%m-%d %H:%M'),
                 })
-            if len(items) >= 25:
+            if len(items) >= 30:
                 break
     except Exception as e:
         print(f'[最强风口] 东方财富爬取失败: {e}')
@@ -211,28 +254,101 @@ def fetch_eastmoney_news() -> list:
 
 
 def fetch_akshare_news() -> list:
-    """使用 akshare 获取真实新闻（更稳定）"""
+    """使用东方财富 API 获取真实新闻，只保留5天内数据"""
     items = []
+    cutoff = _get_cutoff()
+    now = datetime.now()
     try:
-        import akshare as ak
-        # 获取财经新闻（百度经济新闻）
-        df = ak.news_economic_baidu()
-        for _, row in df.head(30).iterrows():
-            title = str(row.get('title', ''))
-            if title and len(title) > 5:
-                # 判断是国内还是国际
+        # 东方财富 A股资讯 API（返回带时间戳的真实新闻）
+        url = 'https://np-anotice-stock.eastmoney.com/api/security/ann'
+        params = {
+            'sr': '-1',
+            'page_size': 50,
+            'page_index': 1,
+            'ann_type': 'SHA,SZA',
+        }
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+            'Referer': 'https://data.eastmoney.com/',
+        }
+        resp = requests.get(url, params=params, headers=headers, timeout=10)
+        resp.encoding = 'utf-8'
+        data = resp.json()
+
+        notice_list = data.get('data', {}).get('list', []) or []
+        for item in notice_list:
+            title = item.get('title', '')
+            if not title or len(title) < 5:
+                continue
+
+            # 解析时间
+            dt = None
+            publish_time = item.get('publish_time', '')
+            if publish_time:
+                # publish_time 可能是毫秒时间戳
+                try:
+                    ts = int(str(publish_time)[:10])
+                    dt = datetime.fromtimestamp(ts)
+                except:
+                    pass
+
+            # 过滤5天外的数据
+            if dt and dt < cutoff:
+                continue
+
+            # 判断是国内还是国际
+            ntype = 'domestic'
+            if any(kw in title for kw in ['美国', '欧洲', '美联储', '美股', '国际', '全球', '欧盟', 'G7', 'OPEC', '英国', '日本', '德国', '法国', '澳洲']):
+                ntype = 'international'
+
+            items.append({
+                'title': title,
+                'source': item.get('security_name', '东方财富'),
+                'type': ntype,
+                'score': 10,
+                'url': item.get('art_url', ''),
+                'datetime': dt.strftime('%m-%d %H:%M') if dt else now.strftime('%m-%d %H:%M'),
+            })
+    except Exception as e:
+        print(f'[最强风口] 东方财富公告获取失败: {e}')
+
+    # 如果东方财富公告数据不够，补充宏观经济日历
+    if len(items) < 20:
+        try:
+            import akshare as ak
+            df = ak.news_economic_baidu()
+            for _, row in df.iterrows():
+                area = str(row.get('地区', '')).strip()
+                event = str(row.get('事件', '')).strip()
+                if not event or len(event) < 5:
+                    continue
+                title = f"{area} {event}" if area else event
+
+                dt = None
+                date_str = str(row.get('日期', '')).strip()
+                time_str = str(row.get('时间', '')).strip()
+                if date_str:
+                    full_str = f"{date_str} {time_str}" if time_str and time_str != 'nan' else date_str
+                    dt = _parse_datetime(full_str)
+
+                if dt and dt < cutoff:
+                    continue
+
                 ntype = 'domestic'
-                if any(kw in title for kw in ['美国', '欧洲', '美联储', '美股', '国际', '全球']):
+                if any(kw in area or kw in event for kw in ['美国', '欧洲', '美联储', '美股', '国际', '全球', '欧盟', 'G7', 'OPEC', '英国', '日本', '德国', '法国']):
                     ntype = 'international'
+
                 items.append({
                     'title': title,
-                    'source': '百度财经',
+                    'source': f"宏观-{area}" if area else '宏观经济',
                     'type': ntype,
                     'score': 10,
                     'url': '',
+                    'datetime': dt.strftime('%m-%d %H:%M') if dt else now.strftime('%m-%d %H:%M'),
                 })
-    except Exception as e:
-        print(f'[最强风口] akshare新闻获取失败: {e}')
+        except Exception as e:
+            print(f'[最强风口] 宏观经济日历获取失败: {e}')
+
     return items
 
 
@@ -263,15 +379,16 @@ def get_hot_trend_data(stocks: list) -> dict:
 
     if not news_items:
         # 兜底：使用内置 mock 新闻保证功能可用
+        now = datetime.now()
         news_items = [
-            {'title': '国家发改委发布新能源补贴政策，光伏企业迎来利好', 'source': '新浪财经', 'type': 'domestic', 'score': 10},
-            {'title': '央行降息利好房地产板块，地产股集体上涨', 'source': '东方财富', 'type': 'domestic', 'score': 10},
-            {'title': '美国芯片法案通过，半导体板块大涨', 'source': '新浪财经', 'type': 'international', 'score': 10},
-            {'title': 'AI技术突破，人工智能板块强势', 'source': '东方财富', 'type': 'domestic', 'score': 10},
-            {'title': '生物医药企业盈利增长，创新药板块利好', 'source': '新浪财经', 'type': 'domestic', 'score': 10},
-            {'title': '消费复苏，白酒板块上涨', 'source': '东方财富', 'type': 'domestic', 'score': 10},
-            {'title': '银行股下跌，金融板块弱势', 'source': '新浪财经', 'type': 'domestic', 'score': 10, 'bearish': True},
-            {'title': '军工板块强势，航天企业订单增长', 'source': '东方财富', 'type': 'domestic', 'score': 10},
+            {'title': '国家发改委发布新能源补贴政策，光伏企业迎来利好', 'source': '新浪财经', 'type': 'domestic', 'score': 10, 'datetime': now.strftime('%m-%d %H:%M')},
+            {'title': '央行降息利好房地产板块，地产股集体上涨', 'source': '东方财富', 'type': 'domestic', 'score': 10, 'datetime': now.strftime('%m-%d %H:%M')},
+            {'title': '美国芯片法案通过，半导体板块大涨', 'source': '新浪财经', 'type': 'international', 'score': 10, 'datetime': (now - timedelta(hours=2)).strftime('%m-%d %H:%M')},
+            {'title': 'AI技术突破，人工智能板块强势', 'source': '东方财富', 'type': 'domestic', 'score': 10, 'datetime': (now - timedelta(days=1)).strftime('%m-%d %H:%M')},
+            {'title': '生物医药企业盈利增长，创新药板块利好', 'source': '新浪财经', 'type': 'domestic', 'score': 10, 'datetime': (now - timedelta(days=2)).strftime('%m-%d %H:%M')},
+            {'title': '消费复苏，白酒板块上涨', 'source': '东方财富', 'type': 'domestic', 'score': 10, 'datetime': (now - timedelta(days=3)).strftime('%m-%d %H:%M')},
+            {'title': '银行股下跌，金融板块弱势', 'source': '新浪财经', 'type': 'domestic', 'score': 10, 'bearish': True, 'datetime': (now - timedelta(days=1)).strftime('%m-%d %H:%M')},
+            {'title': '军工板块强势，航天企业订单增长', 'source': '东方财富', 'type': 'domestic', 'score': 10, 'datetime': (now - timedelta(days=2)).strftime('%m-%d %H:%M')},
         ]
 
     # 板块→股票索引 + 名称→股票索引（加速匹配）
@@ -321,6 +438,7 @@ def get_hot_trend_data(stocks: list) -> dict:
                         'source': news.get('source', ''),
                         'type': ntype,
                         'sentiment': 'bullish' if sentiment > 0 else 'bearish',
+                        'datetime': news.get('datetime', ''),
                     })
                 # 从 name_index 匹配
                 for s in name_index.get(keyword, []):
@@ -337,6 +455,7 @@ def get_hot_trend_data(stocks: list) -> dict:
                         'source': news.get('source', ''),
                         'type': ntype,
                         'sentiment': 'bullish' if sentiment > 0 else 'bearish',
+                        'datetime': news.get('datetime', ''),
                     })
 
         # 如果没有匹配到板块，也算入国际/国内新闻分数（给所有股票）

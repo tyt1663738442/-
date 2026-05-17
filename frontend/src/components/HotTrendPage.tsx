@@ -11,6 +11,7 @@ interface NewsItem {
   source: string
   type: 'domestic' | 'international'
   sentiment: 'bullish' | 'bearish'
+  datetime?: string
 }
 
 interface HotStock {
@@ -139,6 +140,7 @@ function NewsDetailModal({ stock, onClose }: { stock: HotStock; onClose: () => v
                         {n.sentiment === 'bullish' ? '📈利多' : '📉利空'}
                       </span>
                       <span className="text-xs text-gray-500">{n.source}</span>
+                      {n.datetime && <span className="text-xs px-1.5 py-0.5 rounded" style={{ background: 'rgba(255,255,255,0.05)', color: '#7a8aa0' }}>{n.datetime}</span>}
                     </div>
                     <p className="text-sm mt-1" style={{ color: '#e0e6f0' }}>{n.title}</p>
                   </div>
@@ -169,6 +171,7 @@ function NewsDetailModal({ stock, onClose }: { stock: HotStock; onClose: () => v
                         {n.sentiment === 'bullish' ? '📈利多' : '📉利空'}
                       </span>
                       <span className="text-xs text-gray-500">{n.source}</span>
+                      {n.datetime && <span className="text-xs px-1.5 py-0.5 rounded" style={{ background: 'rgba(255,255,255,0.05)', color: '#7a8aa0' }}>{n.datetime}</span>}
                     </div>
                     <p className="text-sm mt-1" style={{ color: '#e0e6f0' }}>{n.title}</p>
                   </div>
