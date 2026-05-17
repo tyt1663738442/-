@@ -2345,7 +2345,9 @@ def _calc_review_scores(stocks: List[Dict]) -> List[Dict]:
 
         # 龙头加分
         leader = 8 if s.get('_is_leader') else 0
-        depth_bonus = 5 if (s.get('_depth') or 0) >= 3 else 0
+        # 梯队加分：depth=2 给5分，depth>=3 给10分
+        d = s.get('_depth') or 0
+        depth_bonus = 10 if d >= 3 else (5 if d == 2 else 0)
 
         # 多题材叠加 (简化: 题材数=1，大题材个数由质地推断)
         big_count = 1 if quality >= 8 else 0
@@ -2445,6 +2447,22 @@ def get_review_stocks():
         'stocks': scored,
     }
 
+# ============== 最强风口（新闻驱动） ==============
+
+def _get_hot_trend_response():
+    try:
+        from hot_trend import get_hot_trend_data
+        # AUCTION_CACHE 是 list，直接传入
+        return get_hot_trend_data(AUCTION_CACHE or [])
+    except Exception as e:
+        print(f'[最强风口] 接口异常: {e}')
+        return {'stocks': [], 'news_count': 0, 'update_time': datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+
+@app.get('/api/hot-trend/stocks')
+def get_hot_trend_stocks():
+    """最强风口 - 新闻驱动股票评分"""
+    return _get_hot_trend_response()
+
 # ============== 静态文件托管 ==============
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
@@ -2465,8 +2483,12 @@ if os.path.isdir(FRONTEND_DIR):
 # ============== 启动 ==============
 
 if __name__ == '__main__':
+    # Railway 会注入 PORT 环境变量，本地开发默认 8001
+    _port = int(os.environ.get('PORT', 8001))
     print('A股监控平台 v3.0 启动中...')
+    print(f'环境: {"Railway" if os.environ.get("RAILWAY") else "Local"}')
+    print(f'端口: {_port}')
     print('数据源: 新浪财经 + 腾讯财经')
     print('风格: 同花顺（绿涨红跌）')
     print(f'前端静态文件: {FRONTEND_DIR}')
-    uvicorn.run(app, host='0.0.0.0', port=8000)
+    uvicorn.run(app, host='0.0.0.0', port=_port)

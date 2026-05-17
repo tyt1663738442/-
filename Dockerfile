@@ -29,8 +29,8 @@ RUN npm install && npm run build
 # 返回工作目录
 WORKDIR /app
 
-# 暴露端口
+# 暴露端口（Railway 会覆盖为 $PORT）
 EXPOSE 8080
 
-# 启动命令
+# 启动命令：后端 main.py 自动读取 $PORT 环境变量
 CMD ["python3", "backend/main.py"]

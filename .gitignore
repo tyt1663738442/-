@@ -1,0 +1,24 @@
+# 环境配置（不提交到仓库）
+.env.local
+.env.*.local
+
+# 依赖
+node_modules/
+
+# 构建产物
+dist/
+
+# 日志
+*.log
+backend/*.log
+
+# 缓存
+__pycache__/
+*.pyc
+backend/__pycache__/
+
+# 数据缓存
+backend/auction_cache.json
+
+# Windows 临时文件
+nul

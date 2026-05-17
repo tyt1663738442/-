@@ -7,16 +7,18 @@ import { AuctionPanel } from './components/AuctionPanel'
 import { FormulaPanel } from './components/FormulaPanel'
 import { SectorPanel } from './components/SectorPanel'
 import { ReviewPanel } from './components/ReviewPanel'
-import { Zap, Grid3x3, Flame, ClipboardList } from 'lucide-react'
+import { HotTrendPage } from './components/HotTrendPage'
+import { Zap, Grid3x3, Flame, ClipboardList, Wind } from 'lucide-react'
 
-type TabKey = 'auction' | 'formula' | 'sector' | 'review'
+type TabKey = 'auction' | 'formula' | 'sector' | 'review' | 'hottrend'
 
 // 科技风配色
 const TABS: { key: TabKey; label: string; icon: any; color: string }[] = [
-  { key: 'auction',  label: '竞价分析',   icon: Zap,         color: '#a855f7' },
-  { key: 'formula',  label: '竞价选股',   icon: Flame,       color: '#f23645' },
-  { key: 'sector',   label: '板块行情',   icon: Grid3x3,     color: '#06b6d4' },
-  { key: 'review',   label: '复盘分析',   icon: ClipboardList, color: '#00d4ff' },
+  { key: 'auction',    label: '竞价分析',   icon: Zap,              color: '#a855f7' },
+  { key: 'formula',    label: '竞价选股',   icon: Flame,            color: '#f23645' },
+  { key: 'sector',     label: '板块行情',   icon: Grid3x3,          color: '#06b6d4' },
+  { key: 'review',     label: '复盘分析',   icon: ClipboardList,    color: '#00d4ff' },
+  { key: 'hottrend',   label: '最强风口',   icon: Wind,             color: '#f59e0b' },
 ]
 
 // 辅助函数：将十六进制颜色转换为RGB
@@ -90,6 +92,7 @@ function App() {
         {activeTab === 'formula' && <FormulaPanel />}
         {activeTab === 'sector' && <SectorPanel />}
         {activeTab === 'review' && <ReviewPanel />}
+        {activeTab === 'hottrend' && <HotTrendPage />}
       </main>
     </div>
   )
