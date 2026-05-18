@@ -1180,6 +1180,9 @@ def _run_formula_scan(stocks: Dict, formula_id: int, auction_data: Dict = None) 
         if not code.isdigit() or not s_dict.get('price'):
             continue
 
+        # 保存原始实时涨幅（用户要求涨幅列显示当前最新涨幅）
+        realtime_change_pct = s_dict.get('change_pct', 0) or 0
+
         # 使用竞价数据覆盖（金额/成交量/换手率只算9:15-9:25）
         if auction_data and code in auction_data:
             ad = auction_data[code]
@@ -1188,12 +1191,25 @@ def _run_formula_scan(stocks: Dict, formula_id: int, auction_data: Dict = None) 
             s_dict['auction_change_pct'] = ad.get('auction_change_pct', s_dict.get('change_pct', 0))
             # 计算竞价换手率 = 竞价成交量(手) * 100 / 流通股数 * 100%
             float_cap = s_dict.get('float_cap', 0) or 0
+            # fallback: 从 MARKET_CENTER_CACHE 补充流通市值
+            if float_cap <= 0 and code in MARKET_CENTER_CACHE:
+                float_cap = MARKET_CENTER_CACHE[code].get('float_cap', 0) or 0
+                if float_cap > 0:
+                    s_dict['float_cap'] = float_cap
             price = s_dict.get('price', 0) or 1
             auction_vol = ad.get('auction_vol', 0)
             if float_cap > 0 and auction_vol > 0:
                 float_shares = float_cap * 1e8 / price
                 auction_turnover_pct = round(auction_vol * 100 / float_shares * 100, 2)
                 s_dict['turnover'] = auction_turnover_pct
+            elif auction_vol > 0 and float_cap <= 0:
+                # 无流通市值时，用原始换手率作为近似（比例关系）
+                orig_turnover = s_dict.get('turnover', 0) or 0
+                if orig_turnover > 0:
+                    # 近似：竞价换手率 ≈ 原始换手率 * (竞价成交量/全天成交量)
+                    orig_vol = s_dict.get('volume', 0) or 1
+                    ratio = auction_vol / orig_vol if orig_vol > 0 else 0
+                    s_dict['turnover'] = round(orig_turnover * ratio, 2)
 
         score = _calc_formula_score(s_dict, formula_id)
         if score > 0:
@@ -1204,13 +1220,13 @@ def _run_formula_scan(stocks: Dict, formula_id: int, auction_data: Dict = None) 
                 'name': s_dict.get('name', ''),
                 'price': s_dict.get('price', 0),
                 'pre_close': s_dict.get('pre_close', 0),
-                'change_pct': round(auction_change, 2),   # 竞价涨幅
+                'change_pct': round(realtime_change_pct, 2),   # 当前最新涨幅（实时行情）
                 'auction_turnover': round(auction_amount_w, 2),
                 'turnover_pct': round(s_dict.get('turnover', 0) or 0, 2),
                 'float_cap': s_dict.get('float_cap', 0) or 0,
                 'score': score,
                 'formula_id': formula_id,
-                'auction_change_pct': round(auction_change, 2),
+                'auction_change_pct': round(auction_change, 2),  # 竞价涨幅（9:15-9:25）
             }
             results.append(item)
     # 按得分降序

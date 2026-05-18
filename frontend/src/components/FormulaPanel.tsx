@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from 'react'
 import { Zap, Target, Flame, TrendingUp, AlertTriangle, ArrowUpDown, RefreshCw, ChevronDown } from 'lucide-react'
 
-const API_BASE = 'http://localhost:8000'
+const API_BASE = import.meta.env.VITE_API_BASE || ''
 
 interface Props {
   onSelectStock?: (code: string) => void
