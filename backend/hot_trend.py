@@ -511,20 +511,20 @@ def get_hot_trend_data(stocks: list) -> dict:
     获取最强风口数据 v2
     stocks: 股票列表（来自 auction_cache 或 review 接口）
     返回: {'stocks': [...], 'news_count': N, 'update_time': '...'}
+    
+    匹配策略：仅个股名称精准匹配（移除板块传导）
+    - 精准匹配：从公告中提取股票代码直接命中
+    - 名称匹配：新闻标题关键词命中个股名称
     """
     if not stocks:
         return {'stocks': [], 'news_count': 0, 'update_time': datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 
-    # 构建股票索引
+    # 构建股票索引：按代码 + 按名称关键词
     stock_by_code = {s['code']: s for s in stocks}
-    sector_index = {}  # keyword -> list of stocks
-    name_index = {}    # keyword -> list of stocks
+    name_index = {}    # keyword -> list of stocks（个股名称包含关键词）
     for s in stocks:
-        sec = s.get('sector', '')
         name = s.get('name', '')
         for kw in KEYWORD_SECTOR_MAP:
-            if kw in sec:
-                sector_index.setdefault(kw, []).append(s)
             if kw in name:
                 name_index.setdefault(kw, []).append(s)
 
@@ -595,46 +595,10 @@ def get_hot_trend_data(stocks: list) -> dict:
                 else:
                     stock_scores[code_key]['score_breakdown']['bearish'] += abs(score_change)
 
-        # === 匹配方式2：自上而下（关键词→板块→板块内股票）===
+        # === 匹配方式2：名称匹配（仅个股名称包含关键词，不走板块传导）===
         matched_kws = news.get('matched_keywords', [])
         for kw in matched_kws:
-            # 从 sector_index 匹配
-            for s in sector_index.get(kw, []):
-                code_key = s['code']
-                if code_key not in stock_scores:
-                    stock_scores[code_key] = {
-                        'score': 0,
-                        'news': [],
-                        'stock': s,
-                        'score_breakdown': {'bullish': 0, 'bearish': 0, 'by_type': {}},
-                    }
-                stock_scores[code_key]['score'] += score_change
-                # 去重：同一条新闻只加一次
-                already_added = any(n['title'] == title for n in stock_scores[code_key]['news'])
-                if not already_added:
-                    stock_scores[code_key]['news'].append({
-                        'title': title,
-                        'source': news.get('source', ''),
-                        'type': news.get('news_type', 'general'),
-                        'force_level': news.get('force_level', 'unknown'),
-                        'sentiment': news.get('impact_type', 'neutral'),
-                        'base_score': news.get('base_score', 10),
-                        'score_change': news.get('score_change', 0),
-                        'force_multiplier': news.get('force_multiplier', 1.0),
-                        'datetime': news.get('datetime', ''),
-                        'impact_reason': news.get('impact_reason', ''),
-                    })
-                    if score_change > 0:
-                        stock_scores[code_key]['score_breakdown']['bullish'] += score_change
-                    else:
-                        stock_scores[code_key]['score_breakdown']['bearish'] += abs(score_change)
-                    # 按类型累计
-                    ntype = news.get('news_type', 'general')
-                    stock_scores[code_key]['score_breakdown'].setdefault('by_type', {})
-                    stock_scores[code_key]['score_breakdown']['by_type'][ntype] = \
-                        stock_scores[code_key]['score_breakdown']['by_type'].get(ntype, 0) + abs(score_change)
-
-            # 从 name_index 匹配
+            # 从 name_index 匹配（个股名称包含关键词）
             for s in name_index.get(kw, []):
                 code_key = s['code']
                 if code_key not in stock_scores:
@@ -663,6 +627,11 @@ def get_hot_trend_data(stocks: list) -> dict:
                         stock_scores[code_key]['score_breakdown']['bullish'] += score_change
                     else:
                         stock_scores[code_key]['score_breakdown']['bearish'] += abs(score_change)
+                    # 按类型累计
+                    ntype = news.get('news_type', 'general')
+                    stock_scores[code_key]['score_breakdown'].setdefault('by_type', {})
+                    stock_scores[code_key]['score_breakdown']['by_type'][ntype] = \
+                        stock_scores[code_key]['score_breakdown']['by_type'].get(ntype, 0) + abs(score_change)
 
     # 转换为列表
     result = []

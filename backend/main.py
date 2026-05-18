@@ -857,12 +857,11 @@ def _load_auction_cache():
 def _update_board_count_cache():
     """
     从东方财富涨停池获取连板数，更新 BOARD_COUNT_CACHE。
-    建议在交易时段每天调用1~2次（如9:30和15:00各一次）。
-    周末/非交易日自动跳过。
+    跳过周末/非交易日，继续往前找最近的交易日。
     """
     global BOARD_COUNT_CACHE
     from datetime import datetime as _dt, timedelta as _td
-    for i in range(1, 6):
+    for i in range(1, 10):  # 扩大范围找最近的交易日
         dt = (_dt.now() - _td(days=i)).strftime('%Y%m%d')
         try:
             df = ak.stock_zt_pool_em(date=dt)
@@ -870,13 +869,17 @@ def _update_board_count_cache():
             for _, row in df.iterrows():
                 code = str(row['代码']).zfill(6)
                 new_cache[code] = int(row['连板数'])
+            # 跳过空结果（非交易日），继续往前找
+            if not new_cache:
+                print(f"[WARN] {dt} 无涨停数据（非交易日），继续往前查...")
+                continue
             BOARD_COUNT_CACHE = new_cache
-            print(f"[OK] 连板数缓存已更新({dt}): {len(BOARD_COUNT_CACHE)} 只")
+            print(f"[OK] 连板数缓存已更新({dt}): {len(BOARD_COUNT_CACHE)} 只（其中连板>1: {sum(1 for v in new_cache.values() if v > 1)}只）")
             return
         except Exception as e:
-            print(f"[WARN] {dt} 连板数获取失败(非交易日?): {e}")
+            print(f"[WARN] {dt} 连板数获取失败: {e}")
             continue
-    print("[WARN] 近5日均非交易日，连板数未更新")
+    print("[WARN] 近10日均无法获取连板数，连板数缓存为空")
 
 # 板块涨跌幅缓存（用于竞价板块效应计算）
 SECTOR_CHANGE_CACHE: Dict[str, float] = {}
