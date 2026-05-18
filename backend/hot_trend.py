@@ -596,42 +596,46 @@ def get_hot_trend_data(stocks: list) -> dict:
                     stock_scores[code_key]['score_breakdown']['bearish'] += abs(score_change)
 
         # === 匹配方式2：名称匹配（仅个股名称包含关键词，不走板块传导）===
-        matched_kws = news.get('matched_keywords', [])
-        for kw in matched_kws:
-            # 从 name_index 匹配（个股名称包含关键词）
-            for s in name_index.get(kw, []):
-                code_key = s['code']
-                if code_key not in stock_scores:
-                    stock_scores[code_key] = {
-                        'score': 0,
-                        'news': [],
-                        'stock': s,
-                        'score_breakdown': {'bullish': 0, 'bearish': 0, 'by_type': {}},
-                    }
-                already_added = any(n['title'] == title for n in stock_scores[code_key]['news'])
-                if not already_added:
-                    stock_scores[code_key]['score'] += score_change
-                    stock_scores[code_key]['news'].append({
-                        'title': title,
-                        'source': news.get('source', ''),
-                        'type': news.get('news_type', 'general'),
-                        'force_level': news.get('force_level', 'unknown'),
-                        'sentiment': news.get('impact_type', 'neutral'),
-                        'base_score': news.get('base_score', 10),
-                        'score_change': news.get('score_change', 0),
-                        'force_multiplier': news.get('force_multiplier', 1.0),
-                        'datetime': news.get('datetime', ''),
-                        'impact_reason': news.get('impact_reason', ''),
-                    })
-                    if score_change > 0:
-                        stock_scores[code_key]['score_breakdown']['bullish'] += score_change
-                    else:
-                        stock_scores[code_key]['score_breakdown']['bearish'] += abs(score_change)
-                    # 按类型累计
-                    ntype = news.get('news_type', 'general')
-                    stock_scores[code_key]['score_breakdown'].setdefault('by_type', {})
-                    stock_scores[code_key]['score_breakdown']['by_type'][ntype] = \
-                        stock_scores[code_key]['score_breakdown']['by_type'].get(ntype, 0) + abs(score_change)
+        # 关键修复：有明确个股代码归属的公告（如威帝股份的公告），
+        # 只匹配到对应个股，不再通过关键词串到其他个股（如科陆电子）
+        has_specific_stock = len(news.get('stock_codes', [])) > 0 or bool(news.get('stock_code_api'))
+        if not has_specific_stock:
+            matched_kws = news.get('matched_keywords', [])
+            for kw in matched_kws:
+                # 从 name_index 匹配（个股名称包含关键词）
+                for s in name_index.get(kw, []):
+                    code_key = s['code']
+                    if code_key not in stock_scores:
+                        stock_scores[code_key] = {
+                            'score': 0,
+                            'news': [],
+                            'stock': s,
+                            'score_breakdown': {'bullish': 0, 'bearish': 0, 'by_type': {}},
+                        }
+                    already_added = any(n['title'] == title for n in stock_scores[code_key]['news'])
+                    if not already_added:
+                        stock_scores[code_key]['score'] += score_change
+                        stock_scores[code_key]['news'].append({
+                            'title': title,
+                            'source': news.get('source', ''),
+                            'type': news.get('news_type', 'general'),
+                            'force_level': news.get('force_level', 'unknown'),
+                            'sentiment': news.get('impact_type', 'neutral'),
+                            'base_score': news.get('base_score', 10),
+                            'score_change': news.get('score_change', 0),
+                            'force_multiplier': news.get('force_multiplier', 1.0),
+                            'datetime': news.get('datetime', ''),
+                            'impact_reason': news.get('impact_reason', ''),
+                        })
+                        if score_change > 0:
+                            stock_scores[code_key]['score_breakdown']['bullish'] += score_change
+                        else:
+                            stock_scores[code_key]['score_breakdown']['bearish'] += abs(score_change)
+                        # 按类型累计
+                        ntype = news.get('news_type', 'general')
+                        stock_scores[code_key]['score_breakdown'].setdefault('by_type', {})
+                        stock_scores[code_key]['score_breakdown']['by_type'][ntype] = \
+                            stock_scores[code_key]['score_breakdown']['by_type'].get(ntype, 0) + abs(score_change)
 
     # 转换为列表
     result = []
