@@ -505,9 +505,8 @@ class THSDataSource:
     def fetch_auction_data(self, codes: List[str]) -> Dict[str, Dict]:
         """
         获取竞价数据（9:15-9:25）
-        返回每只股票竞价阶段的买卖盘口数据
+        返回每只股票竞价阶段的金额、成交量、涨幅
         """
-        # 新浪提供竞价数据
         result = {}
         try:
             symbols = ','.join([f'sh{c}' if c.startswith(('6','5')) else f'sz{c}' for c in codes])
@@ -519,7 +518,6 @@ class THSDataSource:
                 if '=' not in line or 'hq_str' not in line:
                     continue
                 key = line.split('hq_str_')[1].split('=')[0]
-                prefix = 'sh' if key.startswith('sh') else 'sz'
                 code = key[2:]
                 if not code.isdigit():
                     continue
@@ -527,14 +525,21 @@ class THSDataSource:
                     parts = line.split('"')[1].split(',')
                     if len(parts) < 10:
                         continue
-                    # 竞价数据：昨收、开盘价、成交量
+                    pre_close = float(parts[2]) if parts[2] else 0
+                    current_price = float(parts[3]) if parts[3] else 0
+                    auction_vol = int(float(parts[8])) if parts[8] else 0
+                    auction_amount = float(parts[9]) if parts[9] else 0
+                    auction_open = float(parts[1]) if parts[1] else 0
+                    auction_change_pct = round((current_price - pre_close) / pre_close * 100, 2) if pre_close else 0
                     result[code] = {
-                        'auction_open': float(parts[1]) if parts[1] else 0,  # 竞价开盘价
-                        'auction_vol': int(float(parts[8])) if parts[8] else 0,
-                        'pre_close': float(parts[2]) if parts[2] else 0,
-                        'current_price': float(parts[3]) if parts[3] else 0,
+                        'auction_open': auction_open,
+                        'auction_vol': auction_vol,
+                        'auction_amount': auction_amount,
+                        'auction_change_pct': auction_change_pct,
+                        'pre_close': pre_close,
+                        'current_price': current_price,
                     }
-                except:
+                except Exception:
                     continue
         except Exception as e:
             print(f"竞价数据获取失败: {e}")
@@ -1165,26 +1170,47 @@ def _calc_formula_score(s: Dict, formula_id: int) -> float:
     return round(score, 1) if matched else 0
 
 
-def _run_formula_scan(stocks: Dict, formula_id: int) -> List[Dict]:
-    """运行指定公式扫描全市场"""
+def _run_formula_scan(stocks: Dict, formula_id: int, auction_data: Dict = None) -> List[Dict]:
+    """运行指定公式扫描全市场
+    auction_data: 竞价专属数据（9:15-9:25），有则覆盖金额/成交量/换手率
+    """
     results = []
     for code, s in stocks.items():
         s_dict = s.model_dump() if hasattr(s, 'model_dump') else s
         if not code.isdigit() or not s_dict.get('price'):
             continue
+
+        # 使用竞价数据覆盖（金额/成交量/换手率只算9:15-9:25）
+        if auction_data and code in auction_data:
+            ad = auction_data[code]
+            s_dict['amount'] = ad.get('auction_amount', s_dict.get('amount', 0))
+            s_dict['volume'] = ad.get('auction_vol', s_dict.get('volume', 0))
+            s_dict['auction_change_pct'] = ad.get('auction_change_pct', s_dict.get('change_pct', 0))
+            # 计算竞价换手率 = 竞价成交量(手) * 100 / 流通股数 * 100%
+            float_cap = s_dict.get('float_cap', 0) or 0
+            price = s_dict.get('price', 0) or 1
+            auction_vol = ad.get('auction_vol', 0)
+            if float_cap > 0 and auction_vol > 0:
+                float_shares = float_cap * 1e8 / price
+                auction_turnover_pct = round(auction_vol * 100 / float_shares * 100, 2)
+                s_dict['turnover'] = auction_turnover_pct
+
         score = _calc_formula_score(s_dict, formula_id)
         if score > 0:
+            auction_change = s_dict.get('auction_change_pct', s_dict.get('change_pct', 0))
+            auction_amount_w = (s_dict.get('amount', 0) or 0) / 10000  # 万元
             item = {
                 'code': code,
                 'name': s_dict.get('name', ''),
                 'price': s_dict.get('price', 0),
                 'pre_close': s_dict.get('pre_close', 0),
-                'change_pct': round(s_dict.get('change_pct', 0) or 0, 2),
-                'auction_turnover': round((s_dict.get('amount', 0) or 0) / 10000, 2),
+                'change_pct': round(auction_change, 2),   # 竞价涨幅
+                'auction_turnover': round(auction_amount_w, 2),
                 'turnover_pct': round(s_dict.get('turnover', 0) or 0, 2),
                 'float_cap': s_dict.get('float_cap', 0) or 0,
                 'score': score,
                 'formula_id': formula_id,
+                'auction_change_pct': round(auction_change, 2),
             }
             results.append(item)
     # 按得分降序
@@ -1872,7 +1898,9 @@ def auction_formula_scan(
         return {'phase': phase, 'formula_id': formula_id, 'count': 0, 'candidates': [], 'error': '股票列表未加载'}
     try:
         stocks = ds.fetch_batch_realtime(FULL_STOCK_LIST)
-        results = _run_formula_scan(stocks, formula_id)
+        # 获取竞价专属数据（9:15-9:25 金额/成交量/涨幅）
+        auction_data = ds.fetch_auction_data(FULL_STOCK_LIST)
+        results = _run_formula_scan(stocks, formula_id, auction_data)
         is_demo = False
         # 如果结果为空（非交易时段/数据异常），自动返回演示数据
         if not results:

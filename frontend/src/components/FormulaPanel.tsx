@@ -13,6 +13,7 @@ interface FormulaStock {
   price: number
   pre_close: number
   change_pct: number
+  auction_change_pct: number   // 竞价涨幅%
   auction_turnover: number   // 万元
   turnover_pct: number       // 换手率%
   float_cap: number          // 流通市值（亿）
@@ -26,7 +27,7 @@ const FORMULAS = [
     name: '竞价爆量选谷',
     icon: <Flame className="w-4 h-4" />,
     color: '#f23645',
-    desc: '金额>3000万 | 涨幅0~3% | 市值<200亿 | 主板非ST',
+    desc: '金额>3000万 | 竞价涨幅0~3% | 市值<200亿 | 主板非ST',
     conditions: ['竞价金额 > 3000万', '竞价涨幅 0% ~ 3%', '流通市值 < 200亿', '主板 / 非ST'],
   },
   {
@@ -34,7 +35,7 @@ const FORMULAS = [
     name: '竞价抓首板选谷',
     icon: <Target className="w-4 h-4" />,
     color: '#f97316',
-    desc: '昨日非涨停/跌停 + 前日非涨停 | 金额>350万 | 涨幅3~6%',
+    desc: '昨日非涨停/跌停 + 前日非涨停 | 金额>350万 | 竞价涨幅3~6%',
     conditions: ['昨日非涨停 + 昨日非跌停', '前日非涨停', '竞价金额 > 350万', '竞价涨幅 3% ~ 6%', '换手率 > 0.1%'],
   },
   {
@@ -42,7 +43,7 @@ const FORMULAS = [
     name: '竞价爆量抢筹选谷',
     icon: <TrendingUp className="w-4 h-4" />,
     color: '#eab308',
-    desc: '涨幅3~6% | 金额>2500万 | 换手>0.1% | 主力抢筹(j>d)',
+    desc: '竞价涨幅3~6% | 金额>2500万 | 换手>0.1% | 主力抢筹(j>d)',
     conditions: ['竞价涨幅 3% ~ 6%', '竞价金额 > 2500万', '换手率 > 0.1%', '主力净买入 (j值 > d值)'],
   },
   {
@@ -50,7 +51,7 @@ const FORMULAS = [
     name: '竞价异动选谷',
     icon: <Zap className="w-4 h-4" />,
     color: '#a855f7',
-    desc: '有异动 | 金额>3000万 | 换手>0.2% | 涨幅0~2% | 市值<130亿',
+    desc: '有异动 | 金额>3000万 | 换手>0.2% | 竞价涨幅0~2% | 市值<130亿',
     conditions: ['竞价异动信号', '竞价金额 > 3000万', '换手率 > 0.2%', '竞价涨幅 0% ~ 2%', '流通市值 < 130亿'],
   },
   {
@@ -58,12 +59,12 @@ const FORMULAS = [
     name: '竞价砸盘异动选谷',
     icon: <AlertTriangle className="w-4 h-4" />,
     color: '#15b755',
-    desc: '砸盘 | 金额>350万 | 跌幅<-4% | 20天振幅<30%',
+    desc: '砸盘 | 金额>350万 | 竞价跌幅<-4% | 20天振幅<30%',
     conditions: ['竞价砸盘信号', '竞价金额 > 350万', '竞价跌幅 < -4%', '过去20天区间振幅 < 30%'],
   },
 ]
 
-type SortKey = 'score' | 'change_pct' | 'auction_turnover' | 'turnover_pct'
+type SortKey = 'score' | 'change_pct' | 'auction_change' | 'auction_turnover' | 'turnover_pct'
 
 export function FormulaPanel({ onSelectStock }: Props) {
   const [activeFormula, setActiveFormula] = useState(1)
@@ -100,6 +101,7 @@ export function FormulaPanel({ onSelectStock }: Props) {
     let va: number, vb: number
     if (sortKey === 'score') { va = a.score; vb = b.score }
     else if (sortKey === 'change_pct') { va = a.change_pct; vb = b.change_pct }
+    else if (sortKey === 'auction_change') { va = a.auction_change_pct; vb = b.auction_change_pct }
     else if (sortKey === 'auction_turnover') { va = a.auction_turnover; vb = b.auction_turnover }
     else { va = a.turnover_pct; vb = b.turnover_pct }
     return sortAsc ? va - vb : vb - va
@@ -205,12 +207,16 @@ export function FormulaPanel({ onSelectStock }: Props) {
              style={{ maxHeight: 'calc(100vh - 420px)', minHeight: '300px', overflowY: 'auto' }}>
           {/* 表头 */}
           <div className="sticky top-0 z-10 grid gap-1 px-4 py-2.5 bg-[#0d1b3e] text-[11px] text-[#8a8d93] font-bold border-b border-[#2d3748]"
-               style={{ gridTemplateColumns: '1.5fr 2.5fr 1.5fr 1.5fr 1.5fr 1.5fr 1.5fr 1.5fr' }}>
+               style={{ gridTemplateColumns: '1.5fr 2.5fr 1.5fr 1.5fr 1.5fr 1.5fr 1.5fr 1.5fr 1.5fr' }}>
             <div className="text-right">现价</div>
             <div className="pl-2">名称</div>
             <div className="text-right cursor-pointer hover:text-white select-none flex items-center justify-end gap-0.5"
                  onClick={() => toggleSort('change_pct')}>
               涨幅 <ArrowUpDown className="w-3 h-3" style={{ opacity: sortKey === 'change_pct' ? 1 : 0.3 }} />
+            </div>
+            <div className="text-right cursor-pointer hover:text-white select-none flex items-center justify-end gap-0.5"
+                 onClick={() => toggleSort('auction_change')}>
+              竞价涨幅 <ArrowUpDown className="w-3 h-3" style={{ opacity: sortKey === 'auction_change' ? 1 : 0.3 }} />
             </div>
             <div className="text-right cursor-pointer hover:text-white select-none flex items-center justify-end gap-0.5"
                  onClick={() => toggleSort('auction_turnover')}>
@@ -237,7 +243,7 @@ export function FormulaPanel({ onSelectStock }: Props) {
               <div
                 key={stock.code}
                 className="grid gap-1 px-4 py-2.5 text-sm hover:bg-[#1e2d4a]/50 cursor-pointer transition-colors border-t border-[#1e2d4a]/50"
-                style={{ gridTemplateColumns: '1.5fr 2.5fr 1.5fr 1.5fr 1.5fr 1.5fr 1.5fr 1.5fr' }}
+                style={{ gridTemplateColumns: '1.5fr 2.5fr 1.5fr 1.5fr 1.5fr 1.5fr 1.5fr 1.5fr 1.5fr' }}
                 onClick={() => {
                   if (onSelectStock) {
                     onSelectStock(stock.code)
@@ -257,6 +263,10 @@ export function FormulaPanel({ onSelectStock }: Props) {
                 </div>
                 <div className={`text-right font-mono font-bold`} style={{ color }}>
                   {isUp ? '+' : ''}{stock.change_pct.toFixed(2)}%
+                </div>
+                {/* 竞价涨幅 */}
+                <div className={`text-right font-mono text-xs ${stock.auction_change_pct >= 0 ? 'text-[#f23645]' : 'text-[#15b755]'}`}>
+                  {stock.auction_change_pct >= 0 ? '+' : ''}{stock.auction_change_pct.toFixed(2)}%
                 </div>
                 <div className="text-right text-[#f59e0b] font-mono text-xs">
                   {fmtAmount(stock.auction_turnover)}
