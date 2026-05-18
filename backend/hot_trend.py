@@ -229,6 +229,51 @@ def extract_stock_code_from_text(text: str) -> List[str]:
     return codes
 
 
+# 公告标题中公司全称后缀（按长度降序排列，避免"股份有限公司"先匹配"公司"）
+_STOCK_NAME_SUFFIXES = [
+    '股份有限公司', '有限责任公司', '集团有限公司',
+    '科技有限公司', '实业有限公司', '控股有限公司',
+    '股份有限公司', '集团股份有限公司',
+]
+# 股票简称/全称最短长度（太短容易误匹配）
+_MIN_STOCK_NAME_LEN = 2
+
+
+def extract_stock_name_from_title(title: str) -> str | None:
+    """
+    从个股公告标题中提取股票全称。
+    策略：标题开头匹配股票全称，去除公司后缀后精确匹配。
+    例如："威帝股份关于XXX的公告" → "威帝股份"
+          "威帝股份: XXX公告" → "威帝股份"
+    返回：匹配的股票名称，或 None
+    """
+    title = title.strip()
+    if not title:
+        return None
+
+    # 策略1：从标题开头提取（格式："XX股份关于..."、"XX科技: ..." 等）
+    # 去掉开头的 "关于" / "关于" 前的部分
+    for sep in ['关于', ':', '：', '（', '(', ' ', '　']:
+        if sep in title:
+            prefix = title.split(sep)[0].strip()
+            # 清理后缀
+            candidate = prefix
+            for suffix in _STOCK_NAME_SUFFIXES:
+                if candidate.endswith(suffix):
+                    candidate = candidate[:-len(suffix)]
+            candidate = candidate.strip()
+            if len(candidate) >= _MIN_STOCK_NAME_LEN:
+                return candidate
+
+    # 策略2：尝试匹配 "XX股份" / "XX科技" 等常见格式（取前6个字）
+    # 匹配 2-6 个汉字开头的常见股票名称格式
+    m = re.match(r'^([\u4e00-\u9fff]{2,6}(?:股份|科技|医药|能源|电子|机械|化工|农业|矿业|地产|银行|保险|证券|交通|通信|网络|软件|制造|集团|实业))', title)
+    if m:
+        return m.group(1)
+
+    return None
+
+
 def generate_impact_reason(news: dict, matched_kws: list) -> str:
     """生成影响说明"""
     ntype = news.get('news_type', 'general')
@@ -524,8 +569,9 @@ def get_hot_trend_data(stocks: list) -> dict:
     if not stocks:
         return {'stocks': [], 'news_count': 0, 'update_time': datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 
-    # 构建股票索引：按代码 + 按名称关键词
+    # 构建股票索引：按代码 + 按名称关键词 + 按全称
     stock_by_code = {s['code']: s for s in stocks}
+    stock_by_name = {s.get('name', ''): s for s in stocks if s.get('name')}
     name_index = {}    # keyword -> list of stocks（个股名称包含关键词）
     for s in stocks:
         name = s.get('name', '')
@@ -600,9 +646,46 @@ def get_hot_trend_data(stocks: list) -> dict:
                 else:
                     stock_scores[code_key]['score_breakdown']['bearish'] += abs(score_change)
 
-        # === 匹配方式2：名称匹配（仅个股名称包含关键词，不走板块传导）===
-        # 关键修复：有明确个股代码归属的公告（如威帝股份的公告），
-        # 只匹配到对应个股，不再通过关键词串到其他个股（如科陆电子）
+        # === 匹配方式2：个股全称精准匹配（新增：公告标题中的公司全称精确匹配股票名称）===
+        # 有个股代码但没在 stock_by_code 中匹配到，或无代码的个股公告，都尝试全称匹配
+        if not has_specific_stock:
+            extracted_name = extract_stock_name_from_title(title)
+            if extracted_name and extracted_name in stock_by_name:
+                s = stock_by_name[extracted_name]
+                code_key = s['code']
+                if code_key not in stock_scores:
+                    stock_scores[code_key] = {
+                        'score': 0,
+                        'news': [],
+                        'stock': s,
+                        'score_breakdown': {'bullish': 0, 'bearish': 0, 'by_type': {}},
+                    }
+                already_added = any(n['title'] == title for n in stock_scores[code_key]['news'])
+                if not already_added:
+                    stock_scores[code_key]['score'] += score_change
+                    stock_scores[code_key]['news'].append({
+                        'title': title,
+                        'source': news.get('source', ''),
+                        'type': news.get('news_type', 'general'),
+                        'force_level': news.get('force_level', 'unknown'),
+                        'sentiment': news.get('impact_type', 'neutral'),
+                        'base_score': news.get('base_score', 10),
+                        'score_change': news.get('score_change', 0),
+                        'force_multiplier': news.get('force_multiplier', 1.0),
+                        'datetime': news.get('datetime', ''),
+                        'impact_reason': news.get('impact_reason', ''),
+                    })
+                    if score_change > 0:
+                        stock_scores[code_key]['score_breakdown']['bullish'] += score_change
+                    else:
+                        stock_scores[code_key]['score_breakdown']['bearish'] += abs(score_change)
+                    ntype = news.get('news_type', 'general')
+                    stock_scores[code_key]['score_breakdown'].setdefault('by_type', {})
+                    stock_scores[code_key]['score_breakdown']['by_type'][ntype] = \
+                        stock_scores[code_key]['score_breakdown']['by_type'].get(ntype, 0) + abs(score_change)
+
+        # === 匹配方式3：关键词匹配（仅个股名称包含关键词，不走板块传导）===
+        # 关键修复：有明确个股代码归属的公告，只精准匹配对应个股，不再通过关键词串到其他个股
         has_specific_stock = len(news.get('stock_codes', [])) > 0 or bool(news.get('stock_code_api'))
         if not has_specific_stock:
             matched_kws = news.get('matched_keywords', [])
