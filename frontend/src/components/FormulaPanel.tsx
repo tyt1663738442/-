@@ -73,6 +73,7 @@ export function FormulaPanel({ onSelectStock }: Props) {
   const [lastUpdate, setLastUpdate] = useState('')
   const [sortKey, setSortKey] = useState<SortKey>('score')
   const [sortAsc, setSortAsc] = useState(false)
+  const [isDemo, setIsDemo] = useState(false)
 
   const formula = FORMULAS.find(f => f.id === activeFormula)!
 
@@ -84,6 +85,7 @@ export function FormulaPanel({ onSelectStock }: Props) {
       setCandidates(data.candidates || [])
       setPhase(data.phase || '')
       setLastUpdate(data.time || new Date().toLocaleTimeString())
+      setIsDemo(!!data.is_demo)
     } catch (e) {
       console.error('公式扫描失败:', e)
     } finally {
@@ -129,7 +131,7 @@ export function FormulaPanel({ onSelectStock }: Props) {
           return (
             <button
               key={f.id}
-              onClick={() => { setActiveFormula(f.id); setSortKey('score'); setSortAsc(false) }}
+              onClick={() => { setActiveFormula(f.id); setSortKey('score'); setSortAsc(false); setIsDemo(false) }}
               className={`rounded-lg p-2.5 text-left transition-all cursor-pointer ${
                 isActive
                   ? `border-2 ring-1` : 'bg-[#16213e] border-[#2d3748] hover:bg-[#1e2d4a]/80'
@@ -174,6 +176,11 @@ export function FormulaPanel({ onSelectStock }: Props) {
           <span className="text-[#718096]">符合条件</span>
           <span className="text-[10px] text-[#4a5568]">|</span>
           <span className="text-xs text-[#718096]">{phase || '--'} · {lastUpdate}</span>
+          {isDemo && (
+            <span className="text-[10px] px-1.5 py-0.5 rounded bg-[#eab308]/20 text-[#eab308] border border-[#eab308]/30">
+              演示数据
+            </span>
+          )}
         </div>
       </div>
 
@@ -191,7 +198,7 @@ export function FormulaPanel({ onSelectStock }: Props) {
         <div className="bg-[#16213e] rounded-lg p-12 text-center border border-[#2d3748]">
           <Target className="w-12 h-12 mx-auto mb-3 text-[#8a8d93] opacity-50" />
           <p className="text-[#8a8d93]">当前无符合条件的股票</p>
-          <p className="text-xs text-[#718096] mt-1">交易时间内数据更丰富</p>
+          <p className="text-xs text-[#718096] mt-1">{isDemo ? '演示模式下暂无数据，请检查后端服务' : '交易时间内数据更丰富，非交易时段自动展示演示数据'}</p>
         </div>
       ) : (
         <div className="bg-[#16213e] rounded-lg overflow-hidden border border-[#2d3748]"

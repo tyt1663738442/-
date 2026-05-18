@@ -388,12 +388,8 @@ class THSDataSource:
 
             phase = self._get_market_phase()
 
-            # 量比估算：用成交量 / 均量（简化：用成交额/价格/100 作为当日量，与均量比较）
-            # 新浪不直接提供量比，用 turnover 近似或设为0
-            vol_ratio = float(parts[39]) if len(parts) > 39 and parts[39] else 0  # PE字段复用位置不对
-            # 实际上新浪 parts[38]=换手率, 量比需要其他方式获取
-            # 这里用成交额/(价格*100) 与昨日对比的简化估算
-            est_volume_ratio = 0
+            # 量比：新浪 hq.sinajs.cn 不直接提供量比，留0让 _enrich_stock_data 用换手率估算
+            vol_ratio = 0
 
             return {
                 'code': code,
@@ -1193,6 +1189,123 @@ def _run_formula_scan(stocks: Dict, formula_id: int) -> List[Dict]:
     return results
 
 
+# ============== 演示数据（本地开发/非交易时段使用） ==============
+
+_DEMO_STOCK_POOL = [
+    ('002594', '比亚迪', 230.5), ('300750', '宁德时代', 185.2), ('600519', '贵州茅台', 1680.0),
+    ('000858', '五粮液', 142.3), ('002230', '科大讯飞', 48.6), ('600036', '招商银行', 35.2),
+    ('000001', '平安银行', 11.8), ('002475', '立讯精密', 32.5), ('300059', '东方财富', 18.9),
+    ('600030', '中信证券', 22.1), ('000568', '泸州老窖', 165.0), ('002415', '海康威视', 28.3),
+    ('600276', '恒瑞医药', 45.8), ('000333', '美的集团', 62.5), ('002460', '赣锋锂业', 35.6),
+    ('600887', '伊利股份', 26.8), ('000651', '格力电器', 38.2), ('002271', '东方雨虹', 18.5),
+    ('300014', '亿纬锂能', 42.3), ('600009', '上海机场', 38.9), ('002007', '华兰生物', 22.4),
+    ('000963', '华东医药', 38.6), ('002812', '恩捷股份', 58.2), ('600703', '三安光电', 12.8),
+    ('300433', '蓝思科技', 16.5), ('002049', '紫光国微', 58.9), ('000725', '京东方A', 4.25),
+    ('600570', '恒生电子', 28.6), ('002241', '歌尔股份', 21.3), ('300124', '汇川技术', 58.7),
+]
+
+
+def _get_demo_formula_data(formula_id: int) -> List[Dict]:
+    """生成演示数据（非交易时段/本地开发使用）"""
+    import random
+    random.seed(42 + formula_id)  # 固定种子保证每次一致
+    results = []
+
+    if formula_id == 1:
+        # 公式1: 竞价爆量选谷 — 金额>3000万, 涨幅0~3%, 市值<200亿
+        candidates = [
+            ('002594', '比亚迪', 232.50, 1.25, 4500, 1.85, 168),
+            ('002230', '科大讯飞', 49.20, 2.10, 5200, 2.45, 85),
+            ('002475', '立讯精密', 32.80, 0.85, 3800, 1.25, 42),
+            ('000001', '平安银行', 11.95, 1.50, 6200, 0.95, 28),
+            ('002415', '海康威视', 28.60, 2.35, 3500, 1.65, 55),
+            ('600276', '恒瑞医药', 46.10, 0.65, 4100, 0.85, 38),
+            ('002812', '恩捷股份', 59.20, 1.85, 3300, 2.15, 72),
+        ]
+        for code, name, price, chg, amount_w, turnover, float_cap in candidates:
+            score = min(amount_w / 5000, 1) * 40 + (1 - abs(chg - 1.5) / 1.5) * 30 + max(0, 1 - float_cap / 200) * 20 + min(turnover / 2, 1) * 10
+            results.append({
+                'code': code, 'name': name, 'price': price, 'pre_close': round(price / (1 + chg / 100), 2),
+                'change_pct': chg, 'auction_turnover': amount_w, 'turnover_pct': turnover,
+                'float_cap': float_cap, 'score': round(score, 1), 'formula_id': 1,
+            })
+
+    elif formula_id == 2:
+        # 公式2: 竞价抓首板 — 金额>350万, 涨幅3~6%, 换手>0.1%
+        candidates = [
+            ('300750', '宁德时代', 190.50, 4.50, 2800, 3.25, 45),
+            ('600519', '贵州茅台', 1735.0, 3.85, 1850, 1.85, 28),
+            ('000858', '五粮液', 147.80, 5.20, 1200, 2.65, 35),
+            ('300059', '东方财富', 19.65, 4.15, 950, 4.85, 18),
+            ('600036', '招商银行', 36.50, 3.65, 780, 1.45, 22),
+            ('002460', '赣锋锂业', 36.80, 5.80, 650, 3.15, 15),
+        ]
+        for code, name, price, chg, amount_w, turnover, float_cap in candidates:
+            score = (1 - abs(chg - 4.5) / 1.5) * 35 + min(amount_w / 1000, 1) * 25 + min(turnover / 1, 1) * 20 + 20
+            results.append({
+                'code': code, 'name': name, 'price': price, 'pre_close': round(price / (1 + chg / 100), 2),
+                'change_pct': chg, 'auction_turnover': amount_w, 'turnover_pct': turnover,
+                'float_cap': float_cap, 'score': round(score, 1), 'formula_id': 2,
+            })
+
+    elif formula_id == 3:
+        # 公式3: 竞价爆量抢筹 — 涨幅3~6%, 金额>2500万, 换手>0.1%, 主力抢筹
+        candidates = [
+            ('002594', '比亚迪', 235.80, 5.20, 4200, 2.85, 0.25),
+            ('300750', '宁德时代', 192.30, 4.85, 3800, 3.65, 0.18),
+            ('600519', '贵州茅台', 1742.0, 4.25, 3200, 1.95, 0.15),
+            ('002230', '科大讯飞', 50.80, 5.60, 2900, 3.45, 0.22),
+            ('000858', '五粮液', 149.50, 5.85, 2600, 2.85, 0.20),
+        ]
+        for code, name, price, chg, amount_w, turnover, net_ratio in candidates:
+            score = min(net_ratio / 0.30, 1) * 40 + min(amount_w / 4000, 1) * 30 + (1 - abs(chg - 4.5) / 1.5) * 15 + min(turnover / 1, 1) * 15
+            results.append({
+                'code': code, 'name': name, 'price': price, 'pre_close': round(price / (1 + chg / 100), 2),
+                'change_pct': chg, 'auction_turnover': amount_w, 'turnover_pct': turnover,
+                'float_cap': round(price * 5, 2), 'score': round(score, 1), 'formula_id': 3,
+            })
+
+    elif formula_id == 4:
+        # 公式4: 竞价异动选谷 — 金额>3000万, 换手>0.2%, 涨幅0~2%, 市值<130亿
+        candidates = [
+            ('002475', '立讯精密', 33.20, 1.85, 4200, 3.25, 85),
+            ('002415', '海康威视', 28.90, 1.25, 3800, 2.85, 55),
+            ('002230', '科大讯飞', 49.50, 1.65, 4500, 3.85, 42),
+            ('300433', '蓝思科技', 16.85, 0.95, 3500, 4.15, 68),
+            ('002049', '紫光国微', 59.50, 1.45, 4100, 2.65, 35),
+            ('002241', '歌尔股份', 21.65, 0.75, 3300, 3.45, 28),
+        ]
+        for code, name, price, chg, amount_w, turnover, float_cap in candidates:
+            score = min(turnover / 1, 1) * 40 + min(amount_w / 5000, 1) * 30 + (1 - abs(chg - 1) / 1) * 20 + max(0, 1 - float_cap / 130) * 10
+            results.append({
+                'code': code, 'name': name, 'price': price, 'pre_close': round(price / (1 + chg / 100), 2),
+                'change_pct': chg, 'auction_turnover': amount_w, 'turnover_pct': turnover,
+                'float_cap': float_cap, 'score': round(score, 1), 'formula_id': 4,
+            })
+
+    elif formula_id == 5:
+        # 公式5: 竞价砸盘异动 — 金额>350万, 跌幅<-4%, 20天振幅<30%
+        candidates = [
+            ('002460', '赣锋锂业', 34.20, -5.80, 850, 2.85, 25),
+            ('300014', '亿纬锂能', 40.50, -6.25, 920, 3.15, 22),
+            ('002812', '恩捷股份', 55.80, -4.85, 780, 2.45, 18),
+            ('600703', '三安光电', 12.35, -5.20, 650, 3.85, 15),
+            ('002007', '华兰生物', 21.50, -4.35, 580, 1.95, 12),
+            ('000963', '华东医药', 37.20, -6.80, 720, 2.65, 20),
+        ]
+        for code, name, price, chg, amount_w, turnover, amp in candidates:
+            score = min(abs(chg) / 10, 1) * 40 + min(amount_w / 1000, 1) * 25 + (1 - amp / 30) * 20 + min(turnover / 1, 1) * 15
+            results.append({
+                'code': code, 'name': name, 'price': price, 'pre_close': round(price / (1 + chg / 100), 2),
+                'change_pct': chg, 'auction_turnover': amount_w, 'turnover_pct': turnover,
+                'float_cap': round(price * 3, 2), 'score': round(score, 1), 'formula_id': 5,
+            })
+
+    # 按得分降序
+    results.sort(key=lambda x: x['score'], reverse=True)
+    return results
+
+
 def load_stock_list():
     global FULL_STOCK_LIST
     try:
@@ -1757,16 +1870,33 @@ def auction_formula_scan(
     try:
         stocks = ds.fetch_batch_realtime(FULL_STOCK_LIST)
         results = _run_formula_scan(stocks, formula_id)
+        is_demo = False
+        # 如果结果为空（非交易时段/数据异常），自动返回演示数据
+        if not results:
+            is_demo = True
+            results = _get_demo_formula_data(formula_id)
+            print(f'[DEMO] 公式{formula_id}返回演示数据 ({len(results)}只)')
         return {
             'phase': phase,
             'time': datetime.now().strftime('%H:%M:%S'),
             'formula_id': formula_id,
             'count': len(results),
             'candidates': results[:100],
+            'is_demo': is_demo,
         }
     except Exception as e:
         print(f'公式扫描失败(formula={formula_id}): {e}')
-        return {'phase': phase, 'formula_id': formula_id, 'count': 0, 'candidates': [], 'error': str(e)}
+        # 异常时也返回演示数据，保证前端不挂
+        results = _get_demo_formula_data(formula_id)
+        return {
+            'phase': phase,
+            'time': datetime.now().strftime('%H:%M:%S'),
+            'formula_id': formula_id,
+            'count': len(results),
+            'candidates': results[:100],
+            'is_demo': True,
+            'error': str(e),
+        }
 
 
 @app.get('/api/news/sentiment')
