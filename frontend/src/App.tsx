@@ -8,9 +8,10 @@ import { FormulaPanel } from './components/FormulaPanel'
 import { SectorPanel } from './components/SectorPanel'
 import { ReviewPanel } from './components/ReviewPanel'
 import { HotTrendPage } from './components/HotTrendPage'
-import { Zap, Grid3x3, Flame, ClipboardList, Wind } from 'lucide-react'
+import { NewsHub } from './components/NewsHub'
+import { Zap, Grid3x3, Flame, ClipboardList, Wind, Newspaper } from 'lucide-react'
 
-type TabKey = 'auction' | 'formula' | 'sector' | 'review' | 'hottrend'
+type TabKey = 'auction' | 'formula' | 'sector' | 'review' | 'hottrend' | 'newshub'
 
 // 科技风配色
 const TABS: { key: TabKey; label: string; icon: any; color: string }[] = [
@@ -19,6 +20,7 @@ const TABS: { key: TabKey; label: string; icon: any; color: string }[] = [
   { key: 'sector',     label: '板块行情',   icon: Grid3x3,          color: '#06b6d4' },
   { key: 'review',     label: '复盘分析',   icon: ClipboardList,    color: '#00d4ff' },
   { key: 'hottrend',   label: '最强风口',   icon: Wind,             color: '#f59e0b' },
+  { key: 'newshub',    label: '新闻汇总',   icon: Newspaper,       color: '#10b981' },
 ]
 
 // 辅助函数：将十六进制颜色转换为RGB
@@ -93,6 +95,7 @@ function App() {
         {activeTab === 'sector' && <SectorPanel />}
         {activeTab === 'review' && <ReviewPanel />}
         {activeTab === 'hottrend' && <HotTrendPage />}
+        {activeTab === 'newshub' && <NewsHub />}
       </main>
     </div>
   )

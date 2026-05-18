@@ -1568,6 +1568,23 @@ _NEGATIVE_KEYWORDS = [
     '地缘', '冲突', '战争', '战争升级', '避险',
 ]
 
+# ============== 新闻分类关键词 ==============
+_NEWS_CATEGORY_KEYWORDS = {
+    'policy': ['国务院', '发改委', '央行', '财政部', '证监会', '工信部', '通知', '意见', '规划', '纲要', '决定', '条例', '办法', '国常会', '政治局', '中央', '部委', '政府', '中共中央', '全国人大', '银保监', '住建部', '商务部', '生态环境部', '卫健委'],
+    'macro': ['美国', '美联储', '欧洲', '欧盟', 'G7', 'OPEC', '英国', '日本', '德国', '法国', '制裁', '关税', '全球', '国际', '原油', '黄金', '美股', '港股', '美指', '纳斯达克', '道琼斯'],
+    'industry': ['行业', '板块', '产能', '供需', '涨价', '市场', '产业链', '供应链', '景气', '周期', '光伏', '风电', '锂电', '储能', '新能源', '半导体', '芯片', 'AI', '人工智能'],
+}
+
+
+def _classify_news_category(title: str) -> str:
+    """根据标题关键词判断新闻分类"""
+    for cat, keywords in _NEWS_CATEGORY_KEYWORDS.items():
+        for kw in keywords:
+            if kw in title:
+                return cat
+    return 'general'
+
+
 def _fetch_market_news() -> List[Dict]:
     """从新浪财经抓取最新市场新闻，返回带情绪分数的新闻列表"""
     global NEWS_CACHE, NEWS_CACHE_TIME, NEWS_SENTIMENT_SCORE
@@ -2025,6 +2042,82 @@ def _generate_mock_stock_news(code: str) -> List[Dict]:
     ]
 
 
+@app.get('/api/news/all')
+def get_all_news():
+    """
+    汇总所有新闻：政策/国际/行业/个股
+    返回分类后的新闻列表，支持统一查看
+    """
+    news = _fetch_market_news()
+    
+    # 分类整理
+    policy_news = []
+    macro_news = []
+    industry_news = []
+    general_news = []
+    
+    for n in news:
+        title = n.get('title', '')
+        category = _classify_news_category(title)
+        
+        item = {
+            'title': title,
+            'time': n.get('time', ''),
+            'sentiment': n.get('sentiment', 0.5),
+            'category': category,
+        }
+        
+        if category == 'policy':
+            policy_news.append(item)
+        elif category == 'macro':
+            macro_news.append(item)
+        elif category == 'industry':
+            industry_news.append(item)
+        else:
+            general_news.append(item)
+    
+    # 计算各分类情绪
+    def calc_avg_sentiment(items):
+        if not items:
+            return 0.5
+        return round(sum(i['sentiment'] for i in items) / len(items), 2)
+    
+    return {
+        'total': len(news),
+        'update_time': datetime.now().strftime('%H:%M:%S'),
+        'categories': {
+            'policy': {
+                'label': '国内政策',
+                'icon': '🏛️',
+                'count': len(policy_news),
+                'avg_sentiment': calc_avg_sentiment(policy_news),
+                'news': policy_news[:20],
+            },
+            'macro': {
+                'label': '国际宏观',
+                'icon': '🌍',
+                'count': len(macro_news),
+                'avg_sentiment': calc_avg_sentiment(macro_news),
+                'news': macro_news[:20],
+            },
+            'industry': {
+                'label': '行业动态',
+                'icon': '📊',
+                'count': len(industry_news),
+                'avg_sentiment': calc_avg_sentiment(industry_news),
+                'news': industry_news[:20],
+            },
+            'general': {
+                'label': '市场资讯',
+                'icon': '📰',
+                'count': len(general_news),
+                'avg_sentiment': calc_avg_sentiment(general_news),
+                'news': general_news[:20],
+            },
+        },
+        'overall_sentiment': calc_avg_sentiment(news),
+    }
+
 @app.get('/api/news/{code}')
 def get_stock_news(code: str):
     """获取单股相关新闻"""
@@ -2035,8 +2128,6 @@ def get_stock_news(code: str):
         'count': len(news),
         'update_time': datetime.now().strftime('%H:%M:%S'),
     }
-
-@app.get('/api/stock/{code}')
 def get_stock_detail(code: str):
     """个股详情"""
     stock_list = ds.fetch_batch_realtime([code])
