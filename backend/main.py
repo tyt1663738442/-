@@ -2724,7 +2724,29 @@ def get_review_stocks():
 def _get_hot_trend_response():
     try:
         from hot_trend import get_hot_trend_data
-        # AUCTION_CACHE 是 list，直接传入
+        # 使用全量股票实时行情，而非仅限于涨停候选的 AUCTION_CACHE
+        if FULL_STOCK_LIST:
+            # 获取实时行情（全量，避免遗漏）
+            stocks_data = ds.fetch_batch_realtime(FULL_STOCK_LIST)
+            # 转换为 list[dict] 格式
+            stocks_list = []
+            for code, s in stocks_data.items():
+                if not code.isdigit():
+                    continue
+                # StockInfo 是 Pydantic 模型，转为 dict
+                if hasattr(s, 'model_dump'):
+                    s_dict = s.model_dump()
+                    if not s_dict.get('price'):
+                        continue
+                elif isinstance(s, dict):
+                    if not s.get('price'):
+                        continue
+                    s_dict = s
+                else:
+                    continue
+                stocks_list.append(s_dict)
+            print(f"[最强风口] 实时行情已获取: {len(stocks_list)} 只")
+            return get_hot_trend_data(stocks_list)
         return get_hot_trend_data(AUCTION_CACHE or [])
     except Exception as e:
         print(f'[最强风口] 接口异常: {e}')

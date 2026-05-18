@@ -102,8 +102,8 @@ KEYWORD_SECTOR_MAP = {
     '房地产': '房地产', '地产': '房地产', '建筑': '房地产', '建材': '房地产',
     '基建': '房地产', '水泥': '房地产', '钢铁': '房地产',
     # 金融
-    '银行': '金融', '保险': '金融', '券商': '金融', '金融': '金融',
-    '证券': '金融', '期货': '金融', '信托': '金融', '基金': '金融',
+    '保险': '金融', '券商': '金融',
+    '期货': '金融', '信托': '金融',
     # 军工
     '军工': '国防军工', '航天': '国防军工', '卫星': '国防军工', '航空': '国防军工',
     '船舶': '国防军工', '兵器': '国防军工', '无人机': '国防军工', '发动机': '国防军工',
@@ -261,7 +261,8 @@ def extract_stock_name_from_title(title: str) -> str | None:
             for suffix in _STOCK_NAME_SUFFIXES:
                 if candidate.endswith(suffix):
                     candidate = candidate[:-len(suffix)]
-            candidate = candidate.strip()
+            # 去掉末尾的冒号（来自 "XX股份:公告" 格式）
+            candidate = candidate.rstrip(':.：').strip()
             if len(candidate) >= _MIN_STOCK_NAME_LEN:
                 return candidate
 
@@ -650,9 +651,11 @@ def get_hot_trend_data(stocks: list) -> dict:
 
         # === 匹配方式2：个股全称精准匹配（新增：公告标题中的公司全称精确匹配股票名称）===
         # 有个股代码但没在 stock_by_code 中匹配到，或无代码的个股公告，都尝试全称匹配
+        full_name_matched = False  # 标记是否已通过全称精准匹配
         if not has_specific_stock:
             extracted_name = extract_stock_name_from_title(title)
             if extracted_name and extracted_name in stock_by_name:
+                full_name_matched = True
                 s = stock_by_name[extracted_name]
                 code_key = s['code']
                 if code_key not in stock_scores:
@@ -687,8 +690,12 @@ def get_hot_trend_data(stocks: list) -> dict:
                         stock_scores[code_key]['score_breakdown']['by_type'].get(ntype, 0) + abs(score_change)
 
         # === 匹配方式3：关键词匹配（仅个股名称包含关键词，不走板块传导）===
-        # 关键修复：有明确个股代码归属的公告，只精准匹配对应个股，不再通过关键词串到其他个股
-        if not has_specific_stock:
+        # 关键修复：
+        # 1. 有明确个股代码归属的公告，只精准匹配对应个股，不再通过关键词串到其他个股
+        # 2. 有全称精准匹配成功的公告（如"XX科技公告"），只匹配对应股票，不串到其他"XX科技"股
+        # 3. 公告类型（stock）新闻不参与关键词匹配，避免"北自科技公告"串到所有"XX科技"股
+        news_type = news.get('news_type', 'general')
+        if not has_specific_stock and not full_name_matched and news_type != 'stock':
             matched_kws = news.get('matched_keywords', [])
             for kw in matched_kws:
                 # 从 name_index 匹配（个股名称包含关键词）
