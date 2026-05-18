@@ -615,6 +615,8 @@ def get_hot_trend_data(stocks: list) -> dict:
     for news in analyzed_news:
         title = news['title']
         score_change = news['score_change']
+        # 是否有明确个股归属（用于控制匹配方式2和3）
+        has_specific_stock = len(news.get('stock_codes', [])) > 0 or bool(news.get('stock_code_api'))
 
         # === 匹配方式1：精准匹配（从API或正则提取股票代码）===
         for code in news.get('stock_codes', []):
@@ -686,7 +688,6 @@ def get_hot_trend_data(stocks: list) -> dict:
 
         # === 匹配方式3：关键词匹配（仅个股名称包含关键词，不走板块传导）===
         # 关键修复：有明确个股代码归属的公告，只精准匹配对应个股，不再通过关键词串到其他个股
-        has_specific_stock = len(news.get('stock_codes', [])) > 0 or bool(news.get('stock_code_api'))
         if not has_specific_stock:
             matched_kws = news.get('matched_keywords', [])
             for kw in matched_kws:
