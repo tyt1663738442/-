@@ -1357,11 +1357,17 @@ def load_stock_list():
         import csv
         with open('stock_list.csv', 'r', encoding='utf-8-sig') as f:
             reader = csv.DictReader(f)
-            FULL_STOCK_LIST = [row['code'].strip() for row in reader]
-        print(f"[OK] loaded {len(FULL_STOCK_LIST)} stocks")
+            rows = list(reader)
+            FULL_STOCK_LIST = [row['code'].strip() for row in rows]
+            # 同时构建 CODE_NAME_MAP（全局代码→名称映射，供新闻汇总等功能使用）
+            global CODE_NAME_MAP
+            CODE_NAME_MAP = {row['code'].strip(): row.get('name', '').strip() for row in rows if row.get('name', '').strip()}
+        print(f"[OK] loaded {len(FULL_STOCK_LIST)} stocks, code_name_map: {len(CODE_NAME_MAP)}")
     except Exception as e:
         print(f"[ERR] load stock list failed: {e}")
         FULL_STOCK_LIST = MONITOR_STOCKS  # fallback
+
+CODE_NAME_MAP: Dict[str, str] = {}  # code -> name，从 stock_list.csv 初始化
 
 load_stock_list()
 _load_auction_cache()
@@ -1788,29 +1794,42 @@ def get_stocks(
     ascending: bool = Query(False),
 ):
     """获取股票列表（支持分页、搜索、排序）"""
-    # 搜索模式：先在 stock_list.csv 名称中过滤，取匹配的 code 列表
+    phase = ds._get_market_phase()
+    target = FULL_STOCK_LIST if len(FULL_STOCK_LIST) > 0 else MONITOR_STOCKS
+
+    # 搜索模式：先在 CODE_NAME_MAP 中过滤
     if search:
-        # 先从 CSV 元数据搜索（快速）
-        import csv
-        matched_codes = []
-        try:
-            csv_path = os.path.join(os.path.dirname(__file__), 'stock_list.csv')
-            with open(csv_path, 'r', encoding='utf-8-sig') as f:
-                reader = csv.DictReader(f)
-                for row in reader:
-                    code = row.get('code', '').strip()
-                    name = row.get('name', '').strip()
-                    if search in code or search in name:
-                        matched_codes.append(code)
-        except Exception:
-            matched_codes = [c for c in FULL_STOCK_LIST if search in c]
+        matched_codes = [code for code, name in CODE_NAME_MAP.items()
+                         if search in code or search in name]
         if not matched_codes:
-            return {'stocks': [], 'total': 0, 'page': page, 'total_pages': 0, 'time': datetime.now().strftime('%H:%M:%S'), 'phase': ds._get_market_phase()}
+            return {'stocks': [], 'total': 0, 'page': page, 'total_pages': 0, 'time': datetime.now().strftime('%H:%M:%S'), 'phase': phase}
         # 获取匹配股票的实时数据
         stocks_data = ds.fetch_batch_realtime(matched_codes[:200])
         stock_list = list(stocks_data.values())
+        # 非交易时段兜底：实时行情为空时，直接用 CODE_NAME_MAP 返回基本信息
+        if not stock_list:
+            fallback = []
+            for code in matched_codes[:200]:
+                name = CODE_NAME_MAP.get(code, '')
+                if name:
+                    fallback.append({
+                        'code': code, 'name': name, 'price': 0,
+                        'change': 0, 'change_pct': 0, 'volume': 0,
+                        'amount': 0, 'turnover': 0, 'high': 0, 'low': 0,
+                        'open': 0, 'pre_close': 0, 'volume_ratio': 0,
+                        'pb': 0, 'pe': 0, 'sector': DaBanEngine._SECTOR_MAP.get(code, ''),
+                    })
+            fallback.sort(key=lambda x: x.get('name', ''))
+            return {
+                'stocks': fallback[:limit],
+                'total': len(fallback),
+                'page': 1,
+                'total_pages': 1,
+                'time': datetime.now().strftime('%H:%M:%S'),
+                'phase': phase,
+                'is_offline': True,  # 标记为离线数据
+            }
     else:
-        target = FULL_STOCK_LIST if len(FULL_STOCK_LIST) > 0 else MONITOR_STOCKS
         # 按分页计算当前页的股票代码
         total_all = len(target)
         start = (page - 1) * limit
@@ -1833,7 +1852,7 @@ def get_stocks(
             'page': page,
             'total_pages': (total_all + limit - 1) // limit,
             'time': datetime.now().strftime('%H:%M:%S'),
-            'phase': ds._get_market_phase(),
+            'phase': phase,
         }
 
     # 搜索模式的排序
@@ -1852,7 +1871,7 @@ def get_stocks(
         'page': 1,
         'total_pages': 1,
         'time': datetime.now().strftime('%H:%M:%S'),
-        'phase': ds._get_market_phase(),
+        'phase': phase,
     }
 
 @app.get('/api/daban')
@@ -2042,31 +2061,184 @@ def _generate_mock_stock_news(code: str) -> List[Dict]:
     ]
 
 
+def _build_news_stock_map(news_titles: List[str]) -> dict:
+    """
+    为新闻标题列表构建"标题→关联个股"映射
+    
+    方案1（优先）：调用 hot_trend 的结果（交易时段有实时行情时）
+    方案2（兜底）：直接用 KEYWORD_SECTOR_MAP + sector_map 做板块传导
+    """
+    from hot_trend import KEYWORD_SECTOR_MAP, BULLISH_GENERAL, BEARISH_GENERAL
+    news_to_stocks: dict = {}
+
+    # ---- 方案1：从 hot_trend 结果反向构建 ----
+    try:
+        hot_data = _get_hot_trend_response()
+        if hot_data.get('stocks'):
+            for stock in hot_data['stocks']:
+                stock_code = stock.get('code', '')
+                stock_name = stock.get('name', '')
+                stock_change = stock.get('change_pct', 0)
+                for sn in stock.get('news', []):
+                    sn_title = sn.get('title', '')
+                    if not sn_title:
+                        continue
+                    if sn_title not in news_to_stocks:
+                        news_to_stocks[sn_title] = []
+                    existing_codes = {x['code'] for x in news_to_stocks[sn_title]}
+                    if stock_code not in existing_codes:
+                        news_to_stocks[sn_title].append({
+                            'code': stock_code,
+                            'name': stock_name,
+                            'change_pct': stock_change,
+                            'sentiment': sn.get('sentiment', 'neutral'),
+                            'match_type': 'hot_trend',
+                        })
+            print(f"[新闻汇总] hot_trend方案: 已构建 {len(news_to_stocks)} 条新闻的股票映射")
+    except Exception as e:
+        print(f"[新闻汇总] hot_trend方案失败: {e}")
+
+    # ---- 方案2：板块传导兜底 ----
+    # 简化板块名 -> 标准行业分类名（sector_map.json 里的 value）的映射
+    _SECTOR_ALIAS = {
+        '新能源': ['电气机械和器材制造业', '燃气生产和供应业'],
+        '半导体': ['计算机、通信和其他电子设备制造业'],
+        '人工智能': ['软件和信息技术服务业', '互联网和相关服务', '计算机、通信和其他电子设备制造业'],
+        '机器人': ['通用设备制造业', '专用设备', '计算机、通信和其他电子设备制造业'],
+        '医药生物': ['医药制造业', '卫生'],
+        '大消费': ['酒、饮料和精制茶制造业', '零售业', '批发业', '纺织服装、服饰业'],
+        '房地产': ['房地产业', '土木工程建筑业'],
+        '金融': ['货币金融服务', '资本市场服务', '其他金融业'],
+        '国防军工': ['铁路、船舶、航空航天和其他运输设备制造业', '航空运输业'],
+        '有色金属': ['有色金属冶炼和压延加工业', '有色金属矿采选业'],
+        '化工': ['化学原料和化学制品制造业', '化学纤维制造业'],
+        '新材料': ['金属制品业', '化学原料和化学制品制造业'],
+        '机械设备': ['通用设备制造业', '仪器仪表制造业'],
+        '汽车': ['汽车制造业'],
+        '石油': ['开采辅助活动'],
+        '煤炭': ['煤炭开采和洗选业'],
+        '电力': ['电力、热力生产和供应业'],
+        '环保': ['生态保护和环境治理业', '废弃资源综合利用业'],
+        '物流': ['道路运输业', '水上运输业', '装卸搬运和运输代理业'],
+        '农业': ['农业', '农、林、牧、渔服务业'],
+        '传媒': ['广播、电视、电影和影视录音制作业', '新闻和出版业'],
+        '教育': ['教育'],
+        '低空经济': ['航空运输业', '铁路、船舶、航空航天和其他运输设备制造业'],
+    }
+
+    sector_map = DaBanEngine._SECTOR_MAP  # code -> sector_name
+    if sector_map:
+        # 构建标准行业名 -> [code] 反向映射
+        std_sector_to_codes: dict = {}
+        for code, sec_name in sector_map.items():
+            std_sector_to_codes.setdefault(sec_name, []).append(code)
+
+        # 构建代码→名称的映射（优先用 CODE_NAME_MAP，非交易时段也有效）
+        code_to_name: dict = dict(CODE_NAME_MAP) if CODE_NAME_MAP else {}
+        if not code_to_name and AUCTION_CACHE:
+            for s in AUCTION_CACHE:
+                s_dict = s.model_dump() if hasattr(s, 'model_dump') else s
+                if s_dict.get('code') and s_dict.get('name'):
+                    code_to_name[s_dict['code']] = s_dict['name']
+
+        for title in news_titles:
+            # 已有足够匹配，跳过
+            existing = news_to_stocks.get(title, [])
+            if len(existing) >= 3:
+                continue
+
+            # 从标题中提取板块关键词（KEYWORD_SECTOR_MAP 的 key）
+            matched_simple_sectors = set()
+            for kw, sec in KEYWORD_SECTOR_MAP.items():
+                if kw in title:
+                    matched_simple_sectors.add(sec)
+
+            if not matched_simple_sectors:
+                continue
+
+            # 情绪判断
+            is_bullish = any(kw in title for kw in BULLISH_GENERAL)
+            is_bearish = any(kw in title for kw in BEARISH_GENERAL)
+            sentiment = 'bullish' if is_bullish and not is_bearish else 'bearish' if is_bearish and not is_bullish else 'neutral'
+
+            existing_codes = {x['code'] for x in existing}
+            added_total = 0
+
+            for simple_sec in matched_simple_sectors:
+                if added_total >= 4:
+                    break
+                # 映射到标准行业名
+                std_sectors = _SECTOR_ALIAS.get(simple_sec, [])
+                if not std_sectors:
+                    continue
+
+                per_sector = max(1, 4 // len(std_sectors))
+                for std_sec in std_sectors:
+                    codes = std_sector_to_codes.get(std_sec, [])
+                    added_this = 0
+                    for code in codes:
+                        if added_this >= per_sector or added_total >= 4:
+                            break
+                        if code in existing_codes:
+                            continue
+                        name = code_to_name.get(code, '')
+                        if not name:
+                            continue
+                        if 'ST' in name or code.startswith('688') or code.startswith('3'):
+                            continue
+                        if title not in news_to_stocks:
+                            news_to_stocks[title] = list(existing)
+                        news_to_stocks[title].append({
+                            'code': code,
+                            'name': name,
+                            'change_pct': 0,
+                            'sentiment': sentiment,
+                            'match_type': 'sector',
+                            'sector': simple_sec,
+                        })
+                        existing_codes.add(code)
+                        added_this += 1
+                        added_total += 1
+
+    matched_count = sum(1 for v in news_to_stocks.values() if v)
+    print(f"[新闻汇总] 最终匹配: {matched_count} 条新闻有关联个股")
+    return news_to_stocks
+
+
 @app.get('/api/news/all')
 def get_all_news():
     """
     汇总所有新闻：政策/国际/行业/个股
     返回分类后的新闻列表，支持统一查看
+    每条新闻包含 related_stocks（通过板块匹配/名称匹配获取的相关个股）
     """
     news = _fetch_market_news()
-    
+    news_titles = [n.get('title', '') for n in news]
+
+    # 构建新闻→股票映射（兼容交易时段+非交易时段）
+    news_to_stocks = _build_news_stock_map(news_titles)
+
     # 分类整理
     policy_news = []
     macro_news = []
     industry_news = []
     general_news = []
-    
+
     for n in news:
         title = n.get('title', '')
         category = _classify_news_category(title)
-        
+
+        # 获取关联个股（最多6只）
+        related_stocks = news_to_stocks.get(title, [])[:6]
+
         item = {
             'title': title,
             'time': n.get('time', ''),
             'sentiment': n.get('sentiment', 0.5),
             'category': category,
+            'related_stocks': related_stocks,
         }
-        
+
         if category == 'policy':
             policy_news.append(item)
         elif category == 'macro':
@@ -2075,16 +2247,23 @@ def get_all_news():
             industry_news.append(item)
         else:
             general_news.append(item)
-    
+
     # 计算各分类情绪
     def calc_avg_sentiment(items):
         if not items:
             return 0.5
         return round(sum(i['sentiment'] for i in items) / len(items), 2)
-    
+
+    # 统计有关联股票的新闻数
+    all_news_flat = policy_news + macro_news + industry_news + general_news
+    news_with_stocks = sum(1 for n in all_news_flat if n.get('related_stocks'))
+    total_matches = sum(len(n.get('related_stocks', [])) for n in all_news_flat)
+
     return {
         'total': len(news),
         'update_time': datetime.now().strftime('%H:%M:%S'),
+        'news_with_stocks': news_with_stocks,   # 有关联个股的新闻数
+        'total_stock_matches': total_matches,    # 总关联次数
         'categories': {
             'policy': {
                 'label': '国内政策',
@@ -2815,16 +2994,13 @@ def get_review_stocks():
 def _get_hot_trend_response():
     try:
         from hot_trend import get_hot_trend_data
-        # 使用全量股票实时行情，而非仅限于涨停候选的 AUCTION_CACHE
+        # 优先使用全量实时行情；非交易时段实时行情为空时，用AUCTION_CACHE兜底
+        stocks_list = []
         if FULL_STOCK_LIST:
-            # 获取实时行情（全量，避免遗漏）
             stocks_data = ds.fetch_batch_realtime(FULL_STOCK_LIST)
-            # 转换为 list[dict] 格式
-            stocks_list = []
             for code, s in stocks_data.items():
                 if not code.isdigit():
                     continue
-                # StockInfo 是 Pydantic 模型，转为 dict
                 if hasattr(s, 'model_dump'):
                     s_dict = s.model_dump()
                     if not s_dict.get('price'):
@@ -2837,10 +3013,18 @@ def _get_hot_trend_response():
                     continue
                 stocks_list.append(s_dict)
             print(f"[最强风口] 实时行情已获取: {len(stocks_list)} 只")
+
+        # 非交易时段实时行情为空：用AUCTION_CACHE兜底（包含昨日收盘价格数据）
+        if not stocks_list and AUCTION_CACHE:
+            stocks_list = [s.model_dump() if hasattr(s, 'model_dump') else s for s in AUCTION_CACHE]
+            print(f"[最强风口] 使用AUCTION_CACHE兜底: {len(stocks_list)} 只")
+
+        if stocks_list:
             return get_hot_trend_data(stocks_list)
-        return get_hot_trend_data(AUCTION_CACHE or [])
+        return {'stocks': [], 'news_count': 0, 'update_time': datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
     except Exception as e:
-        print(f'[最强风口] 接口异常: {e}')
+        import traceback
+        print(f'[最强风口] 接口异常: {e}\n{traceback.format_exc()}')
         return {'stocks': [], 'news_count': 0, 'update_time': datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 
 @app.get('/api/hot-trend/stocks')

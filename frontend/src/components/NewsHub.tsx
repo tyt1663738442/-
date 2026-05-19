@@ -1,11 +1,12 @@
 /**
  * 新闻汇总中心 - 统一查看所有新闻
  * 分类：政策 / 国际 / 行业 / 市场资讯
+ * 每条新闻展示关联个股标签
  */
 import { useState, useEffect } from 'react'
-import { RefreshCw, Globe, Shield, TrendingUp, FileText, ExternalLink, Clock } from 'lucide-react'
+import { RefreshCw, Clock, TrendingUp } from 'lucide-react'
 
-const API_BASE = 'http://localhost:8000'
+const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:8001'
 
 // 配色
 const COLOR_BG = '#0a0f1a'
@@ -23,11 +24,19 @@ const CATEGORY_CONFIG = {
   general: { icon: '📰', label: '市场资讯', color: '#10b981', bg: 'rgba(16,185,129,0.1)' },
 }
 
+interface RelatedStock {
+  code: string
+  name: string
+  change_pct: number
+  sentiment: string
+}
+
 interface NewsItem {
   title: string
   time: string
   sentiment: number
   category: string
+  related_stocks?: RelatedStock[]
 }
 
 interface CategoryData {
@@ -43,6 +52,8 @@ interface NewsHubResponse {
   update_time: string
   categories: Record<string, CategoryData>
   overall_sentiment: number
+  news_with_stocks?: number
+  total_stock_matches?: number
 }
 
 type CategoryKey = 'policy' | 'macro' | 'industry' | 'general' | 'all'
@@ -53,7 +64,6 @@ function SentimentBadge({ sentiment }: { sentiment: number }) {
   const isNegative = sentiment < 0.45
   const color = isPositive ? '#00ff88' : isNegative ? '#ff6b6b' : '#7a8aa0'
   const label = isPositive ? '利多' : isNegative ? '利空' : '中性'
-  
   return (
     <span
       className="text-xs px-1.5 py-0.5 rounded font-medium"
@@ -64,24 +74,51 @@ function SentimentBadge({ sentiment }: { sentiment: number }) {
   )
 }
 
+// 相关个股标签
+function StockTag({ stock }: { stock: RelatedStock }) {
+  const isUp = stock.change_pct > 0
+  const isDown = stock.change_pct < 0
+  const color = isUp ? '#ff4d4f' : isDown ? '#52c41a' : '#7a8aa0'  // 涨红跌绿
+  return (
+    <span
+      className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-xs font-medium"
+      style={{ background: `${color}18`, color, border: `1px solid ${color}40`, fontSize: '10px' }}
+    >
+      {stock.name}
+      {stock.change_pct !== 0 && (
+        <span style={{ fontSize: '9px' }}>
+          {isUp ? '+' : ''}{stock.change_pct.toFixed(2)}%
+        </span>
+      )}
+    </span>
+  )
+}
+
 // 单条新闻
 function NewsCard({ item, category }: { item: NewsItem; category: string }) {
   const cfg = CATEGORY_CONFIG[category as keyof typeof CATEGORY_CONFIG] || CATEGORY_CONFIG.general
-  
-  // 格式化时间
+  const relatedStocks = item.related_stocks || []
+
+  // 格式化时间（时间戳 or 字符串）
   const formatTime = (timeStr: string) => {
     if (!timeStr) return '--:--'
-    // 处理日期时间格式
+    // unix timestamp
+    if (/^\d{9,10}$/.test(timeStr)) {
+      const d = new Date(parseInt(timeStr) * 1000)
+      const h = d.getHours().toString().padStart(2, '0')
+      const m = d.getMinutes().toString().padStart(2, '0')
+      return `${h}:${m}`
+    }
     if (timeStr.includes('-') || timeStr.includes('/')) {
       const parts = timeStr.split(' ')
-      return parts[1] || parts[0] || timeStr.slice(-5)
+      return parts[1] ? parts[1].slice(0, 5) : parts[0].slice(-5)
     }
     return timeStr.slice(-5)
   }
-  
+
   return (
     <div
-      className="p-3 rounded-lg border transition-colors hover:border-opacity-60 cursor-pointer"
+      className="p-3 rounded-lg border transition-colors"
       style={{
         background: COLOR_CARD,
         borderColor: COLOR_BORDER,
@@ -89,23 +126,36 @@ function NewsCard({ item, category }: { item: NewsItem; category: string }) {
     >
       <div className="flex items-start gap-2">
         <span
-          className="mt-1 shrink-0 w-2 h-2 rounded-full"
+          className="mt-1.5 shrink-0 w-2 h-2 rounded-full"
           style={{ backgroundColor: cfg.color }}
         />
         <div className="flex-1 min-w-0">
-          <p
-            className="text-sm leading-relaxed"
-            style={{ color: COLOR_TEXT }}
-          >
+          {/* 标题 */}
+          <p className="text-sm leading-relaxed" style={{ color: COLOR_TEXT }}>
             {item.title}
           </p>
-          <div className="flex items-center gap-2 mt-2">
+
+          {/* 时间 + 情绪 */}
+          <div className="flex items-center gap-2 mt-1.5">
             <span className="text-xs flex items-center gap-1" style={{ color: COLOR_TEXT_DIM }}>
               <Clock className="w-3 h-3" />
               {formatTime(item.time)}
             </span>
             <SentimentBadge sentiment={item.sentiment} />
           </div>
+
+          {/* 关联个股标签 */}
+          {relatedStocks.length > 0 && (
+            <div className="flex flex-wrap gap-1.5 mt-2">
+              <span className="text-xs flex items-center gap-0.5" style={{ color: COLOR_TEXT_DIM }}>
+                <TrendingUp className="w-3 h-3" />
+                影响:
+              </span>
+              {relatedStocks.map((s) => (
+                <StockTag key={s.code} stock={s} />
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>
@@ -120,43 +170,43 @@ function CategoryCard({
   onClick
 }: {
   category: CategoryKey
-  data?: CategoryData
+  data?: CategoryData & { count: number }
   isActive: boolean
   onClick: () => void
 }) {
-  const cfg = category === 'all' 
+  const cfg = category === 'all'
     ? { icon: '📋', label: '全部', color: COLOR_ACCENT, bg: `${COLOR_ACCENT}15` }
     : CATEGORY_CONFIG[category as keyof typeof CATEGORY_CONFIG]
-  
-  const sentimentColor = data 
-    ? data.avg_sentiment > 0.55 ? '#00ff88' 
-      : data.avg_sentiment < 0.45 ? '#ff6b6b' 
+
+  const sentimentColor = data
+    ? data.avg_sentiment > 0.55 ? '#00ff88'
+      : data.avg_sentiment < 0.45 ? '#ff6b6b'
       : '#7a8aa0'
     : COLOR_TEXT_DIM
 
   return (
     <button
       onClick={onClick}
-      className="flex-1 min-w-[120px] p-3 rounded-lg border transition-all text-left"
+      className="flex-1 min-w-[110px] p-3 rounded-lg border transition-all text-left"
       style={{
         background: isActive ? cfg.bg : COLOR_CARD,
         borderColor: isActive ? cfg.color : COLOR_BORDER,
         borderWidth: isActive ? '2px' : '1px',
       }}
     >
-      <div className="flex items-center gap-2 mb-2">
-        <span className="text-xl">{cfg.icon}</span>
-        <span className="text-sm font-medium" style={{ color: isActive ? cfg.color : COLOR_TEXT }}>
+      <div className="flex items-center gap-2 mb-1.5">
+        <span className="text-lg">{cfg.icon}</span>
+        <span className="text-xs font-medium" style={{ color: isActive ? cfg.color : COLOR_TEXT }}>
           {cfg.label}
         </span>
       </div>
       {data && (
         <>
-          <div className="text-2xl font-bold mb-1" style={{ color: cfg.color }}>
+          <div className="text-xl font-bold" style={{ color: cfg.color }}>
             {data.count}
             <span className="text-xs font-normal ml-1" style={{ color: COLOR_TEXT_DIM }}>条</span>
           </div>
-          <div className="text-xs" style={{ color: sentimentColor }}>
+          <div className="text-xs mt-0.5" style={{ color: sentimentColor }}>
             情绪 {data.avg_sentiment}
           </div>
         </>
@@ -188,24 +238,19 @@ export function NewsHub() {
 
   useEffect(() => {
     fetchData()
-    // 每5分钟自动刷新
-    const interval = setInterval(fetchData, 300000)
+    const interval = setInterval(fetchData, 300000) // 每5分钟刷新
     return () => clearInterval(interval)
   }, [])
 
   // 获取当前显示的新闻
-  const getDisplayNews = () => {
+  const getDisplayNews = (): NewsItem[] => {
     if (!data) return []
     if (activeCategory === 'all') {
-      // 全部：按时间顺序合并所有分类
       return Object.entries(data.categories)
-        .flatMap(([cat, catData]) => 
+        .flatMap(([cat, catData]) =>
           catData.news.map(n => ({ ...n, category: cat }))
         )
-        .sort((a, b) => {
-          // 优先按时间排序
-          return b.time.localeCompare(a.time)
-        })
+        .sort((a, b) => b.time.localeCompare(a.time))
     }
     const catData = data.categories[activeCategory]
     return catData ? catData.news.map(n => ({ ...n, category: activeCategory })) : []
@@ -213,7 +258,6 @@ export function NewsHub() {
 
   const displayNews = getDisplayNews()
 
-  // 整体情绪
   const getOverallSentiment = () => {
     if (!data) return { color: '#7a8aa0', label: '中性' }
     const s = data.overall_sentiment
@@ -251,6 +295,10 @@ export function NewsHub() {
     )
   }
 
+  // 统计有关联股票的新闻数
+  const newsWithStocks = data?.news_with_stocks ?? displayNews.filter(n => (n.related_stocks?.length ?? 0) > 0).length
+  const totalMatches = data?.total_stock_matches ?? 0
+
   return (
     <div className="h-full flex flex-col p-4 gap-4 overflow-hidden" style={{ background: COLOR_BG }}>
       {/* 标题栏 */}
@@ -259,9 +307,17 @@ export function NewsHub() {
           <h1 className="text-xl font-bold" style={{ color: COLOR_ACCENT }}>新闻汇总</h1>
           <p className="text-xs mt-0.5" style={{ color: COLOR_TEXT_DIM }}>
             更新: {data?.update_time || '--:--'}
-            <span className="ml-3" style={{ color: overall.color }}>
-              市场情绪: {overall.label} ({data?.overall_sentiment || 0.5})
+            <span className="ml-2" style={{ color: overall.color }}>
+              市场情绪: {overall.label}
             </span>
+            <span className="ml-2" style={{ color: '#a855f7' }}>
+              {newsWithStocks}条新闻关联个股
+            </span>
+            {totalMatches > 0 && (
+              <span className="ml-2" style={{ color: COLOR_TEXT_DIM }}>
+                共{totalMatches}次匹配
+              </span>
+            )}
           </p>
         </div>
         <button
@@ -279,7 +335,7 @@ export function NewsHub() {
       </div>
 
       {/* 分类卡片 */}
-      <div className="flex gap-3 shrink-0 overflow-x-auto pb-1">
+      <div className="flex gap-2 shrink-0 overflow-x-auto pb-1">
         <CategoryCard
           category="all"
           data={data ? {
@@ -292,7 +348,7 @@ export function NewsHub() {
           isActive={activeCategory === 'all'}
           onClick={() => setActiveCategory('all')}
         />
-        {Object.entries(CATEGORY_CONFIG).map(([key, cfg]) => (
+        {Object.entries(CATEGORY_CONFIG).map(([key, _cfg]) => (
           <CategoryCard
             key={key}
             category={key as CategoryKey}
@@ -306,7 +362,7 @@ export function NewsHub() {
       {/* 新闻列表 */}
       <div className="flex-1 overflow-y-auto">
         {displayNews.length > 0 ? (
-          <div className="space-y-3">
+          <div className="space-y-2.5">
             {displayNews.map((item, idx) => (
               <NewsCard
                 key={`${item.category}-${idx}`}

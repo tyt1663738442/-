@@ -1,0 +1,19 @@
+INFO:     Started server process [53472]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+ERROR:    [Errno 10048] error while attempting to bind on address ('0.0.0.0', 8001): [winerror 10048] 通常每个套接字地址(协议/网络地址/端口)只允许使用一次。
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+[OK] 行业板块映射已加载: 3409 只股票
+[OK] loaded 3001 stocks
+[OK] 恢复 AUCTION_CACHE: 1286 只 (时间: 05-18 20:48)
+  [OK] 初始化 BOARD_COUNT_CACHE: 4 只连板>1
+[WARN] 20260517 无涨停数据（非交易日），继续往前查...
+[WARN] 20260516 无涨停数据（非交易日），继续往前查...
+[OK] 连板数缓存已更新(20260515): 54 只（其中连板>1: 6只）
+A股监控平台 v3.0 启动中...
+环境: Local
+端口: 8001
+数据源: 新浪财经 + 腾讯财经
+风格: 同花顺（绿涨红跌）
+前端静态文件: D:\258\backend\..\frontend\dist

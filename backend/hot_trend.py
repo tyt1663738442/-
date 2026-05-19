@@ -118,6 +118,22 @@ KEYWORD_SECTOR_MAP = {
     '环保': '环保', '物流': '物流', '运输': '物流', '港口': '物流',
     '农业': '农业', '养殖': '农业', '种植': '农业', '传媒': '传媒',
     '游戏': '传媒', '影视': '传媒', '广告': '传媒', '教育': '教育',
+    # 宏观/国际
+    '油价': '石油', '原油价格': '石油', '石油价格': '石油', '天然气价格': '石油',
+    '铜价': '有色金属', '金价': '有色金属', '黄金价格': '有色金属', '铁矿': '有色金属',
+    '美债': '金融', '国债': '金融', '债券': '金融', '利率': '金融',
+    '通胀': '金融', '通货膨胀': '金融', 'CPI': '金融', 'PPI': '金融',
+    '美元': '金融', '人民币': '金融', '汇率': '金融',
+    '半导体出口': '半导体', '芯片禁令': '半导体', '芯片出口': '半导体',
+    'AI需求': '人工智能', '大模型': '人工智能', '算力需求': '人工智能',
+    '锂价': '有色金属', '锂矿': '有色金属', '钴价': '有色金属',
+    '新能源补贴': '新能源', '电动车': '新能源', '充电基础设施': '新能源',
+    '医保': '医药生物', '新药': '医药生物', '创新药审批': '医药生物',
+    '消费复苏': '大消费', '促消费': '大消费', '零售额': '大消费',
+    '出口订单': '机械设备', '工业产出': '机械设备',
+    '低空飞行': '低空经济', '无人机监管': '低空经济',
+    '军费': '国防军工', '国防预算': '国防军工', '军备': '国防军工',
+    # 补充原有关键词
     '低空': '低空经济', 'eVTOL': '低空经济', '通用航空': '低空经济',
     '固态电池': '新能源', '钠电池': '新能源',
     '光刻': '半导体', 'EDA': '半导体',
@@ -580,12 +596,11 @@ def get_hot_trend_data(stocks: list) -> dict:
             if kw in name:
                 name_index.setdefault(kw, []).append(s)
 
-    # 爬取新闻
+    # 爬取新闻（公告 + 政策/宏观/行业新闻 全部拉取）
     news_items = []
-    news_items.extend(fetch_akshare_news())
-    if not news_items:
-        news_items.extend(fetch_sina_news())
-        news_items.extend(fetch_eastmoney_news())
+    news_items.extend(fetch_akshare_news())   # 个股公告（类型=stock）
+    news_items.extend(fetch_sina_news())       # 新浪新闻（政策/宏观/行业）
+    news_items.extend(fetch_eastmoney_news())   # 东方财富新闻
 
     # 兜底新闻（保证功能可用）
     if not news_items:
@@ -684,12 +699,82 @@ def get_hot_trend_data(stocks: list) -> dict:
                         stock_scores[code_key]['score_breakdown']['bullish'] += score_change
                     else:
                         stock_scores[code_key]['score_breakdown']['bearish'] += abs(score_change)
-                    ntype = news.get('news_type', 'general')
-                    stock_scores[code_key]['score_breakdown'].setdefault('by_type', {})
-                    stock_scores[code_key]['score_breakdown']['by_type'][ntype] = \
-                        stock_scores[code_key]['score_breakdown']['by_type'].get(ntype, 0) + abs(score_change)
+                        ntype = news.get('news_type', 'general')
+                        stock_scores[code_key]['score_breakdown'].setdefault('by_type', {})
+                        stock_scores[code_key]['score_breakdown']['by_type'][ntype] = \
+                            stock_scores[code_key]['score_breakdown']['by_type'].get(ntype, 0) + abs(score_change)
 
-        # === 匹配方式3：关键词匹配（仅个股名称包含关键词，不走板块传导）===
+        # === 匹配方式3：板块匹配（按板块影响整个板块）===
+        # 解决：国际新闻/国内政策只匹配到3只个股的问题
+        # 逻辑：只对没有精准匹配到个股的政策/宏观/行业新闻进行板块匹配
+        # 个股公告(stock类型)不走板块传导，避免"北自科技公告"传导到科技板块
+        _snt = news.get('news_type', 'general')
+        # 判断该新闻是否已经匹配到了某些个股（方式1/方式2）
+        _matched_codes_for_this_news = [ck for ck, d in stock_scores.items() for n in d['news'] if n['title'] == title]
+        if not _matched_codes_for_this_news and _snt != 'stock':
+            # 找出标题中涉及的所有板块（通过KEYWORD_SECTOR_MAP的key严格匹配）
+            _ms = set()
+            for _k, _s in KEYWORD_SECTOR_MAP.items():
+                if _k in title:
+                    _ms.add(_s)
+            # 只有明确匹配到板块关键词的新闻才做板块传导
+            # 且只有政策类(policy)和行业类(industry)新闻才做板块传导
+            # 宏观/通用类新闻分数太泛，需要限制
+            _sector_eligible = _snt in ('policy', 'industry')
+            # 宏观新闻只有分数绝对值≥10且有明确板块关键词时才传导
+            if _snt in ('macro', 'general') and abs(score_change) >= 10 and _ms:
+                _sector_eligible = True
+            if _ms and _sector_eligible:
+                # 板块传导分数降权（×0.4，避免宏观新闻与个股精准匹配同权）
+                _sector_score = round(score_change * 0.4, 1)
+                if _sector_score == 0:
+                    _sector_score = score_change
+                # 收集这些板块对应的所有关键词
+                _sk = set()
+                for _k, _s in KEYWORD_SECTOR_MAP.items():
+                    if _s in _ms:
+                        _sk.add(_k)
+                # 通过 name_index 匹配所有相关个股
+                _mc = set()
+                for _k in _sk:
+                    for _s in name_index.get(_k, []):
+                        _mc.add(_s['code'])
+                # 给这些股票加分（去重）
+                for _c in _mc:
+                    _s = stock_by_code.get(_c)
+                    if not _s:
+                        continue
+                    _key = _s['code']
+                    if _key not in stock_scores:
+                        stock_scores[_key] = {
+                            'score': 0, 'news': [], 'stock': _s,
+                            'score_breakdown': {'bullish': 0, 'bearish': 0, 'by_type': {}},
+                        }
+                    _al = any(n['title'] == title for n in stock_scores[_key]['news'])
+                    if not _al:
+                        stock_scores[_key]['score'] += _sector_score
+                        stock_scores[_key]['news'].append({
+                            'title': title,
+                            'source': news.get('source', ''),
+                            'type': news.get('news_type', 'general'),
+                            'force_level': news.get('force_level', 'unknown'),
+                            'sentiment': news.get('impact_type', 'neutral'),
+                            'base_score': news.get('base_score', 10),
+                            'score_change': _sector_score,
+                            'force_multiplier': news.get('force_multiplier', 1.0),
+                            'datetime': news.get('datetime', ''),
+                            'impact_reason': news.get('impact_reason', ''),
+                        })
+                        if _sector_score > 0:
+                            stock_scores[_key]['score_breakdown']['bullish'] += _sector_score
+                        else:
+                            stock_scores[_key]['score_breakdown']['bearish'] += abs(_sector_score)
+                        _nt = news.get('news_type', 'general')
+                        stock_scores[_key]['score_breakdown'].setdefault('by_type', {})
+                        stock_scores[_key]['score_breakdown']['by_type'][_nt] = \
+                            stock_scores[_key]['score_breakdown']['by_type'].get(_nt, 0) + abs(_sector_score)
+
+        # === 匹配方式4：关键词匹配（仅个股名称包含关键词，不走板块传导）===
         # 关键修复：
         # 1. 有明确个股代码归属的公告，只精准匹配对应个股，不再通过关键词串到其他个股
         # 2. 有全称精准匹配成功的公告（如"XX科技公告"），只匹配对应股票，不串到其他"XX科技"股
