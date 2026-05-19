@@ -2881,6 +2881,104 @@ _FALLBACK_SECTORS = [
     {'key': '黄金', '板块名称': '贵金属', '股票数': '15'},
 ]
 
+# 板块名称 → 新浪指数代码（用于获取板块行情）
+_SINA_SECTOR_INDEX_MAP = {
+    '银行': 's_sh000951',      # 300银行
+    '保险': 's_sh000934',      # 中证金融
+    '证券': 's_sh000934',      # 中证金融
+    '房地产': 's_sh000952',    # 300地产
+    '建筑': 's_sh000034',      # 上证工业
+    '钢铁': 's_sh000034',      # 上证工业
+    '煤炭': 's_sh000032',      # 上证能源
+    '石油': 's_sh000032',      # 上证能源
+    '电力': 's_sh000041',      # 上证公用
+    '化工': 's_sh000033',      # 上证材料
+    '医药制造': 's_sh000933',  # 中证医药
+    '医疗器械': 's_sh000933',  # 中证医药
+    '食品饮料': 's_sh000932',  # 中证消费
+    '酿酒行业': 's_sh000932',  # 中证消费
+    '家电行业': 's_sh000035',  # 上证可选
+    '汽车整车': 's_sh000035',  # 上证可选
+    '汽车零部件': 's_sh000035',# 上证可选
+    '电子元件': 's_sh000935',  # 中证信息
+    '半导体': 's_sh000935',    # 中证信息
+    '芯片': 's_sh000935',      # 中证信息
+    '计算机设备': 's_sh000935',# 中证信息
+    '软件开发': 's_sh000935',  # 中证信息
+    '通信设备': 's_sh000040',  # 上证电信
+    '文化传媒': 's_sh000935',  # 中证信息
+    '游戏': 's_sh000935',      # 中证信息
+    '农林牧渔': 's_sh000932',  # 中证消费
+    '有色金属': 's_sh000033',  # 上证材料
+    '机械设备': 's_sh000034',  # 上证工业
+    '纺织服装': 's_sh000035',  # 上证可选
+    '交通运输': 's_sh000034',  # 上证工业
+    '商业百货': 's_sh000035',  # 上证可选
+    '旅游酒店': 's_sh000932',  # 中证消费
+    '环保行业': 's_sh000041',  # 上证公用
+    '航天航空': 's_sh000034',  # 上证工业
+    '船舶制造': 's_sh000034',  # 上证工业
+    '新能源': 's_sh000032',    # 上证能源
+    '光伏设备': 's_sh000033',  # 上证材料
+    '锂电池': 's_sh000033',    # 上证材料
+    '储能': 's_sh000041',      # 上证公用
+    '机器人': 's_sh000034',    # 上证工业
+    '人工智能': 's_sh000935',  # 中证信息
+    '算力概念': 's_sh000935',  # 中证信息
+    '5G概念': 's_sh000040',    # 上证电信
+    '区块链': 's_sh000935',    # 中证信息
+    '数字货币': 's_sh000935',  # 中证信息
+    '物联网': 's_sh000040',    # 上证电信
+    '工业互联网': 's_sh000034',# 上证工业
+    '新材料': 's_sh000033',    # 上证材料
+    '稀土永磁': 's_sh000033',  # 上证材料
+    '贵金属': 's_sh000033',    # 上证材料
+}
+
+_SINA_SECTOR_CHANGE_CACHE: Dict[str, Dict] = {}
+_SINA_SECTOR_CHANGE_CACHE_TIME = 0
+
+def _fetch_sector_changes_sina() -> Dict[str, Dict]:
+    """通过 hq.sinajs.cn 获取板块指数行情（涨跌幅、成交额），带60秒缓存"""
+    global _SINA_SECTOR_CHANGE_CACHE, _SINA_SECTOR_CHANGE_CACHE_TIME
+    now = time.time()
+    if now - _SINA_SECTOR_CHANGE_CACHE_TIME < 60 and _SINA_SECTOR_CHANGE_CACHE:
+        return _SINA_SECTOR_CHANGE_CACHE
+
+    result: Dict[str, Dict] = {}
+    codes = list(set(_SINA_SECTOR_INDEX_MAP.values()))
+    if not codes:
+        return result
+
+    try:
+        url = 'https://hq.sinajs.cn/list=' + ','.join(codes)
+        resp = requests.get(url, timeout=10, headers={'Referer': 'https://finance.sina.com.cn/'})
+        for line in resp.text.strip().split('\n'):
+            if 'hq_str_' not in line or ',' not in line:
+                continue
+            code = line.split('hq_str_')[1].split('=')[0]
+            val = line.split('"')[1] if '"' in line else ''
+            if not val:
+                continue
+            parts = val.split(',')
+            if len(parts) < 4:
+                continue
+            # 格式: 名称,最新价,涨跌额,涨跌幅%,成交量(手),成交额(元)
+            name = parts[0]
+            change_pct = float(parts[3]) if parts[3] else 0.0
+            amount = float(parts[5]) if len(parts) > 5 and parts[5] else 0.0
+            result[code] = {
+                '涨跌幅': round(change_pct, 2),
+                '成交额': round(amount, 2),
+            }
+        _SINA_SECTOR_CHANGE_CACHE = result
+        _SINA_SECTOR_CHANGE_CACHE_TIME = now
+        print(f"✅ 板块行情(sina): {len(result)} 个")
+    except Exception as e:
+        print(f"⚠ 板块行情(sina)失败: {e}")
+
+    return result
+
 def _fetch_sector_list() -> List[Dict]:
     """获取板块列表：AKShare优先（带涨跌幅、资金流入）→ 新浪备用 → 内置兜底（带5分钟缓存）"""
     global SECTOR_LIST_CACHE, SECTOR_LIST_CACHE_TIME
@@ -2936,6 +3034,21 @@ def _fetch_sector_list() -> List[Dict]:
     if not result:
         result = _FALLBACK_SECTORS.copy()
         print(f"✅ 板块列表(内置兜底): {len(result)} 个")
+
+    # 补充板块行情（涨跌幅、成交额）——通过 hq.sinajs.cn 获取
+    sina_changes = _fetch_sector_changes_sina()
+    if sina_changes:
+        for item in result:
+            name = item.get('板块名称', '')
+            sina_code = _SINA_SECTOR_INDEX_MAP.get(name)
+            if sina_code and sina_code in sina_changes:
+                sc = sina_changes[sina_code]
+                # 如果 AKShare 已经提供了数据，就不覆盖
+                if '涨跌幅' not in item:
+                    item['涨跌幅'] = sc.get('涨跌幅', 0)
+                # 用成交额近似资金流入（如果 AKShare 没有提供）
+                if '主力净流入' not in item and sc.get('成交额', 0) > 0:
+                    item['主力净流入'] = round(sc.get('成交额', 0), 2)
 
     SECTOR_LIST_CACHE = result
     SECTOR_LIST_CACHE_TIME = now

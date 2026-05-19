@@ -24,6 +24,10 @@ export function SectorPanel({ onSelectStock }: SectorPanelProps) {
   const [sortColumn, setSortColumn] = useState<'name' | 'price' | 'changePct' | 'changeAmt' | null>(null)
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc')
 
+  // 左侧板块列表排序
+  const [sectorListSort, setSectorListSort] = useState<'name' | 'changePct' | 'flow' | null>(null)
+  const [sectorListDir, setSectorListDir] = useState<'asc' | 'desc'>('desc')
+
   const fetchSectors = useCallback(async () => {
     try {
       const res = await fetch(`${API_BASE}/api/sectors`)
@@ -94,12 +98,67 @@ export function SectorPanel({ onSelectStock }: SectorPanelProps) {
     return list
   }, [sectorStocks, sortColumn, sortDirection])
 
+  // 板块列表排序
+  const handleSectorListSort = useCallback((col: 'name' | 'changePct' | 'flow') => {
+    setSectorListSort(prev => {
+      if (prev === col) {
+        setSectorListDir(d => d === 'desc' ? 'asc' : 'desc')
+        return prev
+      } else {
+        setSectorListDir('desc')
+        return col
+      }
+    })
+  }, [])
+
+  const sortedSectors = useMemo(() => {
+    if (!sectorListSort) return sectors
+    const list = [...sectors]
+    list.sort((a, b) => {
+      if (sectorListSort === 'name') {
+        return sectorListDir === 'desc'
+          ? String(b['板块名称'] || '').localeCompare(String(a['板块名称'] || ''))
+          : String(a['板块名称'] || '').localeCompare(String(b['板块名称'] || ''))
+      } else if (sectorListSort === 'changePct') {
+        const va = parseFloat(a['涨跌幅'] || 0)
+        const vb = parseFloat(b['涨跌幅'] || 0)
+        return sectorListDir === 'desc' ? vb - va : va - vb
+      } else {
+        const va = parseFloat(a['主力净流入'] || a['成交额'] || 0)
+        const vb = parseFloat(b['主力净流入'] || b['成交额'] || 0)
+        return sectorListDir === 'desc' ? vb - va : va - vb
+      }
+    })
+    return list
+  }, [sectors, sectorListSort, sectorListDir])
+
   return (
     <div className="flex h-full overflow-hidden">
       {/* 左侧：板块列表 */}
       <div className="w-56 bg-[#0d1b3e] border-r border-[#2d3748] flex flex-col shrink-0">
         <div className="px-3 py-2 text-xs text-[#8a8d93] border-b border-[#2d3748]">
           板块列表 ({sectors.length})
+        </div>
+        {/* 表头 */}
+        <div className="px-3 py-1.5 grid grid-cols-[1fr_50px_60px] gap-1 text-[10px] text-[#8a8d93] font-medium border-b border-[#2d3748] select-none">
+          <div className="cursor-pointer flex items-center" onClick={() => handleSectorListSort('name')}>
+            名称
+            {sectorListSort === 'name'
+              ? (sectorListDir === 'desc' ? <ArrowDown className="w-2.5 h-2.5 ml-0.5 inline" /> : <ArrowUp className="w-2.5 h-2.5 ml-0.5 inline" />)
+              : <ArrowUpDown className="w-2.5 h-2.5 ml-0.5 inline opacity-30" />}
+          </div>
+          <div className="text-right cursor-pointer flex items-center justify-end" onClick={() => handleSectorListSort('changePct')}>
+            涨幅
+            {sectorListSort === 'changePct'
+              ? (sectorListDir === 'desc' ? <ArrowDown className="w-2.5 h-2.5 ml-0.5 inline" /> : <ArrowUp className="w-2.5 h-2.5 ml-0.5 inline" />)
+              : <ArrowUpDown className="w-2.5 h-2.5 ml-0.5 inline opacity-30" />}
+          </div>
+          <div className="text-right cursor-pointer flex items-center justify-end" onClick={() => handleSectorListSort('flow')}>
+            资金流入
+            {sectorListSort === 'flow'
+              ? (sectorListDir === 'desc' ? <ArrowDown className="w-2.5 h-2.5 ml-0.5 inline" /> : <ArrowUp className="w-2.5 h-2.5 ml-0.5 inline" />)
+              : <ArrowUpDown className="w-2.5 h-2.5 ml-0.5 inline opacity-30" />}
+          </div>
         </div>
         <div className="flex-1 overflow-y-auto">
           {loading && (
@@ -110,7 +169,7 @@ export function SectorPanel({ onSelectStock }: SectorPanelProps) {
               暂无板块数据
             </div>
           )}
-          {sectors.map((s) => {
+          {sortedSectors.map((s) => {
             const chg = (s as any)['涨跌幅'] as number | undefined
             const flow = (s as any)['主力净流入'] as number | undefined
             const isUp = (chg ?? 0) >= 0
@@ -125,21 +184,29 @@ export function SectorPanel({ onSelectStock }: SectorPanelProps) {
                     : 'border-transparent hover:bg-[#1e2d4a]/50 text-[#8a8d93]'
                 }`}
               >
-                <div className="flex justify-between items-center">
-                  <span className="truncate">{s['板块名称']}</span>
-                  {chg !== undefined && (
-                    <span className={`text-[10px] font-mono font-bold ${isUp ? 'text-[#ff4d6d]' : 'text-[#00b826]'}`}>
-                      {isUp ? '+' : ''}{chg.toFixed(2)}%
-                    </span>
-                  )}
-                </div>
-                <div className="flex justify-between items-center mt-0.5">
-                  <span className="text-[10px] text-[#8a8d93]">{s['股票数']}只</span>
-                  {flow !== undefined && (
-                    <span className={`text-[10px] font-mono ${isFlowIn ? 'text-[#ff4d6d]' : 'text-[#00b826]'}`}>
-                      {isFlowIn ? '+' : ''}{fmtSectorFlow(flow)}
-                    </span>
-                  )}
+                <div className="grid grid-cols-[1fr_50px_60px] gap-1 items-center">
+                  <div className="flex flex-col truncate">
+                    <span className="truncate">{s['板块名称']}</span>
+                    <span className="text-[10px] text-[#8a8d93]">{s['股票数']}只</span>
+                  </div>
+                  <div className="text-right">
+                    {chg !== undefined ? (
+                      <span className={`text-[10px] font-mono font-bold ${isUp ? 'text-[#ff4d6d]' : 'text-[#00b826]'}`}>
+                        {isUp ? '+' : ''}{chg.toFixed(2)}%
+                      </span>
+                    ) : (
+                      <span className="text-[10px] text-[#8a8d93]">--</span>
+                    )}
+                  </div>
+                  <div className="text-right">
+                    {flow !== undefined ? (
+                      <span className={`text-[10px] font-mono ${isFlowIn ? 'text-[#ff4d6d]' : 'text-[#00b826]'}`}>
+                        {isFlowIn ? '+' : ''}{fmtSectorFlow(flow)}
+                      </span>
+                    ) : (
+                      <span className="text-[10px] text-[#8a8d93]">--</span>
+                    )}
+                  </div>
                 </div>
               </div>
             )
