@@ -2,14 +2,24 @@
  * A股实时监控系统 v3.0 - 同花顺风格
  * 单页面 + Tab 切换
  */
-import { useState } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { AuctionPanel } from './components/AuctionPanel'
 import { FormulaPanel } from './components/FormulaPanel'
 import { SectorPanel } from './components/SectorPanel'
 import { ReviewPanel } from './components/ReviewPanel'
 import { HotTrendPage } from './components/HotTrendPage'
 import { NewsHub } from './components/NewsHub'
-import { Zap, Grid3x3, Flame, ClipboardList, Wind, Newspaper } from 'lucide-react'
+import { Zap, Grid3x3, Flame, ClipboardList, Wind, Newspaper, Search, X } from 'lucide-react'
+
+const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:8001'
+
+interface SearchStock {
+  code: string
+  name: string
+  price: number
+  change_pct: number
+  sector: string
+}
 
 type TabKey = 'auction' | 'formula' | 'sector' | 'review' | 'hottrend' | 'newshub'
 
@@ -34,6 +44,59 @@ function hexToRgb(hex: string): string {
 
 function App() {
   const [activeTab, setActiveTab] = useState<TabKey>('auction')
+  const [searchTerm, setSearchTerm] = useState('')
+  const [searchResults, setSearchResults] = useState<SearchStock[]>([])
+  const [searching, setSearching] = useState(false)
+  const [showDropdown, setShowDropdown] = useState(false)
+  const searchTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const searchRef = useRef<HTMLDivElement>(null)
+
+  // 搜索防抖
+  const doSearch = useCallback(async (term: string) => {
+    if (!term.trim()) {
+      setSearchResults([])
+      setShowDropdown(false)
+      return
+    }
+    setSearching(true)
+    try {
+      const res = await fetch(`${API_BASE}/api/stocks?limit=10&search=${encodeURIComponent(term)}`)
+      const data = await res.json()
+      setSearchResults(data.stocks || [])
+      setShowDropdown(true)
+    } catch {
+      setSearchResults([])
+    } finally {
+      setSearching(false)
+    }
+  }, [])
+
+  // 输入时防抖搜索
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value
+    setSearchTerm(val)
+    if (searchTimer.current) clearTimeout(searchTimer.current)
+    searchTimer.current = setTimeout(() => doSearch(val), 300)
+  }
+
+  // 选中股票
+  const handleSelectStock = (stock: SearchStock) => {
+    window.dispatchEvent(new CustomEvent('qclaw-select-stock', { detail: stock.code }))
+    setSearchTerm('')
+    setSearchResults([])
+    setShowDropdown(false)
+  }
+
+  // 点击外部关闭下拉
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (searchRef.current && !searchRef.current.contains(e.target as Node)) {
+        setShowDropdown(false)
+      }
+    }
+    document.addEventListener('mousedown', handler)
+    return () => document.removeEventListener('mousedown', handler)
+  }, [])
 
   return (
     <div className="h-screen flex flex-col text-white overflow-hidden" style={{ background: 'linear-gradient(180deg, #0a0f1a 0%, #0d1525 100%)' }}>
@@ -75,6 +138,71 @@ function App() {
             <span>{label}</span>
           </button>
         ))}
+
+        {/* 全局搜索栏 */}
+        <div className="relative ml-4 mr-2" ref={searchRef}>
+          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border transition-all"
+            style={{
+              background: searchTerm ? 'rgba(13,21,37,0.95)' : 'rgba(13,21,37,0.6)',
+              borderColor: searchTerm ? '#00d4ff50' : '#1a2a44',
+              minWidth: '200px',
+            }}>
+            <Search className="w-3.5 h-3.5 shrink-0" style={{ color: '#7a8aa0' }} />
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={handleSearchChange}
+              onFocus={() => searchResults.length > 0 && setShowDropdown(true)}
+              placeholder="代码/名称搜索..."
+              className="flex-1 bg-transparent text-xs outline-none placeholder:text-[#5a6a7a]"
+              style={{ color: '#e0e6f0', minWidth: 0 }}
+            />
+            {searchTerm && (
+              <button onClick={() => { setSearchTerm(''); setSearchResults([]); setShowDropdown(false) }}
+                className="shrink-0 hover:opacity-70 transition-opacity">
+                <X className="w-3 h-3" style={{ color: '#7a8aa0' }} />
+              </button>
+            )}
+          </div>
+          {/* 搜索结果下拉 */}
+          {showDropdown && searchResults.length > 0 && (
+            <div className="absolute top-full left-0 mt-1 w-full min-w-[280px] rounded-lg border overflow-hidden z-50"
+              style={{ background: '#0d1525', borderColor: '#1a2a44', boxShadow: '0 8px 24px rgba(0,0,0,0.4)' }}>
+              {searchResults.map(stock => {
+                const chg = stock.change_pct ?? 0
+                const isUp = chg >= 0
+                const color = isUp ? '#ff4d6d' : '#00b826'
+                return (
+                  <div key={stock.code}
+                    onClick={() => handleSelectStock(stock)}
+                    className="flex items-center justify-between px-3 py-2 cursor-pointer hover:bg-[#1a2a44]/50 transition-colors border-b last:border-0"
+                    style={{ borderColor: '#1a2a4430' }}>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-medium" style={{ color: '#e0e6f0' }}>{stock.name}</span>
+                      <span className="text-[10px] font-mono" style={{ color: '#5a6a7a' }}>{stock.code}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      {stock.price > 0 && (
+                        <span className="text-xs font-mono font-bold" style={{ color }}>
+                          {isUp ? '+' : ''}{chg.toFixed(2)}%
+                        </span>
+                      )}
+                      <span className="text-[10px] px-1.5 py-0.5 rounded" style={{ background: '#1a2a4450', color: '#7a8aa0' }}>
+                        {stock.sector ? stock.sector.slice(0, 4) : '其他'}
+                      </span>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          )}
+          {showDropdown && searchTerm && searchResults.length === 0 && !searching && (
+            <div className="absolute top-full left-0 mt-1 w-full min-w-[200px] rounded-lg border px-3 py-2 z-50 text-xs"
+              style={{ background: '#0d1525', borderColor: '#1a2a44', color: '#7a8aa0' }}>
+              未找到 "{searchTerm}" 相关股票
+            </div>
+          )}
+        </div>
 
         {/* 右侧状态 */}
         <div className="ml-auto flex items-center gap-4">

@@ -386,7 +386,8 @@ function hexToRgb(hex: string): string {
 }
 
 function StockRow({ stock, index, cfg, onClick }: { stock: AuctionStock; index: number; cfg: typeof SIGNAL_CONFIG[string]; onClick: () => void }) {
-  const isUp = stock.change_pct >= 0
+  const chg = stock.change_pct ?? 0
+  const isUp = chg >= 0
   const color = isUp ? '#ff4d6d' : '#00b826'
   const scoreColor = stock.score >= 70 ? '#ff4d6d' : stock.score >= 50 ? '#ff8c42' : '#7a8aa0'
   const netColor = stock.net_amount >= 0 ? '#ff4d6d' : '#00b826'
@@ -410,13 +411,13 @@ function StockRow({ stock, index, cfg, onClick }: { stock: AuctionStock; index: 
         {stock.price > 0 ? stock.price.toFixed(2) : '--'}
       </div>
       <div className="flex flex-col pl-2">
-        <span className="font-medium" style={{ color: stock.change_pct >= 9.5 ? '#ff4d6d' : '#e0e6f0' }}>
+        <span className="font-medium" style={{ color: chg >= 9.5 ? '#ff4d6d' : '#e0e6f0' }}>
           {stock.name}
         </span>
         <span className="text-[10px]" style={{ color: '#5a6a7a' }}>{stock.code}</span>
       </div>
       <div className="text-right font-mono font-bold" style={{ color }}>
-        {isUp ? '+' : ''}{stock.change_pct.toFixed(2)}%
+        {isUp ? '+' : ''}{chg.toFixed(2)}%
       </div>
       <div className="text-right font-mono text-xs" style={{ color: '#ff8c42' }}>
         {stock.auction_turnover > 0 ? fmtAmount(stock.auction_turnover) : '--'}
@@ -446,7 +447,7 @@ function StockRow({ stock, index, cfg, onClick }: { stock: AuctionStock; index: 
       </div>
       <div className="flex justify-end">
         <span className="font-mono font-bold" style={{ color: scoreColor }}>
-          {stock.score.toFixed(0)}
+          {(stock.score ?? 0).toFixed(0)}
         </span>
       </div>
       {/* 5维评分明细 */}

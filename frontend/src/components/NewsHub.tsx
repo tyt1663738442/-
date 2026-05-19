@@ -78,8 +78,9 @@ function SentimentBadge({ sentiment }: { sentiment: number }) {
 
 // 相关个股标签
 function StockTag({ stock }: { stock: RelatedStock }) {
-  const isUp = stock.change_pct > 0
-  const isDown = stock.change_pct < 0
+  const chg = stock.change_pct ?? 0
+  const isUp = chg > 0
+  const isDown = chg < 0
   const color = isUp ? '#ff4d4f' : isDown ? '#52c41a' : '#7a8aa0'  // 涨红跌绿
   return (
     <span
@@ -87,9 +88,9 @@ function StockTag({ stock }: { stock: RelatedStock }) {
       style={{ background: `${color}18`, color, border: `1px solid ${color}40`, fontSize: '10px' }}
     >
       {stock.name}
-      {stock.change_pct !== 0 && (
+      {chg !== 0 && (
         <span style={{ fontSize: '9px' }}>
-          {isUp ? '+' : ''}{stock.change_pct.toFixed(2)}%
+          {isUp ? '+' : ''}{chg.toFixed(2)}%
         </span>
       )}
     </span>
