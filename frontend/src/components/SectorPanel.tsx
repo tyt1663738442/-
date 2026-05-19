@@ -110,20 +110,40 @@ export function SectorPanel({ onSelectStock }: SectorPanelProps) {
               暂无板块数据
             </div>
           )}
-          {sectors.map((s) => (
-            <div
-              key={s.key}
-              onClick={() => handleSectorClick(s.key, s['板块名称'])}
-              className={`px-3 py-2 text-xs cursor-pointer border-l-2 transition-colors ${
-                selectedKey === s.key
-                  ? 'border-[#06b6d4] bg-[#06b6d4]/10 text-white'
-                  : 'border-transparent hover:bg-[#1e2d4a]/50 text-[#8a8d93]'
-              }`}
-            >
-              <span className="truncate block">{s['板块名称']}</span>
-              <span className="text-[10px] text-[#8a8d93]">{s['股票数']}只</span>
-            </div>
-          ))}
+          {sectors.map((s) => {
+            const chg = (s as any)['涨跌幅'] as number | undefined
+            const flow = (s as any)['主力净流入'] as number | undefined
+            const isUp = (chg ?? 0) >= 0
+            const isFlowIn = (flow ?? 0) >= 0
+            return (
+              <div
+                key={s.key}
+                onClick={() => handleSectorClick(s.key, s['板块名称'])}
+                className={`px-3 py-2 text-xs cursor-pointer border-l-2 transition-colors ${
+                  selectedKey === s.key
+                    ? 'border-[#06b6d4] bg-[#06b6d4]/10 text-white'
+                    : 'border-transparent hover:bg-[#1e2d4a]/50 text-[#8a8d93]'
+                }`}
+              >
+                <div className="flex justify-between items-center">
+                  <span className="truncate">{s['板块名称']}</span>
+                  {chg !== undefined && (
+                    <span className={`text-[10px] font-mono font-bold ${isUp ? 'text-[#ff4d6d]' : 'text-[#00b826]'}`}>
+                      {isUp ? '+' : ''}{chg.toFixed(2)}%
+                    </span>
+                  )}
+                </div>
+                <div className="flex justify-between items-center mt-0.5">
+                  <span className="text-[10px] text-[#8a8d93]">{s['股票数']}只</span>
+                  {flow !== undefined && (
+                    <span className={`text-[10px] font-mono ${isFlowIn ? 'text-[#ff4d6d]' : 'text-[#00b826]'}`}>
+                      {isFlowIn ? '+' : ''}{fmtSectorFlow(flow)}
+                    </span>
+                  )}
+                </div>
+              </div>
+            )
+          })}
         </div>
       </div>
 
@@ -212,4 +232,11 @@ export function SectorPanel({ onSelectStock }: SectorPanelProps) {
       </div>
     </div>
   )
+}
+
+function fmtSectorFlow(v: number): string {
+  const absV = Math.abs(v)
+  if (absV >= 100000000) return (v / 100000000).toFixed(1) + '亿'
+  if (absV >= 10000) return (v / 10000).toFixed(0) + '万'
+  return v.toFixed(0)
 }

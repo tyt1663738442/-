@@ -990,10 +990,10 @@ def _calc_auction_signal_and_score(s: Dict, phase: str) -> tuple:
     amount_score = min(amount / 10_000_000, 1) * 20  # 1000万封顶
     # 4. 竞价成交量（15分）：基于换手率
     vol_score = min(turnover_pct / 5, 1) * 15  # 换手率5%封顶
-    # 5. 板块效应（10分）：板块涨幅越大分越高
-    sector_score = min(abs(sector_change), 5) / 5 * 10
+    # 5. 板块效应（10分）：板块涨幅越大分越高，板块跌则扣分
+    sector_score = min(max(sector_change, -5), 5) / 5 * 10
 
-    score = round(min(change_score + main_force_score + amount_score + vol_score + sector_score, 100), 1)
+    score = round(min(max(change_score + main_force_score + amount_score + vol_score + sector_score, 0), 100), 1)
     # 成交额万元
     amount_w = round(amount / 10000, 2) if amount else 0
     net_amount_w = round(net_amount / 10000, 2) if net_amount else 0
@@ -1501,9 +1501,9 @@ def _recalc_score_with_real_flow(item: Dict) -> float:
     amount_score = min(auction_turnover / 10_000_000, 1) * 20
     # 3. 竞价成交量（15分）
     vol_score = min(turnover_pct / 5, 1) * 15
-    # 4. 板块效应（10分）
-    sector_score = min(abs(sector_change), 5) / 5 * 10
-    score = round(min(change_score + main_force_score + amount_score + vol_score + sector_score, 100), 1)
+    # 4. 板块效应（10分）：板块跌则扣分
+    sector_score = min(max(sector_change, -5), 5) / 5 * 10
+    score = round(min(max(change_score + main_force_score + amount_score + vol_score + sector_score, 0), 100), 1)
     # 回写5维明细到item
     item['change_score'] = round(change_score, 1)
     item['main_force_score'] = round(main_force_score, 1)
@@ -2882,42 +2882,55 @@ _FALLBACK_SECTORS = [
 ]
 
 def _fetch_sector_list() -> List[Dict]:
-    """获取板块列表：新浪优先 → AKShare备用 → 内置兜底（带5分钟缓存）"""
+    """获取板块列表：AKShare优先（带涨跌幅、资金流入）→ 新浪备用 → 内置兜底（带5分钟缓存）"""
     global SECTOR_LIST_CACHE, SECTOR_LIST_CACHE_TIME
     now = time.time()
     if now - SECTOR_LIST_CACHE_TIME < 300 and SECTOR_LIST_CACHE:
         return SECTOR_LIST_CACHE
 
     result = []
-    # 第一层：新浪API
+    # 第一层：AKShare（东方财富行业板块）- 带涨跌幅和主力净流入
     try:
-        resp = ds.session.get('https://vip.stock.finance.sina.com.cn/q/view/newSinaHy.php', timeout=10)
-        resp.encoding = 'gbk'
-        raw = resp.text.strip()
-        json_str = re.sub(r'^var\s+S_Finance_bankuai_sinaindustry\s*=\s*', '', raw)
-        json_str = re.sub(r';\s*$', '', json_str)
-        data = json.loads(json_str)
-        for key, val in data.items():
-            parts = val.split(',')
-            if len(parts) >= 2:
-                result.append({'key': key, '板块名称': parts[1], '股票数': parts[2] if len(parts) > 2 else ''})
+        df = ak.stock_board_industry_name_em()
+        for _, row in df.iterrows():
+            name = str(row.get('板块名称', '')).strip()
+            if name:
+                item = {'key': name, '板块名称': name, '股票数': str(row.get('股票数', ''))}
+                # 涨跌幅
+                try:
+                    item['涨跌幅'] = round(float(row.get('涨跌幅', 0)), 2)
+                except Exception:
+                    pass
+                # 主力净流入（字段名可能不同，兼容处理）
+                try:
+                    main_net = row.get('主力资金净流入', row.get('主力净流入', row.get('主力净流入额', 0)))
+                    if main_net is not None and main_net != '':
+                        item['主力净流入'] = round(float(main_net), 2)
+                except Exception:
+                    pass
+                result.append(item)
         if result:
-            print(f"✅ 板块列表(新浪): {len(result)} 个")
+            print(f"✅ 板块列表(AKShare): {len(result)} 个")
     except Exception as e:
-        print(f"⚠ 板块列表(新浪)失败: {e}")
+        print(f"⚠ 板块列表(AKShare)失败: {e}")
 
-    # 第二层：AKShare（东方财富行业板块）
+    # 第二层：新浪API（无涨跌幅数据）
     if not result:
         try:
-            df = ak.stock_board_industry_name_em()
-            for _, row in df.iterrows():
-                name = str(row.get('板块名称', '')).strip()
-                if name:
-                    result.append({'key': name, '板块名称': name, '股票数': str(row.get('股票数', ''))})
+            resp = ds.session.get('https://vip.stock.finance.sina.com.cn/q/view/newSinaHy.php', timeout=10)
+            resp.encoding = 'gbk'
+            raw = resp.text.strip()
+            json_str = re.sub(r'^var\s+S_Finance_bankuai_sinaindustry\s*=\s*', '', raw)
+            json_str = re.sub(r';\s*$', '', json_str)
+            data = json.loads(json_str)
+            for key, val in data.items():
+                parts = val.split(',')
+                if len(parts) >= 2:
+                    result.append({'key': key, '板块名称': parts[1], '股票数': parts[2] if len(parts) > 2 else ''})
             if result:
-                print(f"✅ 板块列表(AKShare): {len(result)} 个")
+                print(f"✅ 板块列表(新浪): {len(result)} 个")
         except Exception as e:
-            print(f"⚠ 板块列表(AKShare)失败: {e}")
+            print(f"⚠ 板块列表(新浪)失败: {e}")
 
     # 第三层：内置兜底
     if not result:

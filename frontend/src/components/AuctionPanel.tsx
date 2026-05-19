@@ -128,8 +128,8 @@ export function AuctionPanel({ onSelectStock }: Props) {
     else if (sortKey === 'score') { va = a.score; vb = b.score }
     else if (sortKey === 'net_amount') { va = a.net_amount; vb = b.net_amount }
     else if (sortKey === 'next_day_prob') { va = a.next_day_prob || 0; vb = b.next_day_prob || 0 }
-    else if (sortKey === 'volume_score') { va = a.turnover_pct || 0; vb = b.turnover_pct || 0 }
-    else if (sortKey === 'sector_score') { va = a.sector_change || 0; vb = b.sector_change || 0 }
+    else if (sortKey === 'volume_score') { va = a.volume_score || 0; vb = b.volume_score || 0 }
+    else if (sortKey === 'sector_score') { va = a.sector_score || 0; vb = b.sector_score || 0 }
     else { va = SIGNAL_ORDER[a.signal] || 0; vb = SIGNAL_ORDER[b.signal] || 0 }
     return sortAsc ? va - vb : vb - va
   })
@@ -454,48 +454,30 @@ function StockRow({ stock, index, cfg, onClick }: { stock: AuctionStock; index: 
       <ScoreCell value={stock.change_score} max={30} color='#ff4d6d' />
       <ScoreCell value={stock.main_force_score} max={25} color='#ff4d6d' />
       <ScoreCell value={stock.amount_score} max={20} color='#ff8c42' />
-      {/* 量能分(换手率) - 显示实际数据 */}
-      <div className="flex flex-col items-end justify-center gap-0.5">
-        <span className="font-mono text-[10px] font-bold" style={{ color: (stock.turnover_pct || 0) > 0 ? '#ff8c42' : '#2a3a55' }}>
-          {(stock.turnover_pct || 0).toFixed(2)}%
-        </span>
-        <div className="w-full h-1 rounded-full overflow-hidden" style={{ background: '#1a2a44' }}>
-          <div className="h-full rounded-full" style={{
-            width: `${Math.min((stock.turnover_pct || 0) / 5 * 100, 100)}%`,
-            backgroundColor: '#ff8c42',
-            opacity: (stock.turnover_pct || 0) > 0 ? 0.7 : 0.15
-          }} />
-        </div>
-      </div>
-      {/* 板块分(板块涨跌幅) - 显示实际数据 */}
-      <div className="flex flex-col items-end justify-center gap-0.5">
-        <span className="font-mono text-[10px] font-bold" style={{ color: (stock.sector_change || 0) >= 0 ? '#ff4d6d' : '#00b826' }}>
-          {(stock.sector_change || 0) >= 0 ? '+' : ''}{(stock.sector_change || 0).toFixed(1)}%
-        </span>
-        <div className="w-full h-1 rounded-full overflow-hidden" style={{ background: '#1a2a44' }}>
-          <div className="h-full rounded-full" style={{
-            width: `${Math.min(Math.abs(stock.sector_change || 0) / 5 * 100, 100)}%`,
-            backgroundColor: (stock.sector_change || 0) >= 0 ? '#ff4d6d' : '#00b826',
-            opacity: (stock.sector_change || 0) !== 0 ? 0.7 : 0.15
-          }} />
-        </div>
-      </div>
+      {/* 量能分 (0-15) */}
+      <ScoreCell value={stock.volume_score} max={15} color='#ff8c42' />
+      {/* 板块分 (-10~10) */}
+      <ScoreCell value={stock.sector_score} max={10} color='#ff4d6d' />
     </div>
   )
 }
 
 function ScoreCell({ value, max, color }: { value?: number; max: number; color: string }) {
   const v = value ?? 0
-  const pct = max > 0 ? (v / max) * 100 : 0
+  const isNegative = v < 0
+  // 负值用绿色（跌），正值用传入 color（涨）
+  const displayColor = isNegative ? '#00b826' : color
+  const absMax = Math.max(max, Math.abs(v))
+  const pct = absMax > 0 ? (Math.abs(v) / absMax) * 100 : 0
   return (
     <div className="flex flex-col items-end justify-center gap-0.5">
-      <span className="font-mono text-[10px] font-bold" style={{ color: v > 0 ? color : '#2a3a55' }}>
-        {v.toFixed(0)}
+      <span className="font-mono text-[10px] font-bold" style={{ color: v !== 0 ? displayColor : '#2a3a55' }}>
+        {v > 0 ? '+' : ''}{v.toFixed(0)}
       </span>
       <div className="w-full h-1 rounded-full overflow-hidden" style={{ background: '#1a2a44' }}>
         <div
           className="h-full rounded-full transition-all duration-300"
-          style={{ width: `${Math.min(pct, 100)}%`, backgroundColor: color, opacity: v > 0 ? 0.7 : 0.15 }}
+          style={{ width: `${Math.min(pct, 100)}%`, backgroundColor: displayColor, opacity: v !== 0 ? 0.7 : 0.15 }}
         />
       </div>
     </div>
