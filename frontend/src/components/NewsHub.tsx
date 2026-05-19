@@ -18,9 +18,10 @@ const COLOR_ACCENT = '#00d4ff'
 
 // 分类配置
 const CATEGORY_CONFIG = {
+  announcement: { icon: '📋', label: '个股公告', color: '#f59e0b', bg: 'rgba(245,158,11,0.1)' },
   policy: { icon: '🏛️', label: '国内政策', color: '#06b6d4', bg: 'rgba(6,182,212,0.1)' },
-  macro: { icon: '🌍', label: '国际宏观', color: '#f59e0b', bg: 'rgba(245,158,11,0.1)' },
-  industry: { icon: '📊', label: '行业动态', color: '#a855f7', bg: 'rgba(168,85,247,0.1)' },
+  macro: { icon: '🌍', label: '国际宏观', color: '#a855f7', bg: 'rgba(168,85,247,0.1)' },
+  industry: { icon: '📊', label: '行业动态', color: '#ec4899', bg: 'rgba(236,72,153,0.1)' },
   general: { icon: '📰', label: '市场资讯', color: '#10b981', bg: 'rgba(16,185,129,0.1)' },
 }
 
@@ -29,6 +30,7 @@ interface RelatedStock {
   name: string
   change_pct: number
   sentiment: string
+  match_type?: string
 }
 
 interface NewsItem {
@@ -56,7 +58,7 @@ interface NewsHubResponse {
   total_stock_matches?: number
 }
 
-type CategoryKey = 'policy' | 'macro' | 'industry' | 'general' | 'all'
+type CategoryKey = 'announcement' | 'policy' | 'macro' | 'industry' | 'general' | 'all'
 
 // 情绪指示器
 function SentimentBadge({ sentiment }: { sentiment: number }) {
@@ -100,8 +102,12 @@ function NewsCard({ item, category }: { item: NewsItem; category: string }) {
   const relatedStocks = item.related_stocks || []
 
   // 格式化时间（时间戳 or 字符串）
-  const formatTime = (timeStr: string) => {
+  const formatTime = (timeStr: string, category: string) => {
     if (!timeStr) return '--:--'
+    // 公告日期格式：2026-05-19 -> 显示日期
+    if (/^\d{4}-\d{2}-\d{2}/.test(timeStr)) {
+      return timeStr.slice(5, 10)  // MM-DD
+    }
     // unix timestamp
     if (/^\d{9,10}$/.test(timeStr)) {
       const d = new Date(parseInt(timeStr) * 1000)
@@ -139,7 +145,7 @@ function NewsCard({ item, category }: { item: NewsItem; category: string }) {
           <div className="flex items-center gap-2 mt-1.5">
             <span className="text-xs flex items-center gap-1" style={{ color: COLOR_TEXT_DIM }}>
               <Clock className="w-3 h-3" />
-              {formatTime(item.time)}
+              {formatTime(item.time, category)}
             </span>
             <SentimentBadge sentiment={item.sentiment} />
           </div>

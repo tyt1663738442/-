@@ -2065,11 +2065,82 @@ def _build_news_stock_map(news_titles: List[str]) -> dict:
     """
     为新闻标题列表构建"标题→关联个股"映射
     
-    方案1（优先）：调用 hot_trend 的结果（交易时段有实时行情时）
-    方案2（兜底）：直接用 KEYWORD_SECTOR_MAP + sector_map 做板块传导
+    匹配规则（优先级递减）：
+    1. 个股公告 → 按个股全称匹配（标题含公司名→精确匹配CODE_NAME_MAP）
+    2. 国内政策/国际新闻 → 按板块匹配（KEYWORD_SECTOR_MAP）
     """
     from hot_trend import KEYWORD_SECTOR_MAP, BULLISH_GENERAL, BEARISH_GENERAL
     news_to_stocks: dict = {}
+
+    # ===== 方案0：个股名精确匹配（公告类新闻） =====
+    # 从CODE_NAME_MAP构建：名称→代码的反向映射（用于从标题提取公司名）
+    _NAME_ALIASES: dict = {}  # name -> code
+    for code, name in CODE_NAME_MAP.items():
+        if not name or len(name) < 2:
+            continue
+        _NAME_ALIASES[name] = code
+        # 常见简称/别名
+        if name.startswith('贵州') and '茅台' in name:
+            _NAME_ALIASES['茅台'] = code
+        if '宁德' in name and '时代' in name:
+            _NAME_ALIASES['宁德时代'] = code
+        if '比亚迪' in name:
+            _NAME_ALIASES['比亚迪'] = code
+        if '华为' in name:
+            _NAME_ALIASES['华为'] = code
+        if '腾讯' in name:
+            _NAME_ALIASES['腾讯'] = code
+        if '阿里' in name:
+            _NAME_ALIASES['阿里巴巴'] = code
+            _NAME_ALIASES['阿里'] = code
+        if '百度' in name:
+            _NAME_ALIASES['百度'] = code
+        if '京东' in name:
+            _NAME_ALIASES['京东'] = code
+        if '小米' in name:
+            _NAME_ALIASES['小米'] = code
+        if '特斯拉' in name:
+            _NAME_ALIASES['特斯拉'] = code
+        if '苹果' in name:
+            _NAME_ALIASES['苹果'] = code
+        if '英特尔' in name:
+            _NAME_ALIASES['英特尔'] = code
+        if '英伟达' in name:
+            _NAME_ALIASES['英伟达'] = code
+        if '高通' in name:
+            _NAME_ALIASES['高通'] = code
+
+    for title in news_titles:
+        matched_stocks = []
+        existing_codes = set()
+
+        # 提取公司名（优先从标题中找常见别名，再模糊匹配全称）
+        found_alias = None
+        for alias, code in _NAME_ALIASES.items():
+            if len(alias) >= 2 and alias in title and code not in existing_codes:
+                found_alias = alias
+                name = CODE_NAME_MAP.get(code, '')
+                if name:
+                    matched_stocks.append({
+                        'code': code,
+                        'name': name,
+                        'change_pct': 0,
+                        'sentiment': 'neutral',
+                        'match_type': 'stock_name',
+                    })
+                    existing_codes.add(code)
+                    break  # 标题同一公司只匹配一次
+
+        # 情绪判断（个股公告通常中性）
+        is_bullish = any(kw in title for kw in BULLISH_GENERAL)
+        is_bearish = any(kw in title for kw in BEARISH_GENERAL)
+        sentiment = 'bullish' if is_bullish and not is_bearish else 'bearish' if is_bearish and not is_bullish else 'neutral'
+
+        if matched_stocks:
+            news_to_stocks[title] = matched_stocks
+            print(f"[新闻汇总] 个股匹配: '{title[:30]}...' → {matched_stocks[0]['name']}({matched_stocks[0]['code']})")
+
+    print(f"[新闻汇总] 个股名匹配: {sum(1 for v in news_to_stocks.values() if any(x['match_type']=='stock_name' for x in v))} 条")
 
     # ---- 方案1：从 hot_trend 结果反向构建 ----
     try:
@@ -2205,17 +2276,119 @@ def _build_news_stock_map(news_titles: List[str]) -> dict:
     return news_to_stocks
 
 
+# ============== 东方财富个股公告 ==============
+ANNOUNCEMENT_CACHE: List[Dict] = []
+ANNOUNCEMENT_CACHE_TIME: float = 0
+ANNOUNCEMENT_CODE_CACHE: Dict[str, List[Dict]] = {}  # code -> announcements
+ANNOUNCEMENT_CODE_CACHE_TIME: Dict[str, float] = {}
+
+
+def _fetch_announcements(page: int = 1, page_size: int = 30, stock_code: str = '') -> List[Dict]:
+    """从东方财富抓取个股公告"""
+    global ANNOUNCEMENT_CACHE, ANNOUNCEMENT_CACHE_TIME, ANNOUNCEMENT_CODE_CACHE, ANNOUNCEMENT_CODE_CACHE_TIME
+    now = time.time()
+
+    # 5分钟缓存
+    if stock_code:
+        if stock_code in ANNOUNCEMENT_CODE_CACHE and now - ANNOUNCEMENT_CODE_CACHE_TIME.get(stock_code, 0) < 300:
+            return ANNOUNCEMENT_CODE_CACHE[stock_code]
+    else:
+        if now - ANNOUNCEMENT_CACHE_TIME < 300 and ANNOUNCEMENT_CACHE:
+            return ANNOUNCEMENT_CACHE
+
+    ann_list = []
+    try:
+        params = {
+            'cb': '',
+            'sr': '-1',
+            'page_size': page_size,
+            'page_index': page,
+            'ann_type': 'A',
+            'client_source': 'web',
+        }
+        if stock_code:
+            params['stock_list'] = stock_code
+
+        resp = requests.get(
+            'https://np-anotice-stock.eastmoney.com/api/security/ann',
+            params=params,
+            timeout=15,
+            headers={'User-Agent': 'Mozilla/5.0', 'Referer': 'https://www.eastmoney.com/'}
+        )
+        data = resp.json()
+        items = data.get('data', {}).get('list', []) if data.get('data') else []
+
+        for item in items:
+            codes = item.get('codes', [{}])
+            code_info = codes[0] if codes else {}
+            ann_list.append({
+                'art_code': item.get('art_code', ''),
+                'title': item.get('title_ch', item.get('title', '')),
+                'notice_date': item.get('notice_date', '')[:10],
+                'display_time': item.get('display_time', '')[:19],
+                'column_name': item.get('columns', [{}])[0].get('column_name', '') if item.get('columns') else '',
+                'stock_code': code_info.get('stock_code', ''),
+                'stock_name': code_info.get('short_name', ''),
+                'ann_type': code_info.get('ann_type', ''),
+                'url': f"https://data.eastmoney.com/notices/detail/{item.get('art_code', '')}",
+            })
+    except Exception as e:
+        print(f"[WARN] 东方财富公告采集失败: {e}")
+
+    if stock_code:
+        ANNOUNCEMENT_CODE_CACHE[stock_code] = ann_list
+        ANNOUNCEMENT_CODE_CACHE_TIME[stock_code] = now
+    else:
+        ANNOUNCEMENT_CACHE = ann_list
+        ANNOUNCEMENT_CACHE_TIME = now
+
+    print(f"[OK] 公告采集: {len(ann_list)}条 (code={stock_code or '全市场'})")
+    return ann_list
+
+
+@app.get('/api/announcements/all')
+def get_all_announcements():
+    """获取全市场最新公告（东方财富）"""
+    announcements = _fetch_announcements(page=1, page_size=50)
+
+    # 按类型分组
+    type_groups: dict = {}
+    for ann in announcements:
+        col = ann.get('column_name', '其他')
+        type_groups.setdefault(col, []).append(ann)
+
+    return {
+        'total': len(announcements),
+        'update_time': datetime.now().strftime('%H:%M:%S'),
+        'announcements': announcements[:50],
+        'type_groups': {k: v[:10] for k, v in type_groups.items()},
+    }
+
+
+@app.get('/api/announcements/{code}')
+def get_announcements_by_code(code: str):
+    """获取指定个股的公告"""
+    announcements = _fetch_announcements(stock_code=code, page_size=20)
+    return {
+        'code': code,
+        'name': CODE_NAME_MAP.get(code, code),
+        'total': len(announcements),
+        'update_time': datetime.now().strftime('%H:%M:%S'),
+        'announcements': announcements,
+    }
+
+
 @app.get('/api/news/all')
 def get_all_news():
     """
-    汇总所有新闻：政策/国际/行业/个股
+    汇总所有新闻：政策/国际/行业/个股公告
     返回分类后的新闻列表，支持统一查看
     每条新闻包含 related_stocks（通过板块匹配/名称匹配获取的相关个股）
     """
     news = _fetch_market_news()
     news_titles = [n.get('title', '') for n in news]
 
-    # 构建新闻→股票映射（兼容交易时段+非交易时段）
+    # 构建新闻→股票映射（个股按全称匹配 + 政策/宏观按板块匹配）
     news_to_stocks = _build_news_stock_map(news_titles)
 
     # 分类整理
@@ -2259,12 +2432,26 @@ def get_all_news():
     news_with_stocks = sum(1 for n in all_news_flat if n.get('related_stocks'))
     total_matches = sum(len(n.get('related_stocks', [])) for n in all_news_flat)
 
+    # 获取真实个股公告（东方财富）
+    announcements = _fetch_announcements(page=1, page_size=30)
+
     return {
-        'total': len(news),
+        'total': len(news) + len(announcements),
         'update_time': datetime.now().strftime('%H:%M:%S'),
         'news_with_stocks': news_with_stocks,   # 有关联个股的新闻数
         'total_stock_matches': total_matches,    # 总关联次数
+        # 个股公告（真实数据）
+        'announcements': announcements[:30],
         'categories': {
+            'announcement': {
+                'label': '个股公告',
+                'icon': '📋',
+                'count': len(announcements),
+                'avg_sentiment': 0.5,
+                'news': [{'title': a['title'], 'time': a['notice_date'], 'sentiment': 0.5,
+                          'related_stocks': [{'code': a['stock_code'], 'name': a['stock_name'], 'match_type': 'announcement'}]}
+                         for a in announcements[:20]],
+            },
             'policy': {
                 'label': '国内政策',
                 'icon': '🏛️',
