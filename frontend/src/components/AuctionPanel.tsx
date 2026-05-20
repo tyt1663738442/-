@@ -1,4 +1,5 @@
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback, Component } from 'react'
+import type { ReactNode, ErrorInfo } from 'react'
 import { Zap, Clock, RefreshCw, AlertTriangle, TrendingUp, Target, Lock, Flame, ArrowUpDown, Newspaper, BarChart3 } from 'lucide-react'
 
 const API_BASE = 'http://localhost:8000'
@@ -96,11 +97,11 @@ export function AuctionPanel({ onSelectStock }: Props) {
     return () => clearInterval(interval)
   }, [fetchAuction])
 
-  // 分组统计
-  const sealed = candidates.filter(c => c.change_pct >= 9.5)
-  const hot = candidates.filter(c => c.change_pct >= 5 && c.change_pct < 9.5)
-  const recommended = candidates.filter(c => c.score >= 70)
-  const highProb = candidates.filter(c => (c.next_day_prob || 0) >= 60)
+  // 分组统计（防 null）
+  const sealed = candidates.filter(c => (c.change_pct ?? 0) >= 9.5)
+  const hot = candidates.filter(c => (c.change_pct ?? 0) >= 5 && (c.change_pct ?? 0) < 9.5)
+  const recommended = candidates.filter(c => (c.score ?? 0) >= 70)
+  const highProb = candidates.filter(c => (c.next_day_prob ?? 0) >= 60)
 
   // 根据筛选过滤
   let filteredList: AuctionStock[]
@@ -121,16 +122,16 @@ export function AuctionPanel({ onSelectStock }: Props) {
       filteredList = candidates
   }
 
-  // 排序
+  // 排序（全部字段防 null）
   const displayList = [...filteredList].sort((a, b) => {
     let va: number, vb: number
-    if (sortKey === 'change_pct') { va = a.change_pct; vb = b.change_pct }
-    else if (sortKey === 'score') { va = a.score; vb = b.score }
-    else if (sortKey === 'net_amount') { va = a.net_amount; vb = b.net_amount }
-    else if (sortKey === 'next_day_prob') { va = a.next_day_prob || 0; vb = b.next_day_prob || 0 }
-    else if (sortKey === 'volume_score') { va = a.volume_score || 0; vb = b.volume_score || 0 }
-    else if (sortKey === 'sector_score') { va = a.sector_score || 0; vb = b.sector_score || 0 }
-    else { va = SIGNAL_ORDER[a.signal] || 0; vb = SIGNAL_ORDER[b.signal] || 0 }
+    if (sortKey === 'change_pct') { va = a.change_pct ?? 0; vb = b.change_pct ?? 0 }
+    else if (sortKey === 'score') { va = a.score ?? 0; vb = b.score ?? 0 }
+    else if (sortKey === 'net_amount') { va = a.net_amount ?? 0; vb = b.net_amount ?? 0 }
+    else if (sortKey === 'next_day_prob') { va = a.next_day_prob ?? 0; vb = b.next_day_prob ?? 0 }
+    else if (sortKey === 'volume_score') { va = a.volume_score ?? 0; vb = b.volume_score ?? 0 }
+    else if (sortKey === 'sector_score') { va = a.sector_score ?? 0; vb = b.sector_score ?? 0 }
+    else { va = SIGNAL_ORDER[a.signal] ?? 0; vb = SIGNAL_ORDER[b.signal] ?? 0 }
     return sortAsc ? va - vb : vb - va
   })
 
@@ -359,7 +360,7 @@ export function AuctionPanel({ onSelectStock }: Props) {
 
               {/* 数据行 */}
               {displayList.map((stock, index) => {
-                const cfg = SIGNAL_CONFIG[stock.signal] || SIGNAL_CONFIG['弱']
+                const cfg = SIGNAL_CONFIG[stock.signal] ?? SIGNAL_CONFIG['弱']
                 return <StockRow key={stock.code} stock={stock} index={index} cfg={cfg} onClick={() => handleRowClick(stock)} />
               })}
 
@@ -389,11 +390,15 @@ function StockRow({ stock, index, cfg, onClick }: { stock: AuctionStock; index: 
   const chg = stock.change_pct ?? 0
   const isUp = chg >= 0
   const color = isUp ? '#ff4d6d' : '#00b826'
-  const scoreColor = stock.score >= 70 ? '#ff4d6d' : stock.score >= 50 ? '#ff8c42' : '#7a8aa0'
-  const netColor = stock.net_amount >= 0 ? '#ff4d6d' : '#00b826'
+  const score = stock.score ?? 0
+  const netAmount = stock.net_amount ?? 0
+  const scoreColor = score >= 70 ? '#ff4d6d' : score >= 50 ? '#ff8c42' : '#7a8aa0'
+  const netColor = netAmount >= 0 ? '#ff4d6d' : '#00b826'
+  const price = stock.price ?? 0
+  const auctionTurnover = stock.auction_turnover ?? 0
 
   // 次日概率颜色
-  const prob = stock.next_day_prob || 0
+  const prob = stock.next_day_prob ?? 0
   const probColor = prob >= 70 ? '#ff4d6d' : prob >= 50 ? '#ff8c42' : prob >= 30 ? '#ffd700' : '#7a8aa0'
   const probBarWidth = Math.min(prob, 100)
 
@@ -408,11 +413,11 @@ function StockRow({ stock, index, cfg, onClick }: { stock: AuctionStock; index: 
       }}
     >
       <div className="text-right font-mono font-bold" style={{ color }}>
-        {stock.price > 0 ? stock.price.toFixed(2) : '--'}
+        {price > 0 ? price.toFixed(2) : '--'}
       </div>
       <div className="flex flex-col pl-2">
         <span className="font-medium" style={{ color: chg >= 9.5 ? '#ff4d6d' : '#e0e6f0' }}>
-          {stock.name}
+          {stock.name || '--'}
         </span>
         <span className="text-[10px]" style={{ color: '#5a6a7a' }}>{stock.code}</span>
       </div>
@@ -420,7 +425,7 @@ function StockRow({ stock, index, cfg, onClick }: { stock: AuctionStock; index: 
         {isUp ? '+' : ''}{chg.toFixed(2)}%
       </div>
       <div className="text-right font-mono text-xs" style={{ color: '#ff8c42' }}>
-        {stock.auction_turnover > 0 ? fmtAmount(stock.auction_turnover) : '--'}
+        {auctionTurnover > 0 ? fmtAmount(auctionTurnover) : '--'}
       </div>
       <div className="flex justify-center">
         <span className="inline-flex px-2 py-0.5 rounded text-xs font-bold border"
@@ -429,8 +434,8 @@ function StockRow({ stock, index, cfg, onClick }: { stock: AuctionStock; index: 
         </span>
       </div>
       <div className="text-right font-mono text-xs font-bold" style={{ color: netColor }}>
-        {stock.net_amount !== undefined && stock.net_amount !== 0
-          ? (stock.net_amount > 0 ? '+' : '') + fmtAmount(Math.abs(stock.net_amount))
+        {netAmount !== 0
+          ? (netAmount > 0 ? '+' : '') + fmtAmount(Math.abs(netAmount))
           : '--'}
       </div>
       {/* 次日概率 - 带进度条 */}
@@ -447,7 +452,7 @@ function StockRow({ stock, index, cfg, onClick }: { stock: AuctionStock; index: 
       </div>
       <div className="flex justify-end">
         <span className="font-mono font-bold" style={{ color: scoreColor }}>
-          {(stock.score ?? 0).toFixed(0)}
+          {score.toFixed(0)}
         </span>
       </div>
       {/* 5维评分明细 */}
@@ -485,7 +490,55 @@ function ScoreCell({ value, max, color }: { value?: number; max: number; color: 
 }
 
 function fmtAmount(v: number): string {
+  if (!isFinite(v) || isNaN(v)) return '--'
   if (v >= 10000) return (v / 10000).toFixed(1) + '亿'
   if (v >= 1) return v.toFixed(0) + '万'
   return '0'
+}
+
+// ===== ErrorBoundary：防止子组件崩溃导致整页白屏 =====
+interface EBState { hasError: boolean; error?: Error }
+class AuctionErrorBoundary extends Component<{ children: ReactNode }, EBState> {
+  constructor(props: { children: ReactNode }) {
+    super(props)
+    this.state = { hasError: false }
+  }
+  static getDerivedStateFromError(error: Error): EBState {
+    return { hasError: true, error }
+  }
+  componentDidCatch(error: Error, info: ErrorInfo) {
+    console.error('[AuctionPanel] 渲染错误:', error, info)
+  }
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="h-full flex flex-col items-center justify-center gap-4 p-8"
+          style={{ background: 'linear-gradient(180deg, #0a0f1a 0%, #0d1525 100%)' }}>
+          <AlertTriangle className="w-12 h-12" style={{ color: '#ff4d6d' }} />
+          <p className="text-sm font-medium" style={{ color: '#ff4d6d' }}>竞价分析渲染出错</p>
+          <p className="text-xs text-center max-w-xs" style={{ color: '#7a8aa0' }}>
+            {this.state.error?.message || '未知错误'}
+          </p>
+          <button
+            className="px-4 py-2 rounded-lg text-xs font-medium transition-all"
+            style={{ background: 'rgba(255,77,109,0.15)', color: '#ff4d6d', border: '1px solid rgba(255,77,109,0.3)' }}
+            onClick={() => this.setState({ hasError: false })}
+          >
+            重试
+          </button>
+        </div>
+      )
+    }
+    return this.props.children
+  }
+}
+
+// 导出带错误边界的包装版本
+const _AuctionPanelInner = AuctionPanel
+export function AuctionPanelSafe(props: Parameters<typeof AuctionPanel>[0]) {
+  return (
+    <AuctionErrorBoundary>
+      <_AuctionPanelInner {...props} />
+    </AuctionErrorBoundary>
+  )
 }

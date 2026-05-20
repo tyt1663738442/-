@@ -3,7 +3,7 @@
  * 单页面 + Tab 切换
  */
 import { useState, useEffect, useRef, useCallback } from 'react'
-import { AuctionPanel } from './components/AuctionPanel'
+import { AuctionPanelSafe } from './components/AuctionPanel'
 import { FormulaPanel } from './components/FormulaPanel'
 import { SectorPanel } from './components/SectorPanel'
 import { ReviewPanel } from './components/ReviewPanel'
@@ -218,7 +218,7 @@ function App() {
 
       {/* 内容区 */}
       <main className="flex-1 overflow-hidden">
-        {activeTab === 'auction' && <AuctionPanel />}
+        {activeTab === 'auction' && <AuctionPanelSafe />}
         {activeTab === 'formula' && <FormulaPanel />}
         {activeTab === 'sector' && <SectorPanel />}
         {activeTab === 'review' && <ReviewPanel />}
