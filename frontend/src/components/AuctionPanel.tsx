@@ -7,27 +7,27 @@ const API_BASE = 'http://localhost:8000'
 interface AuctionStock {
   code: string
   name: string
-  price: number
-  pre_close: number
-  change_pct: number        // 涨幅%
-  auction_turnover: number  // 成交额（万元）
+  price?: number | null
+  pre_close?: number | null
+  change_pct?: number | null     // 涨幅%
+  auction_turnover?: number | null  // 成交额（万元）
   signal: string            // '极强'|'强'|'中'|'弱'|'观望'|'极弱'
-  score: number             // 0-100 总分
+  score?: number | null             // 0-100 总分
   sector: string
-  board_count: number
-  net_ratio: number         // 主力净买入占比%
-  net_amount: number        // 主力净买入额（万元）
-  next_day_prob: number     // 次日打板概率%
+  board_count?: number
+  net_ratio?: number | null       // 主力净买入占比%
+  net_amount?: number | null       // 主力净买入额（万元）
+  next_day_prob?: number | null    // 次日打板概率%
   // 5维评分明细
-  change_score?: number     // 涨幅分 (0-30)
-  main_force_score?: number // 主力抢筹分 (0-25)
-  amount_score?: number     // 竞价金额分 (0-20)
-  volume_score?: number     // 竞价成交量分 (0-15)
-  sector_score?: number     // 板块效应分 (0-10)
-  sector_change?: number    // 板块今日涨跌幅（%）
-  float_cap?: number        // 流通市值（亿）
-  mkt_cap?: number          // 总市值（亿）
-  turnover_pct?: number     // 换手率%
+  change_score?: number | null    // 涨幅分 (0-30)
+  main_force_score?: number | null // 主力抢筹分 (0-25)
+  amount_score?: number | null    // 竞价金额分 (0-20)
+  volume_score?: number | null    // 竞价成交量分 (0-15)
+  sector_score?: number | null    // 板块效应分 (0-10)
+  sector_change?: number | null   // 板块今日涨跌幅（%）
+  float_cap?: number | null       // 流通市值（亿）
+  mkt_cap?: number | null         // 总市值（亿）
+  turnover_pct?: number | null     // 换手率%
 }
 
 interface Props {
@@ -317,7 +317,7 @@ export function AuctionPanel({ onSelectStock }: Props) {
               {/* 表头 */}
               <div className="sticky top-0 z-10 grid gap-1 px-4 py-2.5 text-[11px] font-bold border-b shrink-0"
                    style={{
-                     gridTemplateColumns: '1.5fr 2.5fr 1.3fr 1.4fr 1.2fr 1.6fr 1.6fr 1fr 1.2fr 1fr 1fr 1fr 1fr 1fr',
+                     gridTemplateColumns: '1.5fr 2.5fr 1.3fr 1.4fr 1.2fr 1.6fr 1.6fr 1fr 1.2fr 1fr 1fr 1fr 1fr',
                      background: 'rgba(13, 21, 37, 0.95)',
                      borderColor: '#1a2a44',
                      color: '#7a8aa0'
@@ -387,18 +387,19 @@ function hexToRgb(hex: string): string {
 }
 
 function StockRow({ stock, index, cfg, onClick }: { stock: AuctionStock; index: number; cfg: typeof SIGNAL_CONFIG[string]; onClick: () => void }) {
-  const chg = stock.change_pct ?? 0
+  // 所有数值字段加 isFinite 保护，拦截后端返回的 null/NaN/Infinity
+  const chg = isFinite(stock.change_pct as number) ? (stock.change_pct ?? 0) : 0
   const isUp = chg >= 0
   const color = isUp ? '#ff4d6d' : '#00b826'
-  const score = stock.score ?? 0
-  const netAmount = stock.net_amount ?? 0
+  const score = isFinite(stock.score ?? 0) ? (stock.score ?? 0) : 0
+  const netAmount = isFinite(stock.net_amount ?? 0) ? (stock.net_amount ?? 0) : 0
   const scoreColor = score >= 70 ? '#ff4d6d' : score >= 50 ? '#ff8c42' : '#7a8aa0'
   const netColor = netAmount >= 0 ? '#ff4d6d' : '#00b826'
-  const price = stock.price ?? 0
-  const auctionTurnover = stock.auction_turnover ?? 0
+  const price = isFinite(stock.price ?? 0) ? (stock.price ?? 0) : 0
+  const auctionTurnover = isFinite(stock.auction_turnover ?? 0) ? (stock.auction_turnover ?? 0) : 0
 
   // 次日概率颜色
-  const prob = stock.next_day_prob ?? 0
+  const prob = isFinite(stock.next_day_prob ?? 0) ? (stock.next_day_prob ?? 0) : 0
   const probColor = prob >= 70 ? '#ff4d6d' : prob >= 50 ? '#ff8c42' : prob >= 30 ? '#ffd700' : '#7a8aa0'
   const probBarWidth = Math.min(prob, 100)
 
@@ -407,7 +408,7 @@ function StockRow({ stock, index, cfg, onClick }: { stock: AuctionStock; index: 
       className="grid gap-1 px-4 py-2.5 text-sm cursor-pointer transition-all border-t"
       onClick={onClick}
       style={{
-        gridTemplateColumns: '1.5fr 2.5fr 1.3fr 1.4fr 1.2fr 1.6fr 1.6fr 1fr 1.2fr 1fr 1fr 1fr 1fr 1fr',
+        gridTemplateColumns: '1.5fr 2.5fr 1.3fr 1.4fr 1.2fr 1.6fr 1.6fr 1fr 1.2fr 1fr 1fr 1fr 1fr',
         background: index % 2 === 0 ? 'rgba(13, 21, 37, 0.3)' : 'transparent',
         borderColor: '#1a2a44'
       }}
@@ -468,7 +469,8 @@ function StockRow({ stock, index, cfg, onClick }: { stock: AuctionStock; index: 
 }
 
 function ScoreCell({ value, max, color }: { value?: number; max: number; color: string }) {
-  const v = value ?? 0
+  // 用 || 0 拦截 null/undefined/NaN/Infinity
+  const v = isFinite(value as number) ? (value ?? 0) : 0
   const isNegative = v < 0
   // 负值用绿色（跌），正值用传入 color（涨）
   const displayColor = isNegative ? '#00b826' : color
